@@ -32,4 +32,4 @@ Text engine contains:
     + Quest can have a name, complete condition and on completion action
     + Quest also can be one-time or reusable
 
-`Main` contains example of game and library usage.
+`SimpleAdventure` contains example of simple game and library usage.
