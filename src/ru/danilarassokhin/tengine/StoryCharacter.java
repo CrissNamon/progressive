@@ -9,10 +9,11 @@ import java.util.Set;
  * @param <L> Character location type
  * @param <T> Character items type
  * @param <Q> Character quests type
+ * @param <AN> Character action id type
  */
 public interface StoryCharacter<I, N extends StoryInventory,
         L extends StoryLocation, T extends StoryItem,
-        Q extends StoryQuest> {
+        Q extends StoryQuest, AN> {
 
     /**
      * @return character id
@@ -84,5 +85,20 @@ public interface StoryCharacter<I, N extends StoryInventory,
      * @return true if items has been added
      */
     boolean addItem(T item);
+
+    /**
+     * Gets character action by id
+     * @param actionName Action name to get
+     * @return Action or null
+     */
+    StoryExtraAction action(AN actionName);
+
+    /**
+     * Adds action to character
+     * @param actionName Action name to add
+     * @param action Action to add
+     * @return true if action doesn't exists already
+     */
+    boolean addAction(AN actionName, StoryExtraAction action);
 
 }

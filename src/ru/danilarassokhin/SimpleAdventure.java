@@ -32,6 +32,10 @@ public class SimpleAdventure {
      * Main game character
      */
     private SimpleStoryCharacter mainCharacter;
+    /**
+     * Enemy character
+     */
+    private SimpleStoryCharacter enemyCharacter;
 
     /**
      * Sword item for character
@@ -88,8 +92,13 @@ public class SimpleAdventure {
      */
     public void addCharacters() {
         //Don't forget to add character with start health and location
-        mainCharacter = simpleStory.addStoryCharacter(1L, "TextEngineCharacter",
+        mainCharacter = simpleStory.addStoryCharacter(1L, "MainCharacter",
                 70, startLocation);
+
+        //Allow your character to fight...
+        mainCharacter.addAction("Punch", () -> enemyCharacter.addHealth(-10));
+        //...and give it an enemy
+        enemyCharacter = simpleStory.addStoryCharacter(2L, "EnemyCharacter", 70, startLocation);
     }
 
     /**
@@ -123,6 +132,9 @@ public class SimpleAdventure {
         //May be some more...
         SimpleStoryNode q3 = new SimpleStoryNode(2L, mainCharacter.getName() + ", wanna health buff?");
         SimpleStoryNode q4 = new SimpleStoryNode(3L, "Well, ok. That's the end");
+        SimpleStoryNode fightEnemy = new SimpleStoryNode(4L, "Wanna punch the enemy? It has " + enemyCharacter.getHealth() + "HP now");
+        SimpleStoryNode fightEnemyResult = new SimpleStoryNode(5L, "Great!");
+
         //Wanna interact with your Story? Add some variants as answers to your StoryNodes
         SimpleStoryNodeAnswer q1_a1 = new SimpleStoryNodeAnswer("Basement!",
                 //You can try to move your characters to other locations
@@ -130,7 +142,7 @@ public class SimpleAdventure {
                         //They can move successfully...
                         () -> {
                             System.out.println(mainCharacter.getName() + " entered basement location");
-                            simpleStory.setNext(q4);
+                            simpleStory.setNext(fightEnemy);
                         },
                         //Or face the restrictions :(
                         () -> {
@@ -148,9 +160,18 @@ public class SimpleAdventure {
             simpleStory.setNext(startNode);
         });
         SimpleStoryNodeAnswer q3_2 = new SimpleStoryNodeAnswer("No...", () -> simpleStory.setNext(q4));
+
+        //Punch the enemy!
+        SimpleStoryNodeAnswer fightEnemyYes = new SimpleStoryNodeAnswer("Yes!", () -> {
+            mainCharacter.action("Punch").make();
+            System.out.println("Enemy now have " + enemyCharacter.getHealth() + " HP");
+            simpleStory.setNext(fightEnemyResult);
+        });
+
         //Don't forget to connect your StoryNodes with your answers! It's important!
         startNode.addAnswer(q1_a1);
         q3.addAnswer(q3_1, q3_2);
+        fightEnemy.addAnswer(fightEnemyYes);
     }
 
     /**

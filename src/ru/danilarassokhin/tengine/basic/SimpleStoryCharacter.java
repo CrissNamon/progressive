@@ -4,12 +4,14 @@ import ru.danilarassokhin.tengine.StoryExtraAction;
 import ru.danilarassokhin.tengine.StoryCharacter;
 import ru.danilarassokhin.tengine.StoryState;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInventory,
         SimpleStoryLocation, SimpleStoryItem,
-        SimpleStoryQuest> {
+        SimpleStoryQuest, String> {
 
     private final Long id;
     private String name;
@@ -17,6 +19,7 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     private final SimpleStoryInventory inventory;
     private SimpleStoryLocation location;
     private final Set<SimpleStoryQuest> quests;
+    private final Map<String, StoryExtraAction> actions;
 
     protected SimpleStoryCharacter(Long id, String name, float health, SimpleStoryInventory inventory,
                                 SimpleStoryLocation location) {
@@ -25,6 +28,7 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
         this.inventory = inventory;
         this.location = location;
         this.quests = new HashSet<>();
+        actions = new HashMap<>();
         setHealth(health);
     }
 
@@ -96,6 +100,16 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     @Override
     public boolean addItem(SimpleStoryItem item) {
         return getInventory().addItem(item);
+    }
+
+    @Override
+    public StoryExtraAction action(String actionName) {
+        return actions.getOrDefault(actionName, () -> {});
+    }
+
+    @Override
+    public boolean addAction(String actionName, StoryExtraAction action) {
+        return actions.putIfAbsent(actionName, action) == null;
     }
 
     @Override

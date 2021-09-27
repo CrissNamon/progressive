@@ -22,6 +22,7 @@ Text engine contains:
 + StoryCharacter
     + Represents game story character
     + Story character can have a name, health, items and quests
+    + They can also have some actions like punch or magic for example
 + StoryInventory
     + Represents game story character inventory
 + StoryItem
