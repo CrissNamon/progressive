@@ -1,5 +1,7 @@
 # Progressive
-Progressive is a simple game library, which lets you to create interactive fiction games.
+Progressive is a simple game library, which lets you to create interactive fiction games such as novels,
+text quests and much more! Progressive gives you an abstraction level to let you create any implementation you need. It also has ready-made implementation for interactive fiction games. And there will be much more soon!
+<br>
 <br>
 Progressive have:
 + Story
@@ -8,7 +10,7 @@ Progressive have:
 + StoryStateManager
     + Represents game manager
     + Manager can have states
-    + Manager can execute action on state change
+    + Manager can execute action on state change and gives you some data about states
 + StoryNode
     + Represents game story node
     + Node can have content, text for example
@@ -35,6 +37,7 @@ Progressive have:
 + StorySaveManager
     + You can save and load your game's instance as you wish
     + SimpleSaveManager contains example with json saves 
++ Some utils and actions to make your development simpler and games more functional
 
 Look how is simple to create games with Progressive below, 
 or see `SimpleAdventure` class for example
