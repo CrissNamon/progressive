@@ -76,6 +76,8 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
 
     boolean addStoryQuest(Q quest);
 
+    Set<Q> getStoryQuests();
+
     /**
      * Sets current node in Story to {@code startNode}
      * @param startNode Node to set

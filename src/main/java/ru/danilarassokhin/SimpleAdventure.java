@@ -19,6 +19,8 @@ public class SimpleAdventure {
      */
     private final SimpleStoryStateManager simpleStoryStateManager;
 
+    private final SimpleSaveManager saveManager;
+
     /**
      * Location to start from
      */
@@ -65,6 +67,9 @@ public class SimpleAdventure {
         simpleStory = SimpleStory.getInstance();
         //But story must have states
         simpleStoryStateManager = SimpleStoryStateManager.getInstance();
+
+        saveManager = SimpleSaveManager.getInstance();
+
         sc = new Scanner(System.in);
     }
 
@@ -155,6 +160,7 @@ public class SimpleAdventure {
         SimpleStoryNodeAnswer q3_1 = new SimpleStoryNodeAnswer("Yes!", () -> {
             //You can change you characters! Add some health may be?
             mainCharacter.addHealth(30);
+            mainCharacter.addItem(sword);
             System.out.println("Ok. Whoosh! " + mainCharacter.getName()
                     + " now have " + mainCharacter.getHealth() + "HP!");
             simpleStory.setNext(startNode);
@@ -186,11 +192,17 @@ public class SimpleAdventure {
         addItems();
         addQuests();
         addNodes();
-
-        //AND NOW YOUR STORY BEGINS!
+        String save = "{\"storyCharacters\":[{\"id\":1,\"name\":\"MainCharacter\",\"health\":100.0,\"inventory\":{\"items\":[{\"id\":1,\"name\":\"Sword\",\"count\":1.0}]},\"location\":{\"id\":1}},{\"id\":2,\"name\":\"EnemyCharacter\",\"health\":70.0,\"inventory\":{\"items\":[]},\"location\":{\"id\":1}}],\"currentNode\":{\"id\":1,\"text\":\"Where you wanna go?\"},\"stateManager\":{\"state\":\"NODE_TRANSITION_END\"}}\n";
         SimpleStoryNode current = simpleStory.begin(startNode);
+        if(save.length() > 0) {
+            saveManager.toInstance(saveManager.load(save));
+            current = simpleStory.getCurrentNode();
+        }
+        //AND NOW YOUR STORY BEGINS!
         //Is this the end of adventure?
         while(current != null) {
+            save = saveManager.save();
+            System.out.println("SAVED GAME: " + save);
             System.out.println(current.getContent());
             //No answers in current StoryNode? Well, your game is over...
             if(!current.hasAnswers()) {
@@ -209,6 +221,7 @@ public class SimpleAdventure {
             answer.onAnswer();
             //Update the current node. You awesome! :)
             current = simpleStory.next();
+            save = saveManager.save();
         }
     }
 

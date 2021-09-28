@@ -1,5 +1,7 @@
 package ru.danilarassokhin.tengine.basic;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ru.danilarassokhin.tengine.Story;
 import ru.danilarassokhin.tengine.StoryCondition;
 import ru.danilarassokhin.tengine.StoryObjectExtraAction;
@@ -18,7 +20,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     private transient final Set<SimpleStoryLocation> storyLocations;
     private transient final Set<SimpleStoryItem> storyItems;
     private transient final Set<SimpleStoryQuest> storyQuests;
-    private final Set<SimpleStoryNode> storyNodes;
+    private transient final Set<SimpleStoryNode> storyNodes;
     private SimpleStoryNode currentNode;
     private SimpleStoryStateManager stateManager;
 
@@ -77,7 +79,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
 
     @Override
     public Set<SimpleStoryNode> getStoryNodes() {
-        return null;
+        return storyNodes;
     }
 
     @Override
@@ -113,6 +115,11 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     @Override
     public boolean addStoryQuest(SimpleStoryQuest quest) {
         return storyQuests.add(quest);
+    }
+
+    @Override
+    public Set<SimpleStoryQuest> getStoryQuests() {
+        return storyQuests;
     }
 
     @Override
@@ -214,5 +221,17 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
         SimpleStoryNode node = new SimpleStoryNode(id, content);
         addStoryNode(node);
         return node;
+    }
+
+    public SimpleStoryCharacter getCharacterById(Long id) {
+        return getStoryCharacters().stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public SimpleStoryQuest getQuestById(Long id) {
+        return getStoryQuests().stream().filter(q -> q.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public SimpleStoryItem getItemById(Long id) {
+        return getStoryItems().stream().filter(i -> i.getId().equals(id)).findFirst().orElse(null);
     }
 }
