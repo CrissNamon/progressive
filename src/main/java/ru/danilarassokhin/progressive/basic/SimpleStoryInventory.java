@@ -27,7 +27,7 @@ public class SimpleStoryInventory implements StoryInventory<SimpleStoryItem> {
                 new SimpleStoryItem(
                         item.getId(),
                         item.getName(),
-                        item.getCount()
+                        item.getAmount()
                 )
         );
     }

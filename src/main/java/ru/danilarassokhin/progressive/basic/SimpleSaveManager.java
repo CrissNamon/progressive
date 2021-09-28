@@ -31,7 +31,7 @@ public class SimpleSaveManager implements StorySaveManager<SimpleStory, String> 
     }
 
     /**
-     * Writes data from {@coded saved} to current Story instance
+     * Writes data from {@code saved} to current Story instance
      * @param saved Saved story
      */
     public void toInstance(SimpleStory saved) {

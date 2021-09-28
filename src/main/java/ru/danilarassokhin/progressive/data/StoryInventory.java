@@ -36,6 +36,7 @@ public interface StoryInventory<I extends StoryItem> {
     void removeItem(I item);
 
     /**
+     * Returns all items in this inventory
      * @return Items in inventory
      */
     Set<I> getItems();

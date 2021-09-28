@@ -11,16 +11,19 @@ import java.util.List;
 public interface StoryNode<ID, C, A extends StoryNodeAnswer> {
 
     /**
+     * Returns node's content
      * @return Node content
      */
     C getContent();
 
     /**
+     * Returns node id
      * @return Node id
      */
     ID getId();
 
     /**
+     * Returns all answers connected with this node
      * @return Node answers
      */
     List<A> getAnswers();
@@ -32,6 +35,7 @@ public interface StoryNode<ID, C, A extends StoryNodeAnswer> {
     void addAnswer(A... answer);
 
     /**
+     * Checks if node has any answers
      * @return true if node has any answers
      */
     boolean hasAnswers();

@@ -3,10 +3,24 @@ package ru.danilarassokhin.progressive.builders;
 import ru.danilarassokhin.progressive.lambdas.StoryCondition;
 import ru.danilarassokhin.progressive.data.StoryLocation;
 
+/**
+ * Represents builder for location
+ * @param <V> Location type
+ */
 public interface LocationBuilder<V extends StoryLocation> extends Builder<V> {
 
-    <B extends LocationBuilder<V>> B setName(String name);
+    /**
+     * Sets location name
+     * @param name Name to set
+     * @return Location builder
+     */
+    LocationBuilder setName(String name);
 
-    <B extends LocationBuilder<V>> B setEntryRestriction(StoryCondition entryRestriction);
+    /**
+     * Sets restriction to location
+     * @param entryRestriction Restriction to set
+     * @return Location builder
+     */
+    LocationBuilder setEntryRestriction(StoryCondition entryRestriction);
 
 }

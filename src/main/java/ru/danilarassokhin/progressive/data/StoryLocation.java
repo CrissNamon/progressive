@@ -7,11 +7,13 @@ package ru.danilarassokhin.progressive.data;
 public interface StoryLocation<I> {
 
     /**
+     * Returns location id
      * @return Location id
      */
     I getId();
 
     /**
+     * Returns location id
      * @return Location name
      */
     String getName();
@@ -23,6 +25,7 @@ public interface StoryLocation<I> {
     void setName(String name);
 
     /**
+     * Checks if entry condition is done
      * @return true if entry condition is completed
      */
     boolean canEntry();

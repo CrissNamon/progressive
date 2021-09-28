@@ -18,6 +18,7 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
         Q extends StoryQuest> {
 
     /**
+     * Returns current node
      * @return current story node
      */
     N getCurrentNode();
@@ -38,38 +39,45 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     /**
      * Adds character to story
      * @param character Character to add
+     * @return true if character doesn't exists already
      */
     boolean addStoryCharacter(C character);
 
     /**
-     * @return Map of registered story nodes as nodeId -> node
+     * Returns all nodes registered in story
+     * @return Map of nodes as nodeId - node
      */
     Map<?, N> getStoryNodes();
 
     /**
+     * Adds node to story
      * @param node Node to add
      * @return true if node doesn't exists already
      */
     boolean addStoryNode(N node);
 
     /**
-     * @return All characters registered in story
+     * Returns all characters registered in story
+     * @return Map of characters as characterId - character
      */
     Map<?, C> getStoryCharacters();
 
     /**
      * Adds location to story
      * @param location Location to add
+     * @return true if location doesn't exists already
      */
     boolean addStoryLocation(L location);
 
     /**
-     * @return Map of locations registered in story as locationId -> location
+     * Returns all location registered in story
+     * @return Map of locations as characterId - character
      */
     Map<?, L> getStoryLocations();
 
     /**
-     * @return All items registered in story as itemId -> item
+     * Returns all items registered in story
+     * @return Map of items as characterId - character
      */
     Map<?, I> getStoryItems();
 
@@ -88,7 +96,8 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     boolean addStoryQuest(Q quest);
 
     /**
-     * @return All quests registered in story as questId -> quest
+     * Returns all quests registered in story
+     * @return Map of quests as characterId - character
      */
     Map<?, Q> getStoryQuests();
 

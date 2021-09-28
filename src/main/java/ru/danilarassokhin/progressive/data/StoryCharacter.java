@@ -18,11 +18,13 @@ public interface StoryCharacter<I, N extends StoryInventory,
         Q extends StoryQuest, AN> {
 
     /**
+     * Returns character id
      * @return character id
      */
     I getId();
 
     /**
+     * Returns character name
      * @return character name
      */
     String getName();
@@ -34,6 +36,7 @@ public interface StoryCharacter<I, N extends StoryInventory,
     void setName(String name);
 
     /**
+     * Returns character's health
      * @return character's current health
      */
     float getHealth();
@@ -58,16 +61,19 @@ public interface StoryCharacter<I, N extends StoryInventory,
     boolean addQuest(Q quest);
 
     /**
+     * Returns all quests assigned to this character
      * @return character's quests
      */
     Set<Q> getQuests();
 
     /**
+     * Returns inventory of this character
      * @return character inventory
      */
     N getInventory();
 
     /**
+     * Returns location of this character
      * @return character location
      */
     L getLocation();

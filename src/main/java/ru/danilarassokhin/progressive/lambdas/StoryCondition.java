@@ -6,6 +6,7 @@ package ru.danilarassokhin.progressive.lambdas;
 public interface StoryCondition {
 
     /**
+     * Checks condition
      * @return true if condition is completed
      */
     boolean isTrue();

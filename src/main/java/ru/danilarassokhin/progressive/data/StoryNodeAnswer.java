@@ -6,6 +6,7 @@ package ru.danilarassokhin.progressive.data;
  */
 public interface StoryNodeAnswer<C> {
     /**
+     * Returns answer content
      * @return Answer content
      */
     C getContent();

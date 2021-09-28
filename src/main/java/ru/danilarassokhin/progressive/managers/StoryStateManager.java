@@ -12,6 +12,7 @@ import java.util.List;
 public interface StoryStateManager<S extends StoryState> {
 
     /**
+     * Returns current state
      * @return Current story state
      */
     S getCurrentState();
@@ -19,10 +20,13 @@ public interface StoryStateManager<S extends StoryState> {
     /**
      * Sets state in manager
      * @param state New state
+     * @param <O> Action param type
+     * @param actionParam Param to pass in action of this state
      */
     <O> void setState(S state, O actionParam);
 
     /**
+     * Returns all actions registered in {@code state}
      * @param state State to search
      * @return List with actions for {@code state}
      */
@@ -31,6 +35,7 @@ public interface StoryStateManager<S extends StoryState> {
     /**
      * Adds action to state
      * @param state State to add action
+     * @param <V> Action param type
      * @param action Action to add
      */
     <V> void addAction(S state, StoryActionParam<V> action);

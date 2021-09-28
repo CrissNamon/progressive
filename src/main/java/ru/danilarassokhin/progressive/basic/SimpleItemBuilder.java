@@ -11,8 +11,8 @@ public class SimpleItemBuilder implements ItemBuilder<SimpleStoryItem> {
     }
 
     @Override
-    public SimpleItemBuilder setStartCount(float startCount) {
-        item.setCount(startCount);
+    public SimpleItemBuilder setStartAmount(float startCount) {
+        item.setAmount(startCount);
         return this;
     }
 

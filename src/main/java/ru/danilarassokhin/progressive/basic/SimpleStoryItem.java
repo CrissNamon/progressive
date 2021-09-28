@@ -8,12 +8,12 @@ public class SimpleStoryItem implements StoryItem<Long>, Serializable, AutoClose
 
     private final Long id;
     private String name;
-    private float count;
+    private float amount;
 
-    protected SimpleStoryItem(Long id, String name, float startCount) {
+    protected SimpleStoryItem(Long id, String name, float startAmount) {
         this.id = id;
         this.name = name;
-        this.count = startCount;
+        this.amount = startAmount;
     }
 
     protected SimpleStoryItem(Long id) {
@@ -37,18 +37,18 @@ public class SimpleStoryItem implements StoryItem<Long>, Serializable, AutoClose
     }
 
     @Override
-    public float getCount() {
-        return count;
+    public float getAmount() {
+        return amount;
     }
 
     @Override
-    public void setCount(float count) {
-        this.count = count;
+    public void setAmount(float count) {
+        this.amount = count;
     }
 
     @Override
     public void add(float add) {
-        this.count += add;
+        this.amount += add;
     }
 
     @Override

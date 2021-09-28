@@ -67,7 +67,7 @@ public class SimpleAdventure {
 
     public void addItems() {
         //Add some items, why not?
-        SimpleStoryItem sword = new SimpleItemBuilder(1L).setName("Sword").setStartCount(1).build();
+        SimpleStoryItem sword = new SimpleItemBuilder(1L).setName("Sword").setStartAmount(1).build();
         simpleStory.addStoryItem(sword);
     }
 

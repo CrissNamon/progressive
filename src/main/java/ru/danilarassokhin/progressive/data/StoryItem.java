@@ -7,11 +7,13 @@ package ru.danilarassokhin.progressive.data;
 public interface StoryItem<I>{
 
     /**
+     * Returns item id
      * @return Item id
      */
     I getId();
 
     /**
+     * Return item name
      * @return Item name
      */
     String getName();
@@ -23,15 +25,16 @@ public interface StoryItem<I>{
     void setName(String name);
 
     /**
-     * @return Item count
+     * Returns item amount
+     * @return Item amount
      */
-    float getCount();
+    float getAmount();
 
     /**
      * Sets item count
-     * @param count new count
+     * @param amount new amount
      */
-    void setCount(float count);
+    void setAmount(float amount);
 
     /**
      * Adds item's count

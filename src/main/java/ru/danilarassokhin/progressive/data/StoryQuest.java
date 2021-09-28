@@ -10,11 +10,13 @@ import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 public interface StoryQuest<I> {
 
     /**
+     * Returns quest id
      * @return Quest id
      */
     I getId();
 
     /**
+     * Returns quest name
      * @return Quest name
      */
     String getName();
@@ -26,6 +28,7 @@ public interface StoryQuest<I> {
     void setName(String name);
 
     /**
+     * Returns quest state
      * @return true if quest can be completed
      */
     boolean isCompleted();
@@ -49,13 +52,14 @@ public interface StoryQuest<I> {
     void setCompleteCondition(StoryCondition completeCondition);
 
     /**
+     * Returns quest uniqueness
      * @return true if quest can be done many times
      */
     boolean isUnique();
 
     /**
      * Sets quest unique param
-     * @param unique
+     * @param unique Define if quest is unique (one-time)
      */
     void setUnique(boolean unique);
 
