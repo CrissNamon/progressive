@@ -47,7 +47,7 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      * Returns all nodes registered in story
      * @return Map of nodes as nodeId - node
      */
-    Map<?, N> getStoryNodes();
+    Map<ID, N> getStoryNodes();
 
     /**
      * Adds node to story
@@ -60,7 +60,7 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      * Returns all characters registered in story
      * @return Map of characters as characterId - character
      */
-    Map<?, C> getStoryCharacters();
+    Map<ID, C> getStoryCharacters();
 
     /**
      * Adds location to story
@@ -73,13 +73,13 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      * Returns all location registered in story
      * @return Map of locations as characterId - character
      */
-    Map<?, L> getStoryLocations();
+    Map<ID, L> getStoryLocations();
 
     /**
      * Returns all items registered in story
      * @return Map of items as characterId - character
      */
-    Map<?, I> getStoryItems();
+    Map<ID, I> getStoryItems();
 
     /**
      * Adds item to story
@@ -99,14 +99,14 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      * Returns all quests registered in story
      * @return Map of quests as characterId - character
      */
-    Map<?, Q> getStoryQuests();
+    Map<ID, Q> getStoryQuests();
 
     /**
      * Sets current node in Story to {@code startNode}
      * @param startNode Node to set
      * @return {@code startNode}
      */
-    SimpleStoryNode begin(N startNode);
+    N begin(N startNode);
 
     /**
      * Checks if {@code character} registered in Story
