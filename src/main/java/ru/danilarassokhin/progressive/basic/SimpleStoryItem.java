@@ -55,4 +55,9 @@ public class SimpleStoryItem implements StoryItem<Long>, Serializable, AutoClose
     public void close() throws ClassCastException {
 
     }
+
+    @Override
+    public int hashCode() {
+        return getId().intValue();
+    }
 }

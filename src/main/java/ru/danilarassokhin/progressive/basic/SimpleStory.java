@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
+public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryCharacter,
         SimpleStoryLocation, SimpleStoryItem, SimpleStoryQuest>, Serializable {
 
     private transient static SimpleStory INSTANCE;
@@ -146,7 +146,6 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
         return getStoryItems().containsKey(item.getId());
     }
 
-    @Override
     public SimpleStoryCharacter getCharacterById(Long id) {
         return getStoryCharacters().getOrDefault(id, null);
     }

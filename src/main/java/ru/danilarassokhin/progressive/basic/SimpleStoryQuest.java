@@ -95,4 +95,9 @@ public class SimpleStoryQuest implements StoryQuest<Long>, Serializable, AutoClo
     public void close() throws ClassCastException {
 
     }
+
+    @Override
+    public int hashCode() {
+        return getId().intValue();
+    }
 }

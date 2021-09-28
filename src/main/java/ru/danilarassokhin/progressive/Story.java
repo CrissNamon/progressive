@@ -13,7 +13,7 @@ import java.util.Map;
  * @param <C> Story characters type {@link StoryCharacter}
  * @param <L> Story locations type {@link StoryLocation}
  */
-public interface Story<N extends StoryNode, C extends StoryCharacter,
+public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
         L extends StoryLocation, I extends StoryItem,
         Q extends StoryQuest> {
 
@@ -134,27 +134,27 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
      * @param id Id to search
      * @return Character, null otherwise
      */
-    C getCharacterById(Long id);
+    C getCharacterById(ID id);
 
     /**
      * Searches for quest registered in story by id
      * @param id Id to search
      * @return Quest, null otherwise
      */
-    Q getQuestById(Long id);
+    Q getQuestById(ID id);
 
     /**
      * Searches for item registered in story by id
      * @param id Id to search
      * @return Item, null otherwise
      */
-    I getItemById(Long id);
+    I getItemById(ID id);
 
     /**
      * Searches for location registered in story by id
      * @param id Id to search
      * @return Location, null otherwise
      */
-    L getLocationById(Long id);
+    L getLocationById(ID id);
 
 }
