@@ -1,9 +1,9 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.lambdas;
 
 /**
  * @param <T> Object to pass as param
  */
-public interface StoryExtraActionParam<T>{
+public interface StoryActionParam<T>{
     /**
      * Makes action
      * @param param Param to pass

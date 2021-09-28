@@ -1,8 +1,8 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryExtraAction;
-import ru.danilarassokhin.progressive.StoryCharacter;
-import ru.danilarassokhin.progressive.StoryState;
+import ru.danilarassokhin.progressive.lambdas.StoryAction;
+import ru.danilarassokhin.progressive.data.StoryCharacter;
+import ru.danilarassokhin.progressive.data.StoryState;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     private final SimpleStoryInventory inventory;
     private SimpleStoryLocation location;
     private transient final Set<SimpleStoryQuest> quests;
-    private transient final Map<String, StoryExtraAction> actions;
+    private transient final Map<String, StoryAction> actions;
 
     protected SimpleStoryCharacter(Long id, String name, float health, SimpleStoryInventory inventory,
                                 SimpleStoryLocation location) {
@@ -41,6 +41,15 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
         this.quests = new HashSet<>();
         actions = new HashMap<>();
         setHealth(health);
+    }
+
+    protected SimpleStoryCharacter(Long id) {
+        this.id = id;
+        this.name = "";
+        this.inventory = new SimpleStoryInventory();
+        this.location = null;
+        this.quests = new HashSet<>();
+        actions = new HashMap<>();
     }
 
     @Override
@@ -106,13 +115,13 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
      * @return true if location has been changed
      */
     @Override
-    public boolean setLocation(SimpleStoryLocation location, StoryExtraAction onSuccess, StoryExtraAction onError) {
-        SimpleStoryStateManager.getInstance()
-                .setState(StoryState.LOCATION_MOVE_START, getLocation());
+    public boolean setLocation(SimpleStoryLocation location, StoryAction onSuccess, StoryAction onError) {
         if(getLocation() == null) {
             this.location = location;
             return true;
         }
+        SimpleStoryStateManager.getInstance()
+                .setState(StoryState.LOCATION_MOVE_START, getLocation());
         if(location.canEntry()) {
             this.location = location;
             onSuccess.make();
@@ -139,12 +148,12 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     }
 
     @Override
-    public StoryExtraAction action(String actionName) {
+    public StoryAction action(String actionName) {
         return actions.getOrDefault(actionName, () -> {});
     }
 
     @Override
-    public boolean addAction(String actionName, StoryExtraAction action) {
+    public boolean addAction(String actionName, StoryAction action) {
         return actions.putIfAbsent(actionName, action) == null;
     }
 

@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.data;
 
 import java.util.List;
 
@@ -42,5 +42,11 @@ public interface StoryNode<ID, C, A extends StoryNodeAnswer> {
      * @return Answer of index {@code i}
      */
     A answer(int i);
+
+    /**
+     * Sets content to node
+     * @param content New content
+     */
+    void setContent(C content);
 
 }

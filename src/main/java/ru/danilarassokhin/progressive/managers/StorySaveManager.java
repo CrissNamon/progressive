@@ -1,4 +1,6 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.managers;
+
+import ru.danilarassokhin.progressive.Story;
 
 /**
  * Represents save manager

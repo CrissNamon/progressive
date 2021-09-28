@@ -80,35 +80,45 @@ simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_COMPLETE, (newLocatio
 Then fill your game with content
 ````java
     public void addLocations() {
-        //Add start location for your hero
-        SimpleStoryLocation startLocation = simpleStory.addStoryLocation(1L, "Castle");
+        //Add start location for your hero with builder
+        SimpleStoryLocation startLocation = new SimpleLocationBuilder(1L).setName("Castle").build();
+        //All components must be registered in story!
+        simpleStory.addStoryLocation(startLocation);
         //Add location for your enemies
-        SimpleStoryLocation basement = simpleStory.addStoryLocation(2L, "Basement");
-        //You can add entry restrictions to your location
-        basement.setEntryRestriction(() -> simpleStory.getCharacterById(1L).getHealth() > 80);
+        SimpleStoryLocation basement = new SimpleLocationBuilder(2L)
+                .setName("Basement")
+                //You can add entry restrictions to your location
+                .setEntryRestriction(() -> simpleStory.getCharacterById(1L).getHealth() > 80)
+                .build();
+        simpleStory.addStoryLocation(basement);
     }
     public void addItems() {
         //Add some items, why not?
-        SimpleStoryItem sword = simpleStory.addStoryItem(1L, "Sword", 1);
+        SimpleStoryItem sword = new SimpleItemBuilder(1L).setName("Sword").setStartCount(1).build();
+        simpleStory.addStoryItem(sword);
     }
 
     public void addQuests() {
         //May be some quest? Hero need to do hero things!
-        SimpleStoryQuest enterBasement = simpleStory.addStoryQuest(1L, "Enter basement", true,
-                //When this quest will be completed?
-                () -> mainCharacter.getLocation().getId().equals(2L),
-                //What if quest will be completed?
-                (q) -> System.out.println("QUEST COMPLETED: " + q.getName())
-        );
+        SimpleStoryQuest enterBasement = new SimpleQuestBuilder(1L).setName("Enter basement").setUnique(true)
+                .setCompleteCondition(
+                        //When this quest will be completed?
+                        () -> mainCharacter.getLocation().getId().equals(2L)
+                )
+                .setOnComplete(
+                        //What if quest will be completed?
+                        (q) -> System.out.println("QUEST COMPLETED: " + q.getName())
+                ).build();
+        simpleStory.addStoryQuest(enterBasement);
     }
 
     public void addCharacters() {
         //And your hero...
-        mainCharacter = simpleStory.addStoryCharacter(1L, "Otis", 80);
-        //set your hero to start location...
-        mainCharacter.setLocation(
-                simpleStory.getLocationById(1L)
-        );
+        mainCharacter = new SimpleCharacterBuilder(1L).setHealth(80).setName("Otis")
+                //set your hero to start location...
+                .setLocation(simpleStory.getLocationById(1L))
+                .build();
+        simpleStory.addStoryCharacter(mainCharacter);
         //give him a goal...
         mainCharacter.addQuest(
                 simpleStory.getQuestById(1L)
@@ -120,11 +130,10 @@ Then fill your game with content
         //hero can punch zombies
         mainCharacter.addAction("Punch", () -> enemyCharacter.addHealth(-10));
         //Add some enemies
-        enemyCharacter = simpleStory.addStoryCharacter(2L, "Zombie", 10);
-        //and set them to locations
-        enemyCharacter.setLocation(
-                simpleStory.getLocationById(2L)
-        );
+        enemyCharacter = new SimpleCharacterBuilder(2L).setHealth(10).setName("Zombie")
+                .setLocation(simpleStory.getLocationById(2L))
+                .build();
+        simpleStory.addStoryCharacter(enemyCharacter);
     }
 ````
 Add game scenery
@@ -132,11 +141,15 @@ Add game scenery
 public void addNodes() {
         //And now scenery...
         //Greet your hero
-        SimpleStoryNode greeting = simpleStory.addStoryNode(1L, "Hi, stranger! What do you want?");
+        SimpleStoryNode greeting = new SimpleNodeBuilder(1L, "Hi, stranger! What do you want?").build();
+        simpleStory.addStoryNode(greeting);
         startNode = greeting;
-        SimpleStoryNode lowHp = simpleStory.addStoryNode(2L, "Seem like you are injured. Need a help?");
-        SimpleStoryNode metZombie = simpleStory.addStoryNode(3L, "You see the zombie! What do you want to do?");
-        SimpleStoryNode punchZombieResult = simpleStory.addStoryNode(4L, "I killed the zombie!");
+        SimpleStoryNode lowHp = new SimpleNodeBuilder(2L, "Seem like you are injured. Need a help?").build();
+        simpleStory.addStoryNode(lowHp);
+        SimpleStoryNode metZombie = new SimpleNodeBuilder(3L, "You see the zombie! What do you want to do?").build();
+        simpleStory.addStoryNode(metZombie);
+        SimpleStoryNode punchZombieResult = new SimpleNodeBuilder(4L, "I killed the zombie!").build();
+        simpleStory.addStoryNode(punchZombieResult);
 
         //You can add answers to your scenery nodes
         SimpleStoryNodeAnswer greetingAnswer1 = new SimpleStoryNodeAnswer("Go to basement",
@@ -225,8 +238,6 @@ Start your story
 ````
 The result
 ````
-START MOVE TO LOCATION
-START MOVE TO LOCATION
 Hi, stranger! What do you want?
 
 Choose your answer: 

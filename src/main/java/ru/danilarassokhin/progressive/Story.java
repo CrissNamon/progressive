@@ -1,17 +1,17 @@
 package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.progressive.basic.SimpleStoryNode;
+import ru.danilarassokhin.progressive.basic.*;
+import ru.danilarassokhin.progressive.data.*;
 
 import java.util.Map;
-import java.util.Set;
 
 
 /**
  * Represents game story
  * <br>Story must be Singleton!
- * @param <N> Story nodes type {@link ru.danilarassokhin.progressive.StoryNode}
- * @param <C> Story characters type {@link ru.danilarassokhin.progressive.StoryCharacter}
- * @param <L> Story locations type {@link ru.danilarassokhin.progressive.StoryLocation}
+ * @param <N> Story nodes type {@link StoryNode}
+ * @param <C> Story characters type {@link StoryCharacter}
+ * @param <L> Story locations type {@link StoryLocation}
  */
 public interface Story<N extends StoryNode, C extends StoryCharacter,
         L extends StoryLocation, I extends StoryItem,
@@ -42,9 +42,9 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     boolean addStoryCharacter(C character);
 
     /**
-     * @return Set of registered story nodes
+     * @return Map of registered story nodes as nodeId -> node
      */
-    <V> Map<V, N> getStoryNodes();
+    Map<?, N> getStoryNodes();
 
     /**
      * @param node Node to add
@@ -55,7 +55,7 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     /**
      * @return All characters registered in story
      */
-    <V> Map<V, C> getStoryCharacters();
+    Map<?, C> getStoryCharacters();
 
     /**
      * Adds location to story
@@ -64,14 +64,14 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     boolean addStoryLocation(L location);
 
     /**
-     * @return All locations registered in story
+     * @return Map of locations registered in story as locationId -> location
      */
-    <V> Map<V, L> getStoryLocations();
+    Map<?, L> getStoryLocations();
 
     /**
-     * @return All items registered in story
+     * @return All items registered in story as itemId -> item
      */
-    <V> Map<V, I> getStoryItems();
+    Map<?, I> getStoryItems();
 
     /**
      * Adds item to story
@@ -88,9 +88,9 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     boolean addStoryQuest(Q quest);
 
     /**
-     * @return All quests registered in story
+     * @return All quests registered in story as questId -> quest
      */
-    <V> Map<V, Q> getStoryQuests();
+    Map<?, Q> getStoryQuests();
 
     /**
      * Sets current node in Story to {@code startNode}
@@ -119,5 +119,33 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
      * @return true if {@code item} is registered
      */
     boolean isItemRegistered(I item);
+
+    /**
+     * Searches for character registered in story by id
+     * @param id Id to search
+     * @return Character, null otherwise
+     */
+    C getCharacterById(Long id);
+
+    /**
+     * Searches for quest registered in story by id
+     * @param id Id to search
+     * @return Quest, null otherwise
+     */
+    Q getQuestById(Long id);
+
+    /**
+     * Searches for item registered in story by id
+     * @param id Id to search
+     * @return Item, null otherwise
+     */
+    I getItemById(Long id);
+
+    /**
+     * Searches for location registered in story by id
+     * @param id Id to search
+     * @return Location, null otherwise
+     */
+    L getLocationById(Long id);
 
 }

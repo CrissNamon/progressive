@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.basic;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.danilarassokhin.progressive.StorySaveManager;
+import ru.danilarassokhin.progressive.managers.StorySaveManager;
 
 public class SimpleSaveManager implements StorySaveManager<SimpleStory, String> {
 

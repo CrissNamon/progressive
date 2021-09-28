@@ -1,9 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Story;
-import ru.danilarassokhin.progressive.StoryCondition;
-import ru.danilarassokhin.progressive.StoryObjectExtraAction;
-import ru.danilarassokhin.progressive.StoryState;
+import ru.danilarassokhin.progressive.data.StoryState;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -148,145 +146,24 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
         return getStoryItems().containsKey(item.getId());
     }
 
-    /**
-     * Creates new character and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryCharacter#SimpleStoryCharacter(Long, String, float, SimpleStoryInventory)}
-     */
-    public SimpleStoryCharacter addStoryCharacter(Long id, String name, float health, SimpleStoryLocation startLocation) {
-        SimpleStoryCharacter character = new SimpleStoryCharacter(id, name, health, new SimpleStoryInventory(), startLocation);
-        addStoryCharacter(character);
-        return character;
-    }
-
-    /**
-     * Creates new character and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryCharacter#SimpleStoryCharacter(Long, String, float, SimpleStoryInventory)}
-     */
-    public SimpleStoryCharacter addStoryCharacter(Long id, String name, float health) {
-        SimpleStoryCharacter character = new SimpleStoryCharacter(id, name, health, new SimpleStoryInventory(), null);
-        addStoryCharacter(character);
-        return character;
-    }
-
-    /**
-     * Creates new character and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryCharacter#SimpleStoryCharacter(Long, String, float, SimpleStoryInventory)}
-     */
-    public SimpleStoryCharacter addStoryCharacter(Long id, String name, float health, SimpleStoryItem... items) {
-        SimpleStoryCharacter character = new SimpleStoryCharacter(id, name, health, new SimpleStoryInventory(items), null);
-        addStoryCharacter(character);
-        return character;
-    }
-
-    /**
-     * Creates new character and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryCharacter#SimpleStoryCharacter(Long, String, float, SimpleStoryInventory)}
-     */
-    public SimpleStoryCharacter addStoryCharacter(Long id, String name, float health, SimpleStoryLocation startLocation, SimpleStoryItem... items) {
-        SimpleStoryCharacter character = new SimpleStoryCharacter(id, name, health, new SimpleStoryInventory(items), startLocation);
-        addStoryCharacter(character);
-        return character;
-    }
-
-    /**
-     * Creates new location and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryLocation#SimpleStoryLocation(Long, String)}
-     */
-    public SimpleStoryLocation addStoryLocation(Long id, String name) {
-        SimpleStoryLocation location = new SimpleStoryLocation(id, name);
-        addStoryLocation(location);
-        return location;
-    }
-
-    /**
-     * Creates new location and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryLocation#SimpleStoryLocation(Long, String)}
-     */
-    public SimpleStoryLocation addStoryLocation(Long id, String name, StoryCondition restriction) {
-        SimpleStoryLocation location = new SimpleStoryLocation(id, name, restriction);
-        addStoryLocation(location);
-        return location;
-    }
-
-    /**
-     * Creates new item and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryItem#SimpleStoryItem(Long, String, float)}
-     */
-    public SimpleStoryItem addStoryItem(Long id, String name, float startCount) {
-        SimpleStoryItem item = new SimpleStoryItem(id, name, startCount);
-        addStoryItem(item);
-        return item;
-    }
-
-    /**
-     * Creates new quest and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryQuest#SimpleStoryQuest(Long, String, StoryCondition, StoryObjectExtraAction)}
-     */
-    public SimpleStoryQuest addStoryQuest(Long id, String name, StoryCondition completeCondition, StoryObjectExtraAction<SimpleStoryQuest> onComplete) {
-        SimpleStoryQuest quest = new SimpleStoryQuest(id, name, completeCondition, onComplete);
-        addStoryQuest(quest);
-        return quest;
-    }
-
-    /**
-     * Creates new quest and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryQuest#SimpleStoryQuest(Long, String, StoryCondition, StoryObjectExtraAction)}
-     */
-    public SimpleStoryQuest addStoryQuest(Long id, String name, boolean isUnique, StoryCondition completeCondition,
-                                          StoryObjectExtraAction<SimpleStoryQuest> onComplete) {
-        SimpleStoryQuest quest = new SimpleStoryQuest(id, name, isUnique, completeCondition, onComplete);
-        addStoryQuest(quest);
-        return quest;
-    }
-
-    /**
-     * Creates new node and adds it to Story
-     * <br>
-     * See {@link ru.danilarassokhin.progressive.basic.SimpleStoryNode#SimpleStoryNode(Long, String)}
-     */
-    public SimpleStoryNode addStoryNode(Long id, String content) {
-        SimpleStoryNode node = new SimpleStoryNode(id, content);
-        addStoryNode(node);
-        return node;
-    }
-
-    /**
-     * Searches for character registered in story by id
-     * @param id Id to search
-     * @return Character, null otherwise
-     */
+    @Override
     public SimpleStoryCharacter getCharacterById(Long id) {
         return getStoryCharacters().getOrDefault(id, null);
     }
 
-    /**
-     * Searches for quest registered in story by id
-     * @param id Id to search
-     * @return Quest, null otherwise
-     */
+    @Override
     public SimpleStoryQuest getQuestById(Long id) {
         return getStoryQuests().getOrDefault(id, null);
     }
 
-    /**
-     * Searches for item registered in story by id
-     * @param id Id to search
-     * @return Item, null otherwise
-     */
+    @Override
     public SimpleStoryItem getItemById(Long id) {
         return getStoryItems().getOrDefault(id, null);
     }
 
+    @Override
     public SimpleStoryLocation getLocationById(Long id) {
         return getStoryLocations().getOrDefault(id, null);
     }
+
 }

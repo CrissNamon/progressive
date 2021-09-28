@@ -1,9 +1,9 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.lambdas;
 
 /**
  * Represents some story action
  */
-public interface StoryExtraAction {
+public interface StoryAction {
     /**
      * Makes action
      */
