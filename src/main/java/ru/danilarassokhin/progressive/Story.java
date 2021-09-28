@@ -23,8 +23,6 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Go to next node
-     * <br>
-     * Changes StateManager state as <CURRENT_STATE> -> NODE_TRANSITION_START -> NODE_TRANSITION_END
      * @return next node
      */
     N next();
@@ -42,8 +40,15 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
      */
     boolean addStoryCharacter(C character);
 
+    /**
+     * @return Set of registered story nodes
+     */
     Set<N> getStoryNodes();
 
+    /**
+     * @param node Node to add
+     * @return true if node doesn't exists already
+     */
     boolean addStoryNode(N node);
 
     /**
@@ -74,8 +79,16 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
      */
     boolean addStoryItem(I item);
 
+    /**
+     * Adds quest to story
+     * @param quest Quest to add
+     * @return true if quest doesn't exists already
+     */
     boolean addStoryQuest(Q quest);
 
+    /**
+     * @return All quests registered in story
+     */
     Set<Q> getStoryQuests();
 
     /**

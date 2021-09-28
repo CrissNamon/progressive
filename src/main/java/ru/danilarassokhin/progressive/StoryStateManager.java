@@ -5,9 +5,8 @@ import java.util.List;
 /**
  * Represents story state manager
  * @param <S> State type
- * @param <A> State action type
  */
-public interface StoryStateManager<S extends StoryState, A extends StoryExtraAction> {
+public interface StoryStateManager<S extends StoryState> {
 
     /**
      * @return Current story state
@@ -18,19 +17,20 @@ public interface StoryStateManager<S extends StoryState, A extends StoryExtraAct
      * Sets state in manager
      * @param state New state
      */
-    void setState(S state);
+    <O> void setState(S state, O actionParam);
 
     /**
      * @param state State to search
      * @return List with actions for {@code state}
      */
-    List<A> getActions(S state);
+    List<StoryExtraActionParam> getActions(S state);
 
     /**
      * Adds action to state
      * @param state State to add action
      * @param action Action to add
      */
-    void addAction(S state, A action);
+    <V> void addAction(S state, StoryExtraActionParam<V> action);
+
 
 }

@@ -4,7 +4,7 @@ import ru.danilarassokhin.progressive.StoryItem;
 
 import java.io.Serializable;
 
-public class SimpleStoryItem implements StoryItem<Long>, Serializable {
+public class SimpleStoryItem implements StoryItem<Long>, Serializable, AutoCloseable {
 
     private final Long id;
     private String name;
@@ -44,5 +44,10 @@ public class SimpleStoryItem implements StoryItem<Long>, Serializable {
     @Override
     public void add(float add) {
         this.count += add;
+    }
+
+    @Override
+    public void close() throws ClassCastException {
+
     }
 }

@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryExtraAction;
+import ru.danilarassokhin.progressive.StoryExtraActionParam;
 import ru.danilarassokhin.progressive.StoryState;
 import ru.danilarassokhin.progressive.StoryStateManager;
 
@@ -10,15 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleStoryStateManager implements StoryStateManager<StoryState, StoryExtraAction>, Serializable {
+public class SimpleStoryStateManager implements StoryStateManager<StoryState>, Serializable {
 
     private static SimpleStoryStateManager INSTANCE;
     private StoryState state;
-    private transient Map<StoryState, List<StoryExtraAction>> actions;
+    private transient Map<StoryState, List<StoryExtraActionParam>> actions;
 
     private SimpleStoryStateManager() {
         actions = new HashMap<>();
-        setState(StoryState.INIT);
+        setState(StoryState.UNDEFINED, null);
     }
 
     public static SimpleStoryStateManager getInstance() {
@@ -34,9 +34,9 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState, St
     }
 
     @Override
-    public void setState(StoryState state) {
+    public <O> void setState(StoryState state, O o) {
         if(actions.containsKey(state)) {
-            actions.get(state).forEach(StoryExtraAction::make);
+            actions.get(state).forEach(a -> a.make(o));
         }else{
             actions.put(state, new ArrayList<>());
         }
@@ -44,12 +44,12 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState, St
     }
 
     @Override
-    public List<StoryExtraAction> getActions(StoryState state) {
+    public List<StoryExtraActionParam> getActions(StoryState state) {
         return actions.getOrDefault(state, new ArrayList<>());
     }
 
     @Override
-    public void addAction(StoryState state, StoryExtraAction action) {
+    public <V> void addAction(StoryState state, StoryExtraActionParam<V> action) {
         actions.putIfAbsent(state, new ArrayList<>());
         actions.get(state).add(action);
     }

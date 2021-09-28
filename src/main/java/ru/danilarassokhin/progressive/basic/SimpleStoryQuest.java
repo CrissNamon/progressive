@@ -6,7 +6,7 @@ import ru.danilarassokhin.progressive.StoryQuest;
 
 import java.io.Serializable;
 
-public class SimpleStoryQuest implements StoryQuest<Long>, Serializable {
+public class SimpleStoryQuest implements StoryQuest<Long>, Serializable, AutoCloseable {
 
     private final Long id;
     private String name;
@@ -45,14 +45,14 @@ public class SimpleStoryQuest implements StoryQuest<Long>, Serializable {
 
     @Override
     public boolean isCompleted() {
-        return completeCondition.isTrue();
+        return isCompleted;
     }
 
     @Override
     public boolean complete() {
-        isCompleted = isCompleted();
-        if(isCompleted) {
+        if(completeCondition.isTrue() && !isCompleted) {
             onComplete.make(this);
+            isCompleted = true;
         }
         return isCompleted;
     }
@@ -60,5 +60,10 @@ public class SimpleStoryQuest implements StoryQuest<Long>, Serializable {
     @Override
     public boolean isUnique() {
         return unique;
+    }
+
+    @Override
+    public void close() throws ClassCastException {
+
     }
 }

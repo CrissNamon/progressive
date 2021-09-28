@@ -5,7 +5,7 @@ import ru.danilarassokhin.progressive.StoryLocation;
 
 import java.io.Serializable;
 
-public class SimpleStoryLocation implements StoryLocation<Long>, Serializable {
+public class SimpleStoryLocation implements StoryLocation<Long>, Serializable, AutoCloseable {
 
     private final Long id;
     private transient String name;
@@ -38,13 +38,26 @@ public class SimpleStoryLocation implements StoryLocation<Long>, Serializable {
         this.name = name;
     }
 
+    public void setEntryRestriction(StoryCondition entryRestriction) {
+        this.entryRestriction = entryRestriction;
+    }
+
     @Override
     public boolean canEntry() {
-        return entryRestriction.isTrue();
+        if(entryRestriction != null) {
+            return entryRestriction.isTrue();
+        }else{
+            return true;
+        }
     }
 
     @Override
     public int hashCode() {
         return getId().intValue();
+    }
+
+    @Override
+    public void close() throws ClassCastException {
+
     }
 }

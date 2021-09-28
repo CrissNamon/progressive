@@ -1,84 +1,55 @@
-# Progressive
-Progressive is a simple game library, which lets you to create interactive fiction games.
-<br>
-Progressive have:
-+ Story
-    + Represents game story
-    + Controls game nodes, items, characters and etc
-+ StoryStateManager
-    + Represents game manager
-    + Manager can have states
-    + Manager can execute action on state change
-+ StoryNode
-    + Represents game story node
-    + Node can have content, text for example
-+ StoryNodeAnswer
-    + Represents game story node answer
-    + Answers can have content, text for example
-    + Answers can have actions to do on... answer
-+ StoryLocation
-    + Represents game story location
-    + Location can have a name and entering condition
-+ StoryCharacter
-    + Represents game story character
-    + Story character can have a name, health, items and quests
-    + They can also have some actions like punch or magic for example
-+ StoryInventory
-    + Represents game story character inventory
-+ StoryItem
-    + Represents game story item
-    + Item can have a name and count
-+ StoryQuest
-    + Represents game story quest
-    + Quest can have a name, complete condition and on completion action
-    + Quest also can be one-time or reusable
-+ StorySaveManager
-    + You can save and load your game's instance as you wish
-    + SimpleSaveManager contains example with json saves 
+package ru.danilarassokhin.progressive;
 
-Look how is simple to create games with Progressive below, 
-or see `SimpleAdventure` class for example
-<br>
-<br>
-First you need to create... a story!
-````java 
-public SimpleAdventure() {
-    //Story begins with... a story actually
-    simpleStory = SimpleStory.getInstance();
-    //and with a state management
-    simpleStoryStateManager = SimpleStoryStateManager.getInstance();
-    //wanna save your game?
-    simpleSaveManager = SimpleSaveManager.getInstance();
-}
-````
-Then you can add some actions to run on game states
-````java
-//And states can do some actions on change
-simpleStoryStateManager.<SimpleStory>addAction(StoryState.INIT, (story) -> {
-//You can do some stuff after story initialization
-//It will be called one time on Story instance creation
-});
-//Actions have parameters with some cool stuff!
-simpleStoryStateManager.addAction(StoryState.NODE_TRANSITION_START, (oldNode) -> System.out.println("Node transition start"));
-//You can specify action param type...
-simpleStoryStateManager.<SimpleStoryNode>addAction(StoryState.NODE_TRANSITION_END, (newNode) -> System.out.println("Node transition end"));
-simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_START, (oldLocation) -> System.out.println("START MOVE TO LOCATION"));
-simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_COMPLETE, (newLocation) -> {
-    //...or get an Object by default
-    //You can try-with-resource (yup, some types are AutoClosable)
-    try(SimpleStoryLocation l = (SimpleStoryLocation) newLocation) {
-        System.out.println("MOVE TO LOCATION " + l.getName() + " complete");
-    }catch (Exception e) {
-        System.out.println("NOT AN ITEM!");
+import ru.danilarassokhin.progressive.basic.*;
+
+import java.util.Scanner;
+
+public class SimpleAdventure {
+
+    private SimpleStory simpleStory;
+    private SimpleStoryStateManager simpleStoryStateManager;
+    private SimpleSaveManager simpleSaveManager;
+
+    private SimpleStoryNode startNode;
+    private SimpleStoryCharacter mainCharacter;
+    private SimpleStoryCharacter enemyCharacter;
+
+    public SimpleAdventure() {
+        //Story begins with... a story actually
+        simpleStory = SimpleStory.getInstance();
+        //and with a state management
+        simpleStoryStateManager = SimpleStoryStateManager.getInstance();
+        //wanna save your game?
+        simpleSaveManager = SimpleSaveManager.getInstance();
     }
-    //...or you can use THE OBJECT CASTER
-    SimpleObjectCaster simpleObjectCaster = new SimpleObjectCaster();
-    //cast will return casted object and make action, you had specified!
-    SimpleStoryLocation castedLocation = simpleObjectCaster.cast(newLocation, SimpleStoryLocation.class, (l) -> System.out.println("MOVE TO LOCATION " + l.getName() + " complete"));
-});
-````
-Then fill your game with content
-````java
+
+    public void addStates() {
+        //And states can do some actions on change
+        simpleStoryStateManager.<SimpleStory>addAction(StoryState.INIT, (story) -> {
+            //You can do some stuff after story initialization
+            //It will be called one time on Story instance creation
+        });
+        //Actions have parameters with some cool stuff!
+        simpleStoryStateManager.addAction(StoryState.NODE_TRANSITION_START, (oldNode) -> System.out.println("Node transition start"));
+        //You can specify action param type...
+        simpleStoryStateManager.<SimpleStoryNode>addAction(StoryState.NODE_TRANSITION_END, (newNode) -> System.out.println("Node transition end"));
+        simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_START, (oldLocation) -> System.out.println("START MOVE TO LOCATION"));
+        simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_COMPLETE, (newLocation) -> {
+            //...or get an Object by default
+            //You can try-with-resource (yup, some types are AutoClosable)
+            try(SimpleStoryLocation l = (SimpleStoryLocation) newLocation) {
+                System.out.println("MOVE TO LOCATION " + l.getName() + " complete");
+            }catch (Exception e) {
+                System.out.println("NOT AN ITEM!");
+            }
+            //...or you can use THE OBJECT CASTER
+            SimpleObjectCaster simpleObjectCaster = new SimpleObjectCaster();
+            //cast will return casted object and make action, you had specified!
+            SimpleStoryLocation castedLocation = simpleObjectCaster.cast(newLocation, SimpleStoryLocation.class, (l) -> System.out.println("MOVE TO LOCATION " + l.getName() + " complete"));
+        });
+    }
+
+
     public void addLocations() {
         //Add start location for your hero
         SimpleStoryLocation startLocation = simpleStory.addStoryLocation(1L, "Castle");
@@ -87,6 +58,7 @@ Then fill your game with content
         //You can add entry restrictions to your location
         basement.setEntryRestriction(() -> simpleStory.getCharacterById(1L).getHealth() > 80);
     }
+
     public void addItems() {
         //Add some items, why not?
         SimpleStoryItem sword = simpleStory.addStoryItem(1L, "Sword", 1);
@@ -126,10 +98,8 @@ Then fill your game with content
                 simpleStory.getLocationById(2L)
         );
     }
-````
-Add game scenery
-````java
-public void addNodes() {
+
+    public void addNodes() {
         //And now scenery...
         //Greet your hero
         SimpleStoryNode greeting = simpleStory.addStoryNode(1L, "Hi, stranger! What do you want?");
@@ -177,10 +147,8 @@ public void addNodes() {
                 });
         metZombie.addAnswer(metZombiePunch);
     }
-````
-Start your story
-````java
-   public void startStory() {
+
+    public void startStory() {
         Scanner sc = new Scanner(System.in);
 
         addStates();
@@ -222,46 +190,5 @@ Start your story
             current = simpleStory.next();
         }
     }
-````
-The result
-````
-START MOVE TO LOCATION
-START MOVE TO LOCATION
-Hi, stranger! What do you want?
 
-Choose your answer: 
-1. Go to basement
-1
-START MOVE TO LOCATION
-You have 80.0HP. Not enough for basement
-Node transition start
-Node transition end
-Seem like you are injured. Need a help?
-
-Choose your answer: 
-1. Yeah
-2. No
-1
-Done! You now have 100.0HP
-Node transition start
-Node transition end
-Hi, stranger! What do you want?
-
-Choose your answer: 
-1. Go to basement
-1
-START MOVE TO LOCATION
-Node transition start
-MOVE TO LOCATION Basement complete
-MOVE TO LOCATION Basement complete
-QUEST COMPLETED: Enter basement
-Node transition end
-You see the zombie! What do you want to do?
-
-Choose your answer: 
-1. Punch zombie
-1
-Node transition start
-Node transition end
-I killed the zombie!
-````
+}

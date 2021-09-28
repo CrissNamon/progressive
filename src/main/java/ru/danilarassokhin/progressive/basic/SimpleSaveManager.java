@@ -30,6 +30,10 @@ public class SimpleSaveManager implements StorySaveManager<SimpleStory, String> 
         return gson.fromJson(save, SimpleStory.class);
     }
 
+    /**
+     * Writes data from {@coded saved} to current Story instance
+     * @param saved Saved story
+     */
     public void toInstance(SimpleStory saved) {
         for(SimpleStoryNode find : SimpleStory.getInstance().getStoryNodes()) {
             if(find.getId().equals(saved.getCurrentNode().getId())) {

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeAnswer>, Serializable {
+public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeAnswer>, Serializable, AutoCloseable {
 
     private final Long id;
     private final String text;
@@ -74,5 +74,10 @@ public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeA
 
     public String getText() {
         return text;
+    }
+
+    @Override
+    public void close() throws ClassCastException {
+
     }
 }
