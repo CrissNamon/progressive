@@ -1,5 +1,6 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.main;
 
+import ru.danilarassokhin.progressive.StoryState;
 import ru.danilarassokhin.progressive.basic.*;
 
 import java.util.Scanner;
