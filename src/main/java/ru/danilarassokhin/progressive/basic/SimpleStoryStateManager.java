@@ -1,8 +1,8 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryExtraActionParam;
-import ru.danilarassokhin.progressive.StoryState;
-import ru.danilarassokhin.progressive.StoryStateManager;
+import ru.danilarassokhin.progressive.lambdas.StoryActionParam;
+import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.managers.StoryStateManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState>, S
 
     private static SimpleStoryStateManager INSTANCE;
     private StoryState state;
-    private transient Map<StoryState, List<StoryExtraActionParam>> actions;
+    private transient Map<StoryState, List<StoryActionParam>> actions;
 
     private SimpleStoryStateManager() {
         actions = new HashMap<>();
@@ -44,12 +44,12 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState>, S
     }
 
     @Override
-    public List<StoryExtraActionParam> getActions(StoryState state) {
+    public List<StoryActionParam> getActions(StoryState state) {
         return actions.getOrDefault(state, new ArrayList<>());
     }
 
     @Override
-    public <V> void addAction(StoryState state, StoryExtraActionParam<V> action) {
+    public <V> void addAction(StoryState state, StoryActionParam<V> action) {
         actions.putIfAbsent(state, new ArrayList<>());
         actions.get(state).add(action);
     }

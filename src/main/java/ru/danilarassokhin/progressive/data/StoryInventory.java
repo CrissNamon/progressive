@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.data;
 
 import java.util.Set;
 

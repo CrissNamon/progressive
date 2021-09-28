@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.basic;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.danilarassokhin.progressive.StorySaveManager;
+import ru.danilarassokhin.progressive.managers.StorySaveManager;
 
 public class SimpleSaveManager implements StorySaveManager<SimpleStory, String> {
 
@@ -35,13 +35,13 @@ public class SimpleSaveManager implements StorySaveManager<SimpleStory, String> 
      * @param saved Saved story
      */
     public void toInstance(SimpleStory saved) {
-        for(SimpleStoryNode find : SimpleStory.getInstance().getStoryNodes()) {
+        for(SimpleStoryNode find : SimpleStory.getInstance().getStoryNodes().values()) {
             if(find.getId().equals(saved.getCurrentNode().getId())) {
                 SimpleStory.getInstance().setNext(find);
                 break;
             }
         }
-        for(SimpleStoryCharacter character : saved.getStoryCharacters()) {
+        for(SimpleStoryCharacter character : saved.getStoryCharacters().values()) {
             SimpleStoryCharacter exists = SimpleStory.getInstance().getCharacterById(character.getId());
             if(exists != null) {
                 exists.setHealth(character.getHealth());

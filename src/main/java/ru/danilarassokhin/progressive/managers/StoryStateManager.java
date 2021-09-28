@@ -1,4 +1,7 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.managers;
+
+import ru.danilarassokhin.progressive.lambdas.StoryActionParam;
+import ru.danilarassokhin.progressive.data.StoryState;
 
 import java.util.List;
 
@@ -23,14 +26,14 @@ public interface StoryStateManager<S extends StoryState> {
      * @param state State to search
      * @return List with actions for {@code state}
      */
-    List<StoryExtraActionParam> getActions(S state);
+    List<StoryActionParam> getActions(S state);
 
     /**
      * Adds action to state
      * @param state State to add action
      * @param action Action to add
      */
-    <V> void addAction(S state, StoryExtraActionParam<V> action);
+    <V> void addAction(S state, StoryActionParam<V> action);
 
 
 }

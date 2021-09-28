@@ -1,16 +1,16 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryExtraAction;
-import ru.danilarassokhin.progressive.StoryNodeAnswer;
+import ru.danilarassokhin.progressive.lambdas.StoryAction;
+import ru.danilarassokhin.progressive.data.StoryNodeAnswer;
 
 import java.io.Serializable;
 
 public class SimpleStoryNodeAnswer implements StoryNodeAnswer<String>, Serializable {
 
     private String text;
-    private StoryExtraAction onAnswer;
+    private StoryAction onAnswer;
 
-    public SimpleStoryNodeAnswer(String text, StoryExtraAction onAnswer) {
+    public SimpleStoryNodeAnswer(String text, StoryAction onAnswer) {
         this.text = text;
         this.onAnswer = onAnswer;
     }

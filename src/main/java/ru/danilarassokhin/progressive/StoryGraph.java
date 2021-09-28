@@ -1,5 +1,7 @@
 package ru.danilarassokhin.progressive;
 
+import ru.danilarassokhin.progressive.data.StoryNode;
+
 import java.util.List;
 import java.util.Map;
 

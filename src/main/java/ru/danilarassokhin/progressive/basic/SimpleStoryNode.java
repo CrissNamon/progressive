@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryNode;
+import ru.danilarassokhin.progressive.data.StoryNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,25 +11,31 @@ import java.util.List;
 public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeAnswer>, Serializable, AutoCloseable {
 
     private final Long id;
-    private final String text;
+    private String text;
     private transient final List<SimpleStoryNodeAnswer> answers;
 
-    public SimpleStoryNode(Long id, String text, List<SimpleStoryNodeAnswer> answers) {
+    protected SimpleStoryNode(Long id, String text, List<SimpleStoryNodeAnswer> answers) {
         this.id = id;
         this.text = text;
         this.answers = answers;
     }
 
-    public SimpleStoryNode(Long id, String text, SimpleStoryNodeAnswer... answers) {
+    protected SimpleStoryNode(Long id, String text, SimpleStoryNodeAnswer... answers) {
         this.id = id;
         this.text = text;
         this.answers = new ArrayList<>();
         addAnswer(answers);
     }
 
-    public SimpleStoryNode(Long id, String text) {
+    protected SimpleStoryNode(Long id, String text) {
         this.id = id;
         this.text = text;
+        this.answers = new ArrayList<>();
+    }
+
+    protected SimpleStoryNode(Long id) {
+        this.id = id;
+        this.text = "";
         this.answers = new ArrayList<>();
     }
 
@@ -65,6 +71,11 @@ public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeA
         }else{
             return null;
         }
+    }
+
+    @Override
+    public void setContent(String content) {
+        this.text = content;
     }
 
     @Override

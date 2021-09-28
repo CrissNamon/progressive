@@ -1,4 +1,6 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.data;
+
+import ru.danilarassokhin.progressive.lambdas.StoryAction;
 
 import java.util.Set;
 
@@ -77,7 +79,7 @@ public interface StoryCharacter<I, N extends StoryInventory,
      * @param onError called if location not changed
      * @return true if location has been changed
      */
-    boolean setLocation(L location, StoryExtraAction onSuccess, StoryExtraAction onError);
+    boolean setLocation(L location, StoryAction onSuccess, StoryAction onError);
 
     /**
      * Adds item to character
@@ -91,7 +93,7 @@ public interface StoryCharacter<I, N extends StoryInventory,
      * @param actionName Action name to get
      * @return Action or null
      */
-    StoryExtraAction action(AN actionName);
+    StoryAction action(AN actionName);
 
     /**
      * Adds action to character
@@ -99,6 +101,6 @@ public interface StoryCharacter<I, N extends StoryInventory,
      * @param action Action to add
      * @return true if action doesn't exists already
      */
-    boolean addAction(AN actionName, StoryExtraAction action);
+    boolean addAction(AN actionName, StoryAction action);
 
 }

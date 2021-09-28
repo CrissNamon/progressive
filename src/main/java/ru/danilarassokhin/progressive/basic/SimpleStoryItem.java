@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryItem;
+import ru.danilarassokhin.progressive.data.StoryItem;
 
 import java.io.Serializable;
 
@@ -14,6 +14,11 @@ public class SimpleStoryItem implements StoryItem<Long>, Serializable, AutoClose
         this.id = id;
         this.name = name;
         this.count = startCount;
+    }
+
+    protected SimpleStoryItem(Long id) {
+        this.id = id;
+        this.name = "";
     }
 
     @Override

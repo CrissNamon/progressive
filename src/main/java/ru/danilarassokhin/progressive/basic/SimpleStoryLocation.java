@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.StoryCondition;
-import ru.danilarassokhin.progressive.StoryLocation;
+import ru.danilarassokhin.progressive.lambdas.StoryCondition;
+import ru.danilarassokhin.progressive.data.StoryLocation;
 
 import java.io.Serializable;
 
@@ -21,6 +21,12 @@ public class SimpleStoryLocation implements StoryLocation<Long>, Serializable, A
         this.id = id;
         this.name = name;
         this.entryRestriction = entryRestriction;
+    }
+
+    protected SimpleStoryLocation(Long id) {
+        this.id = id;
+        this.name = "";
+        this.entryRestriction = () -> true;
     }
 
     @Override

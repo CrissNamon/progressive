@@ -1,6 +1,4 @@
-package ru.danilarassokhin;
-
-import ru.danilarassokhin.progressive.SimpleAdventure;
+package ru.danilarassokhin.main;
 
 public class Main {
 
