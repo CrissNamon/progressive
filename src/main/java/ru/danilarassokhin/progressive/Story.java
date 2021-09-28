@@ -2,6 +2,7 @@ package ru.danilarassokhin.progressive;
 
 import ru.danilarassokhin.progressive.basic.SimpleStoryNode;
 
+import java.util.Map;
 import java.util.Set;
 
 
@@ -43,7 +44,7 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     /**
      * @return Set of registered story nodes
      */
-    Set<N> getStoryNodes();
+    <V> Map<V, N> getStoryNodes();
 
     /**
      * @param node Node to add
@@ -54,7 +55,7 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     /**
      * @return All characters registered in story
      */
-    Set<C> getStoryCharacters();
+    <V> Map<V, C> getStoryCharacters();
 
     /**
      * Adds location to story
@@ -65,12 +66,12 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     /**
      * @return All locations registered in story
      */
-    Set<L> getStoryLocations();
+    <V> Map<V, L> getStoryLocations();
 
     /**
      * @return All items registered in story
      */
-    Set<I> getStoryItems();
+    <V> Map<V, I> getStoryItems();
 
     /**
      * Adds item to story
@@ -89,7 +90,7 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
     /**
      * @return All quests registered in story
      */
-    Set<Q> getStoryQuests();
+    <V> Map<V, Q> getStoryQuests();
 
     /**
      * Sets current node in Story to {@code startNode}

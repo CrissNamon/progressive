@@ -6,28 +6,28 @@ import ru.danilarassokhin.progressive.StoryObjectExtraAction;
 import ru.danilarassokhin.progressive.StoryState;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
         SimpleStoryLocation, SimpleStoryItem, SimpleStoryQuest>, Serializable {
 
     private transient static SimpleStory INSTANCE;
 
-    private final Set<SimpleStoryCharacter> storyCharacters;
-    private transient final Set<SimpleStoryLocation> storyLocations;
-    private transient final Set<SimpleStoryItem> storyItems;
-    private transient final Set<SimpleStoryQuest> storyQuests;
-    private transient final Set<SimpleStoryNode> storyNodes;
+    private final Map<Long, SimpleStoryCharacter> storyCharacters;
+    private transient final Map<Long, SimpleStoryLocation> storyLocations;
+    private transient final Map<Long, SimpleStoryItem> storyItems;
+    private transient final Map<Long, SimpleStoryQuest> storyQuests;
+    private transient final Map<Long, SimpleStoryNode> storyNodes;
     private SimpleStoryNode currentNode;
     private SimpleStoryStateManager stateManager;
 
     private SimpleStory() {
-        this.storyCharacters = new HashSet<>();
-        this.storyLocations = new HashSet<>();
-        this.storyItems = new HashSet<>();
-        this.storyQuests = new HashSet<>();
-        this.storyNodes = new HashSet<>();
+        this.storyCharacters = new HashMap<>();
+        this.storyLocations = new HashMap<>();
+        this.storyItems = new HashMap<>();
+        this.storyQuests = new HashMap<>();
+        this.storyNodes = new HashMap<>();
         this.stateManager = SimpleStoryStateManager.getInstance();
         stateManager.setState(StoryState.INIT, this);
     }
@@ -72,7 +72,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
      */
     @Override
     public SimpleStoryNode next() {
-        getStoryCharacters()
+        getStoryCharacters().values()
                 .forEach(character -> {
                     character.getQuests()
                             .forEach(SimpleStoryQuest::complete);
@@ -85,67 +85,67 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
 
     @Override
     public boolean addStoryCharacter(SimpleStoryCharacter character) {
-        return storyCharacters.add(character);
+        return storyCharacters.putIfAbsent(character.getId(), character) == null;
     }
 
     @Override
-    public Set<SimpleStoryNode> getStoryNodes() {
+    public Map<Long, SimpleStoryNode> getStoryNodes() {
         return storyNodes;
     }
 
     @Override
     public boolean addStoryNode(SimpleStoryNode node) {
-        return storyNodes.add(node);
+        return storyNodes.putIfAbsent(node.getId(), node) == null;
     }
 
     @Override
-    public Set<SimpleStoryCharacter> getStoryCharacters() {
+    public Map<Long, SimpleStoryCharacter> getStoryCharacters() {
         return storyCharacters;
     }
 
     @Override
     public boolean addStoryLocation(SimpleStoryLocation location) {
-        return storyLocations.add(location);
+        return storyLocations.putIfAbsent(location.getId(), location) == null;
     }
 
     @Override
-    public Set<SimpleStoryLocation> getStoryLocations() {
+    public Map<Long, SimpleStoryLocation> getStoryLocations() {
         return storyLocations;
     }
 
     @Override
-    public Set<SimpleStoryItem> getStoryItems() {
+    public Map<Long, SimpleStoryItem> getStoryItems() {
         return storyItems;
     }
 
     @Override
     public boolean addStoryItem(SimpleStoryItem item) {
-        return storyItems.add(item);
+        return storyItems.putIfAbsent(item.getId(), item) == null;
     }
 
     @Override
     public boolean addStoryQuest(SimpleStoryQuest quest) {
-        return storyQuests.add(quest);
+        return storyQuests.putIfAbsent(quest.getId(), quest) == null;
     }
 
     @Override
-    public Set<SimpleStoryQuest> getStoryQuests() {
+    public Map<Long, SimpleStoryQuest> getStoryQuests() {
         return storyQuests;
     }
 
     @Override
     public boolean isCharacterRegistered(SimpleStoryCharacter character) {
-        return getStoryCharacters().contains(character);
+        return getStoryCharacters().containsKey(character.getId());
     }
 
     @Override
     public boolean isLocationRegistered(SimpleStoryLocation location) {
-        return getStoryLocations().contains(location);
+        return getStoryLocations().containsKey(location.getId());
     }
 
     @Override
     public boolean isItemRegistered(SimpleStoryItem item) {
-        return getStoryItems().contains(item);
+        return getStoryItems().containsKey(item.getId());
     }
 
     /**
@@ -265,7 +265,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
      * @return Character, null otherwise
      */
     public SimpleStoryCharacter getCharacterById(Long id) {
-        return getStoryCharacters().stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);
+        return getStoryCharacters().getOrDefault(id, null);
     }
 
     /**
@@ -274,7 +274,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
      * @return Quest, null otherwise
      */
     public SimpleStoryQuest getQuestById(Long id) {
-        return getStoryQuests().stream().filter(q -> q.getId().equals(id)).findFirst().orElse(null);
+        return getStoryQuests().getOrDefault(id, null);
     }
 
     /**
@@ -283,10 +283,10 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
      * @return Item, null otherwise
      */
     public SimpleStoryItem getItemById(Long id) {
-        return getStoryItems().stream().filter(i -> i.getId().equals(id)).findFirst().orElse(null);
+        return getStoryItems().getOrDefault(id, null);
     }
 
     public SimpleStoryLocation getLocationById(Long id) {
-        return getStoryLocations().stream().filter(l -> l.getId().equals(id)).findFirst().orElse(null);
+        return getStoryLocations().getOrDefault(id, null);
     }
 }
