@@ -1,11 +1,9 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import ru.danilarassokhin.tengine.Story;
-import ru.danilarassokhin.tengine.StoryCondition;
-import ru.danilarassokhin.tengine.StoryObjectExtraAction;
-import ru.danilarassokhin.tengine.StoryState;
+import ru.danilarassokhin.progressive.Story;
+import ru.danilarassokhin.progressive.StoryCondition;
+import ru.danilarassokhin.progressive.StoryObjectExtraAction;
+import ru.danilarassokhin.progressive.StoryState;
 
 import java.io.Serializable;
 import java.util.HashSet;

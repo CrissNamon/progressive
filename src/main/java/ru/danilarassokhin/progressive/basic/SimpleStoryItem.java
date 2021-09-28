@@ -1,6 +1,6 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryItem;
+import ru.danilarassokhin.progressive.StoryItem;
 
 import java.io.Serializable;
 

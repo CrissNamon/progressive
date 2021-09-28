@@ -1,10 +1,9 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryExtraAction;
-import ru.danilarassokhin.tengine.StoryCharacter;
-import ru.danilarassokhin.tengine.StoryState;
+import ru.danilarassokhin.progressive.StoryExtraAction;
+import ru.danilarassokhin.progressive.StoryCharacter;
+import ru.danilarassokhin.progressive.StoryState;
 
-import java.beans.Transient;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;

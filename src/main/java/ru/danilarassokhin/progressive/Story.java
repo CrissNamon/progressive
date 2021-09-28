@@ -1,6 +1,6 @@
-package ru.danilarassokhin.tengine;
+package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.tengine.basic.SimpleStoryNode;
+import ru.danilarassokhin.progressive.basic.SimpleStoryNode;
 
 import java.util.Set;
 
@@ -8,9 +8,9 @@ import java.util.Set;
 /**
  * Represents game story
  * <br>Story must be Singleton!
- * @param <N> Story nodes type {@link ru.danilarassokhin.tengine.StoryNode}
- * @param <C> Story characters type {@link ru.danilarassokhin.tengine.StoryCharacter}
- * @param <L> Story locations type {@link ru.danilarassokhin.tengine.StoryLocation}
+ * @param <N> Story nodes type {@link ru.danilarassokhin.progressive.StoryNode}
+ * @param <C> Story characters type {@link ru.danilarassokhin.progressive.StoryCharacter}
+ * @param <L> Story locations type {@link ru.danilarassokhin.progressive.StoryLocation}
  */
 public interface Story<N extends StoryNode, C extends StoryCharacter,
         L extends StoryLocation, I extends StoryItem,

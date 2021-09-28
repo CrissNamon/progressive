@@ -1,6 +1,6 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryInventory;
+import ru.danilarassokhin.progressive.StoryInventory;
 
 import java.util.*;
 

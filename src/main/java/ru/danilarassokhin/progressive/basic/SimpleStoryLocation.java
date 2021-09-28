@@ -1,7 +1,7 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryCondition;
-import ru.danilarassokhin.tengine.StoryLocation;
+import ru.danilarassokhin.progressive.StoryCondition;
+import ru.danilarassokhin.progressive.StoryLocation;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryGraph;
+import ru.danilarassokhin.progressive.StoryGraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;

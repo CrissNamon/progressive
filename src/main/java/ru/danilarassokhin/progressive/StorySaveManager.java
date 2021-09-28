@@ -1,4 +1,4 @@
-package ru.danilarassokhin.tengine;
+package ru.danilarassokhin.progressive;
 
 public interface StorySaveManager<S extends Story, T> {
 

@@ -1,8 +1,8 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryCondition;
-import ru.danilarassokhin.tengine.StoryObjectExtraAction;
-import ru.danilarassokhin.tengine.StoryQuest;
+import ru.danilarassokhin.progressive.StoryCondition;
+import ru.danilarassokhin.progressive.StoryObjectExtraAction;
+import ru.danilarassokhin.progressive.StoryQuest;
 
 import java.io.Serializable;
 

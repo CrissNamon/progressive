@@ -1,8 +1,8 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryExtraAction;
-import ru.danilarassokhin.tengine.StoryState;
-import ru.danilarassokhin.tengine.StoryStateManager;
+import ru.danilarassokhin.progressive.StoryExtraAction;
+import ru.danilarassokhin.progressive.StoryState;
+import ru.danilarassokhin.progressive.StoryStateManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;

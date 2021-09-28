@@ -1,4 +1,4 @@
-package ru.danilarassokhin.tengine;
+package ru.danilarassokhin.progressive;
 
 import java.util.Set;
 

@@ -1,7 +1,7 @@
-package ru.danilarassokhin.tengine.basic;
+package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.tengine.StoryExtraAction;
-import ru.danilarassokhin.tengine.StoryNodeAnswer;
+import ru.danilarassokhin.progressive.StoryExtraAction;
+import ru.danilarassokhin.progressive.StoryNodeAnswer;
 
 import java.io.Serializable;
 

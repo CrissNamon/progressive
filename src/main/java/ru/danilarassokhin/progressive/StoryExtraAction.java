@@ -1,4 +1,4 @@
-package ru.danilarassokhin.tengine;
+package ru.danilarassokhin.progressive;
 
 /**
  * Represents some story action

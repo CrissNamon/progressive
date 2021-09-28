@@ -1,7 +1,7 @@
 package ru.danilarassokhin;
 
-import ru.danilarassokhin.tengine.StoryState;
-import ru.danilarassokhin.tengine.basic.*;
+import ru.danilarassokhin.progressive.StoryState;
+import ru.danilarassokhin.progressive.basic.*;
 
 import java.util.Scanner;
 
