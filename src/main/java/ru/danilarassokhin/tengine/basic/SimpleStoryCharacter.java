@@ -4,6 +4,8 @@ import ru.danilarassokhin.tengine.StoryExtraAction;
 import ru.danilarassokhin.tengine.StoryCharacter;
 import ru.danilarassokhin.tengine.StoryState;
 
+import java.beans.Transient;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,15 +13,15 @@ import java.util.Set;
 
 public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInventory,
         SimpleStoryLocation, SimpleStoryItem,
-        SimpleStoryQuest, String> {
+        SimpleStoryQuest, String>, Serializable {
 
     private final Long id;
     private String name;
     private float health;
     private final SimpleStoryInventory inventory;
     private SimpleStoryLocation location;
-    private final Set<SimpleStoryQuest> quests;
-    private final Map<String, StoryExtraAction> actions;
+    private transient final Set<SimpleStoryQuest> quests;
+    private transient final Map<String, StoryExtraAction> actions;
 
     protected SimpleStoryCharacter(Long id, String name, float health, SimpleStoryInventory inventory,
                                 SimpleStoryLocation location) {

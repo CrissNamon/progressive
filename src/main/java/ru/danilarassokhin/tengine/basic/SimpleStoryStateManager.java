@@ -4,16 +4,17 @@ import ru.danilarassokhin.tengine.StoryExtraAction;
 import ru.danilarassokhin.tengine.StoryState;
 import ru.danilarassokhin.tengine.StoryStateManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleStoryStateManager implements StoryStateManager<StoryState, StoryExtraAction> {
+public class SimpleStoryStateManager implements StoryStateManager<StoryState, StoryExtraAction>, Serializable {
 
     private static SimpleStoryStateManager INSTANCE;
     private StoryState state;
-    private Map<StoryState, List<StoryExtraAction>> actions;
+    private transient Map<StoryState, List<StoryExtraAction>> actions;
 
     private SimpleStoryStateManager() {
         actions = new HashMap<>();

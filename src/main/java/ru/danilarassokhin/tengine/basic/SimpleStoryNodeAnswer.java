@@ -3,7 +3,9 @@ package ru.danilarassokhin.tengine.basic;
 import ru.danilarassokhin.tengine.StoryExtraAction;
 import ru.danilarassokhin.tengine.StoryNodeAnswer;
 
-public class SimpleStoryNodeAnswer implements StoryNodeAnswer<String> {
+import java.io.Serializable;
+
+public class SimpleStoryNodeAnswer implements StoryNodeAnswer<String>, Serializable {
 
     private String text;
     private StoryExtraAction onAnswer;

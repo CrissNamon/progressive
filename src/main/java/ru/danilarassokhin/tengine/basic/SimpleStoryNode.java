@@ -2,15 +2,17 @@ package ru.danilarassokhin.tengine.basic;
 
 import ru.danilarassokhin.tengine.StoryNode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeAnswer> {
+
+public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeAnswer>, Serializable {
 
     private final Long id;
     private final String text;
-    private final List<SimpleStoryNodeAnswer> answers;
+    private transient final List<SimpleStoryNodeAnswer> answers;
 
     public SimpleStoryNode(Long id, String text, List<SimpleStoryNodeAnswer> answers) {
         this.id = id;
@@ -68,5 +70,9 @@ public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeA
     @Override
     public int hashCode() {
         return getId().intValue();
+    }
+
+    public String getText() {
+        return text;
     }
 }

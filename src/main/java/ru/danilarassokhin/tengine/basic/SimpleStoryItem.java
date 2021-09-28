@@ -2,7 +2,9 @@ package ru.danilarassokhin.tengine.basic;
 
 import ru.danilarassokhin.tengine.StoryItem;
 
-public class SimpleStoryItem implements StoryItem<Long> {
+import java.io.Serializable;
+
+public class SimpleStoryItem implements StoryItem<Long>, Serializable {
 
     private final Long id;
     private String name;

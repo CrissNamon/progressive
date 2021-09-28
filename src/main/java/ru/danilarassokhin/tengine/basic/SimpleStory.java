@@ -1,30 +1,31 @@
 package ru.danilarassokhin.tengine.basic;
 
-import ru.danilarassokhin.tengine.*;
+import ru.danilarassokhin.tengine.Story;
+import ru.danilarassokhin.tengine.StoryCondition;
+import ru.danilarassokhin.tengine.StoryObjectExtraAction;
+import ru.danilarassokhin.tengine.StoryState;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
-        SimpleStoryLocation, SimpleStoryItem, SimpleStoryQuest> {
+        SimpleStoryLocation, SimpleStoryItem, SimpleStoryQuest>, Serializable {
 
-    private static SimpleStory INSTANCE;
+    private transient static SimpleStory INSTANCE;
 
-    private final SimpleStoryGraph storyGraph;
     private final Set<SimpleStoryCharacter> storyCharacters;
-    private final Set<SimpleStoryLocation> storyLocations;
-    private final Set<SimpleStoryItem> storyItems;
-    private final Set<SimpleStoryQuest> storyQuests;
+    private transient final Set<SimpleStoryLocation> storyLocations;
+    private transient final Set<SimpleStoryItem> storyItems;
+    private transient final Set<SimpleStoryQuest> storyQuests;
     private SimpleStoryNode currentNode;
     private SimpleStoryStateManager stateManager;
 
     private SimpleStory() {
-        this.storyGraph = new SimpleStoryGraph();
         this.storyCharacters = new HashSet<>();
         this.storyLocations = new HashSet<>();
         this.storyItems = new HashSet<>();
         this.storyQuests = new HashSet<>();
-        this.currentNode = storyGraph.first();
         this.stateManager = SimpleStoryStateManager.getInstance();
     }
 

@@ -3,11 +3,13 @@ package ru.danilarassokhin.tengine.basic;
 import ru.danilarassokhin.tengine.StoryCondition;
 import ru.danilarassokhin.tengine.StoryLocation;
 
-public class SimpleStoryLocation implements StoryLocation<Long> {
+import java.io.Serializable;
+
+public class SimpleStoryLocation implements StoryLocation<Long>, Serializable {
 
     private final Long id;
-    private String name;
-    private StoryCondition entryRestriction;
+    private transient String name;
+    private transient StoryCondition entryRestriction;
 
     protected SimpleStoryLocation(Long id, String name) {
         this.id = id;

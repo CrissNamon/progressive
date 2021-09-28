@@ -4,7 +4,9 @@ import ru.danilarassokhin.tengine.StoryCondition;
 import ru.danilarassokhin.tengine.StoryObjectExtraAction;
 import ru.danilarassokhin.tengine.StoryQuest;
 
-public class SimpleStoryQuest implements StoryQuest<Long> {
+import java.io.Serializable;
+
+public class SimpleStoryQuest implements StoryQuest<Long>, Serializable {
 
     private final Long id;
     private String name;
