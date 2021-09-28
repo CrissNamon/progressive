@@ -42,6 +42,10 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
      */
     boolean addStoryCharacter(C character);
 
+    Set<N> getStoryNodes();
+
+    boolean addStoryNode(N node);
+
     /**
      * @return All characters registered in story
      */

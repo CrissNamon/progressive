@@ -18,6 +18,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     private transient final Set<SimpleStoryLocation> storyLocations;
     private transient final Set<SimpleStoryItem> storyItems;
     private transient final Set<SimpleStoryQuest> storyQuests;
+    private final Set<SimpleStoryNode> storyNodes;
     private SimpleStoryNode currentNode;
     private SimpleStoryStateManager stateManager;
 
@@ -26,6 +27,7 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
         this.storyLocations = new HashSet<>();
         this.storyItems = new HashSet<>();
         this.storyQuests = new HashSet<>();
+        this.storyNodes = new HashSet<>();
         this.stateManager = SimpleStoryStateManager.getInstance();
     }
 
@@ -71,6 +73,16 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     @Override
     public boolean addStoryCharacter(SimpleStoryCharacter character) {
         return storyCharacters.add(character);
+    }
+
+    @Override
+    public Set<SimpleStoryNode> getStoryNodes() {
+        return null;
+    }
+
+    @Override
+    public boolean addStoryNode(SimpleStoryNode node) {
+        return storyNodes.add(node);
     }
 
     @Override
@@ -196,5 +208,11 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
         SimpleStoryQuest quest = new SimpleStoryQuest(id, name, isUnique, completeCondition, onComplete);
         addStoryQuest(quest);
         return quest;
+    }
+
+    public SimpleStoryNode addStoryNode(Long id, String content) {
+        SimpleStoryNode node = new SimpleStoryNode(id, content);
+        addStoryNode(node);
+        return node;
     }
 }

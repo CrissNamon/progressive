@@ -128,12 +128,12 @@ public class SimpleAdventure {
      */
     public void addNodes() {
         //Every event in story is a node. So, create one!
-        startNode = new SimpleStoryNode(1L, "Where you wanna go?");
+        startNode = simpleStory.addStoryNode(1L, "Where you wanna go?");
         //May be some more...
-        SimpleStoryNode q3 = new SimpleStoryNode(2L, mainCharacter.getName() + ", wanna health buff?");
-        SimpleStoryNode q4 = new SimpleStoryNode(3L, "Well, ok. That's the end");
-        SimpleStoryNode fightEnemy = new SimpleStoryNode(4L, "Wanna punch the enemy? It has " + enemyCharacter.getHealth() + "HP now");
-        SimpleStoryNode fightEnemyResult = new SimpleStoryNode(5L, "Great!");
+        SimpleStoryNode q3 = simpleStory.addStoryNode(2L, mainCharacter.getName() + ", wanna health buff?");
+        SimpleStoryNode q4 = simpleStory.addStoryNode(3L, "Well, ok. That's the end");
+        SimpleStoryNode fightEnemy = simpleStory.addStoryNode(4L, "Wanna punch the enemy? It has " + enemyCharacter.getHealth() + "HP now");
+        SimpleStoryNode fightEnemyResult = simpleStory.addStoryNode(5L, "Great!");
 
         //Wanna interact with your Story? Add some variants as answers to your StoryNodes
         SimpleStoryNodeAnswer q1_a1 = new SimpleStoryNodeAnswer("Basement!",
