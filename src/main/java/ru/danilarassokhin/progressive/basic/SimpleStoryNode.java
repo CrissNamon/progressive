@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeAnswer>, Serializable, AutoCloseable {
+public class SimpleStoryNode implements StoryNode<Long, SimpleStoryNode, String, SimpleStoryNodeAnswer>, Serializable, AutoCloseable {
 
     private final Long id;
     private String text;
@@ -74,17 +74,14 @@ public class SimpleStoryNode implements StoryNode<Long, String, SimpleStoryNodeA
     }
 
     @Override
-    public void setContent(String content) {
+    public SimpleStoryNode setContent(String content) {
         this.text = content;
+        return this;
     }
 
     @Override
     public int hashCode() {
         return getId().intValue();
-    }
-
-    public String getText() {
-        return text;
     }
 
     @Override

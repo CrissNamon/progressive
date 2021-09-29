@@ -1,6 +1,5 @@
 package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.progressive.basic.*;
 import ru.danilarassokhin.progressive.data.*;
 
 import java.util.Map;
@@ -12,6 +11,8 @@ import java.util.Map;
  * @param <N> Story nodes type {@link StoryNode}
  * @param <C> Story characters type {@link StoryCharacter}
  * @param <L> Story locations type {@link StoryLocation}
+ * @param <I> Story item type {@link StoryItem}
+ * @param <Q> Story quest type {@link StoryQuest}
  */
 public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
         L extends StoryLocation, I extends StoryItem,
@@ -38,10 +39,10 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Adds character to story
-     * @param character Character to add
-     * @return true if character doesn't exists already
+     * @param id Character id to add
+     * @return Empty character or null if id already exists
      */
-    boolean addStoryCharacter(C character);
+    C addStoryCharacter(ID id);
 
     /**
      * Returns all nodes registered in story
@@ -51,10 +52,10 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Adds node to story
-     * @param node Node to add
-     * @return true if node doesn't exists already
+     * @param id Node id to add
+     * @return Empty node or null if id already exists
      */
-    boolean addStoryNode(N node);
+    N addStoryNode(ID id);
 
     /**
      * Returns all characters registered in story
@@ -64,10 +65,10 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Adds location to story
-     * @param location Location to add
-     * @return true if location doesn't exists already
+     * @param id Location id to add
+     * @return Empty location or null if id already exists
      */
-    boolean addStoryLocation(L location);
+    L addStoryLocation(ID id);
 
     /**
      * Returns all location registered in story
@@ -83,17 +84,17 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Adds item to story
-     * @param item Item to add
-     * @return true if item doesn't exists already
+     * @param id Item id to add
+     * @return Empty item or null if id already exists
      */
-    boolean addStoryItem(I item);
+    I addStoryItem(ID id);
 
     /**
      * Adds quest to story
-     * @param quest Quest to add
-     * @return true if quest doesn't exists already
+     * @param id Quest id to add
+     * @return Empty item or null if id already exists
      */
-    boolean addStoryQuest(Q quest);
+    Q addStoryQuest(ID id);
 
     /**
      * Returns all quests registered in story
@@ -110,24 +111,24 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Checks if {@code character} registered in Story
-     * @param character Character to check
+     * @param id Character id to check
      * @return true if {@code character} is registered
      */
-    boolean isCharacterRegistered(C character);
+    boolean isCharacterRegistered(ID id);
 
     /**
      * Checks if {@code location} registered in Story
-     * @param location Location to check
+     * @param id Location id to check
      * @return true if {@code location} is registered
      */
-    boolean isLocationRegistered(L location);
+    boolean isLocationRegistered(ID id);
 
     /**
      * Checks if {@code item} registered in Story
-     * @param item Item to check
+     * @param id Item id to check
      * @return true if {@code item} is registered
      */
-    boolean isItemRegistered(I item);
+    boolean isItemRegistered(ID id);
 
     /**
      * Searches for character registered in story by id

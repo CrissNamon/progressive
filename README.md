@@ -131,7 +131,9 @@ Then fill your game with content
                 simpleStory.getItemById(1L)
         );
         //hero can punch zombies
-        mainCharacter.addAction("Punch", () -> enemyCharacter.addHealth(-10));
+        //and action can have some parameters
+        mainCharacter.<SimpleStoryCharacter>addAction("Punch", (e) -> e.addHealth(-10));
+        mainCharacter.addAction("Open", (o) -> {});
         //Add some enemies
         enemyCharacter = new SimpleCharacterBuilder(2L).setHealth(10).setName("Zombie")
                 .setLocation(simpleStory.getLocationById(2L))
@@ -188,7 +190,10 @@ public void addNodes() {
 
         SimpleStoryNodeAnswer metZombiePunch = new SimpleStoryNodeAnswer("Punch zombie",
                 () -> {
-                    mainCharacter.action("Punch");
+                    //You can pass params to action...
+                    mainCharacter.action("Punch", enemyCharacter);
+                    //... and make action without params
+                    mainCharacter.action("Open");
                     simpleStory.setNext(punchZombieResult);
                 });
         metZombie.addAnswer(metZombiePunch);
