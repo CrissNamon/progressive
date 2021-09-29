@@ -181,7 +181,7 @@ public class SimpleAdventure {
 
         addStates();
         addLocations();
-        //addItems();
+        addItems();
         addQuests();
         addCharacters();
         addNodes();
