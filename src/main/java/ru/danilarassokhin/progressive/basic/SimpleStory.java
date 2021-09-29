@@ -190,4 +190,9 @@ public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryChar
         return getStoryLocations().getOrDefault(id, null);
     }
 
+    @Override
+    public SimpleStoryNode getNodeById(Long id) {
+        return getStoryNodes().getOrDefault(id, null);
+    }
+
 }

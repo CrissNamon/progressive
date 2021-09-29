@@ -158,4 +158,11 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      */
     L getLocationById(ID id);
 
+    /**
+     * Searches for node registered in story by id
+     * @param id Id to search
+     * @return Node, null otherwise
+     */
+    N getNodeById(ID id);
+
 }
