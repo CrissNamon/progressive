@@ -53,6 +53,7 @@ public interface Story<I, N extends StoryNode> {
     /**
      * Sets current node in Story to {@code startNode}
      * @param startNode Node to set
+     * @throws StoryRequirementException if some systems requirements has been violated
      * @return {@code startNode}
      */
     N begin(N startNode) throws StoryRequirementException;
@@ -61,6 +62,8 @@ public interface Story<I, N extends StoryNode> {
      * Adds system to story
      * @param system System class to add
      * @param <S> System type
+     * @throws StoryException if error occurred while adding system. Systems must have empty non-private constructor
+     * @throws StoryRequirementException if {@code system} requirements has been violated
      * @return System object or null
      */
    <S extends StorySystem> S addSystem(Class<S> system) throws StoryException, StoryRequirementException;

@@ -54,6 +54,7 @@
                 <configuration>
                     <includes>
                         <include>ru/danilarassokhin/progressive/*/*.*</include>
+                        <include>ru/danilarassokhin/progressive/*/*/*.*</include>
                     </includes>
                 </configuration>
             </plugin>
