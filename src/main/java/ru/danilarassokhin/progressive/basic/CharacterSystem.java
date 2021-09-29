@@ -1,15 +1,17 @@
 package ru.danilarassokhin.progressive.basic;
 
+import ru.danilarassokhin.progressive.annotations.StorySystemRequirement;
 import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@StorySystemRequirement({QuestSystem.class, LocationSystem.class, ItemSystem.class})
 public class CharacterSystem implements StorySystem<Long, SimpleStoryCharacter> {
 
     private final Map<Long, SimpleStoryCharacter> characters;
-    private final Set<Class<? extends StorySystem>> requirements = Set.of(LocationSystem.class, QuestSystem.class, ItemSystem.class);
 
     protected CharacterSystem() {
         characters = new HashMap<>();
@@ -37,6 +39,14 @@ public class CharacterSystem implements StorySystem<Long, SimpleStoryCharacter> 
 
     @Override
     public Set<Class<? extends StorySystem>> getRequirements() {
+        Class<?> c = this.getClass();
+        Set<Class<? extends StorySystem>> requirements = new HashSet<>();
+        if(c.isAnnotationPresent(StorySystemRequirement.class)) {
+            Class<? extends StorySystem>[] req = c.getAnnotation(StorySystemRequirement.class).value();
+            for(int i = 0; i < req.length; ++i) {
+                requirements.add(req[i]);
+            }
+        }
         return requirements;
     }
 

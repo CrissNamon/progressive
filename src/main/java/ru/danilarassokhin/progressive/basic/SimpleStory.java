@@ -2,11 +2,13 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Story;
 import ru.danilarassokhin.progressive.component.StoryState;
+import ru.danilarassokhin.progressive.exception.StoryException;
+import ru.danilarassokhin.progressive.exception.StoryRequirementException;
 import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,37 +36,29 @@ public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
     }
 
     @Override
-    public SimpleStoryNode begin(SimpleStoryNode startNode) {
+    public SimpleStoryNode begin(SimpleStoryNode startNode) throws StoryRequirementException{
+        checkAllRequirements();
         currentNode = startNode;
         return currentNode;
     }
 
     @Override
-    public <S extends StorySystem> S addSystem(Class<S> system) {
+    public <S extends StorySystem> S addSystem(Class<S> system) throws StoryException, StoryRequirementException{
+
         try {
             S systemObj = system.getDeclaredConstructor().newInstance();
             if(systemObj.getRequirements() != null) {
-                if(!checkSystemRequirements(systemObj.getRequirements())) {
-                    return null;
-                }
+                checkSystemRequirements(system);
             }
             if(systems.putIfAbsent(system, systemObj) == null) {
                 return systemObj;
             }else{
                 return null;
             }
-        }catch (Exception e) {
-            return null;
+        } catch (InstantiationException | IllegalAccessException
+        | InvocationTargetException | NoSuchMethodException e) {
+            throw new StoryException("System registration failure! Check if your system has empty constructor");
         }
-    }
-
-    private boolean checkSystemRequirements(Set<Class<? extends StorySystem>> reqs) {
-        Iterator<Class<? extends StorySystem>> iterator = reqs.iterator();
-        boolean allReqs = true;
-        while(iterator.hasNext() && allReqs) {
-            allReqs = systems.containsKey(iterator.next());
-        }
-        return allReqs;
     }
 
     @Override
@@ -74,8 +68,25 @@ public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
     }
 
     @Override
+    public Map<Class<? extends StorySystem>, ? extends StorySystem> getSystems() {
+        return systems;
+    }
+
+    @Override
+    public <S extends StorySystem> boolean hasSystem(Class<S> systemClass) {
+        return getSystem(systemClass) != null;
+    }
+
+    @Override
     public SimpleStoryNode getNodeById(Long id) {
         return storyNodes.getOrDefault(id, null);
+    }
+
+    private void checkAllRequirements() throws StoryRequirementException {
+        Set<Class<? extends StorySystem>> keys = getSystems().keySet();
+        for (Class<? extends StorySystem> key : keys) {
+            checkSystemRequirements(key);
+        }
     }
 
     @Override
@@ -123,5 +134,4 @@ public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
         stateManager.setState(StoryState.NODE_TRANSITION_END, getCurrentNode());
         return currentNode;
     }
-
 }

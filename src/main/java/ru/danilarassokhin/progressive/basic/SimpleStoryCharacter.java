@@ -1,8 +1,8 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.lambdas.StoryAction;
-import ru.danilarassokhin.progressive.component.StoryCharacter;
+import ru.danilarassokhin.progressive.basic.abstraction.AllSystemsCharacter;
 import ru.danilarassokhin.progressive.component.StoryState;
+import ru.danilarassokhin.progressive.lambdas.StoryAction;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryCharacter, SimpleStoryInventory,
+public class SimpleStoryCharacter implements AllSystemsCharacter<Long, SimpleStoryCharacter, SimpleStoryInventory,
         SimpleStoryLocation, SimpleStoryItem,
         SimpleStoryQuest, String>, Serializable, AutoCloseable {
 
@@ -85,22 +85,18 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryCha
         this.health += add;
     }
 
-    @Override
     public boolean addQuest(SimpleStoryQuest quest) {
         return quests.add(quest);
     }
 
-    @Override
     public Set<SimpleStoryQuest> getQuests() {
         return quests;
     }
 
-    @Override
     public SimpleStoryInventory getInventory() {
         return inventory;
     }
 
-    @Override
     public SimpleStoryLocation getLocation() {
         return location;
     }

@@ -1,6 +1,9 @@
 package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.progressive.component.*;
+import ru.danilarassokhin.progressive.annotations.StorySystemRequirement;
+import ru.danilarassokhin.progressive.component.StoryNode;
+import ru.danilarassokhin.progressive.exception.StoryException;
+import ru.danilarassokhin.progressive.exception.StoryRequirementException;
 import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.util.Map;
@@ -52,7 +55,7 @@ public interface Story<I, N extends StoryNode> {
      * @param startNode Node to set
      * @return {@code startNode}
      */
-    N begin(N startNode);
+    N begin(N startNode) throws StoryRequirementException;
 
     /**
      * Adds system to story
@@ -60,7 +63,7 @@ public interface Story<I, N extends StoryNode> {
      * @param <S> System type
      * @return System object or null
      */
-   <S extends StorySystem> S addSystem(Class<S> system);
+   <S extends StorySystem> S addSystem(Class<S> system) throws StoryException, StoryRequirementException;
 
     /**
      * Searches for system by it's class
@@ -71,10 +74,49 @@ public interface Story<I, N extends StoryNode> {
     <S extends StorySystem> S getSystem(Class<S> systemClass);
 
     /**
+     * Returns map of all registered systems
+     * @param <S> Story system type
+     * @return Map of systems as system class - system
+     */
+    <S extends StorySystem> Map<Class<S>, S> getSystems();
+
+    /**
+     * Checks if system is registered in story
+     * @param systemClass System class to check
+     * @param <S> Story system type
+     * @return true if system is registered in story
+     */
+    <S extends StorySystem> boolean hasSystem(Class<S> systemClass);
+
+    /**
      * Searches for node registered in story by id
      * @param id Id to search
      * @return Node, null otherwise
      */
     N getNodeById(I id);
+
+
+    /**
+     * Checks if required systems by {@code systemClass} are registered in story
+     * <br>
+     * You can set a requirement by {@link ru.danilarassokhin.progressive.annotations.StorySystemRequirement} annotation
+     * @param systemClass System class to check
+     * @param <S> Story system type
+     * @throws StoryRequirementException if requirements violated
+     */
+    default <S extends StorySystem> void checkSystemRequirements(Class<S> systemClass) throws StoryRequirementException {
+       if(systemClass.isAnnotationPresent(StorySystemRequirement.class)) {
+           StorySystemRequirement ann = systemClass.getAnnotation(StorySystemRequirement.class);
+           Class<? extends StorySystem>[] reqs = ann.value();
+           boolean cond = true;
+           for(int i = 0; i < reqs.length && cond; ++i) {
+               cond = hasSystem(reqs[i]);
+               if(!cond) {
+                   throw new StoryRequirementException("Requirement violation! System " + systemClass.toString()
+                           + " requires " + reqs[i].toString() + " system which is not registered in story!");
+               }
+           }
+       }
+   }
 
 }

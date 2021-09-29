@@ -2,6 +2,8 @@ package ru.danilarassokhin.main;
 
 import ru.danilarassokhin.progressive.component.StoryState;
 import ru.danilarassokhin.progressive.basic.*;
+import ru.danilarassokhin.progressive.exception.StoryException;
+import ru.danilarassokhin.progressive.exception.StoryRequirementException;
 
 import java.util.Scanner;
 
@@ -53,7 +55,7 @@ public class SimpleAdventure {
     }
 
 
-    public void addLocations() {
+    public void addLocations() throws StoryException, StoryRequirementException {
         //Register location system in story
         LocationSystem locationSystem = simpleStory.addSystem(LocationSystem.class);
         //Add start location for your hero with builder
@@ -65,7 +67,7 @@ public class SimpleAdventure {
         basement.setEntryRestriction(() -> mainCharacter.getHealth() > 80);
     }
 
-    public void addItems() {
+    public void addItems() throws StoryException, StoryRequirementException {
         //Register item system in story
         ItemSystem itemSystem = simpleStory.addSystem(ItemSystem.class);
         //Add some items, why not?
@@ -74,7 +76,7 @@ public class SimpleAdventure {
         sword.setAmount(1);
     }
 
-    public void addQuests() {
+    public void addQuests() throws StoryException, StoryRequirementException {
         //Register quest system in story
         QuestSystem questSystem = simpleStory.addSystem(QuestSystem.class);
         //May be some quest? Hero need to do hero things!
@@ -91,7 +93,7 @@ public class SimpleAdventure {
                 );
     }
 
-    public void addCharacters() {
+    public void addCharacters() throws StoryException, StoryRequirementException {
         //And your hero...
         //Register character system
         CharacterSystem characterSystem = simpleStory.addSystem(CharacterSystem.class);
@@ -174,19 +176,24 @@ public class SimpleAdventure {
         metZombie.addAnswer(metZombiePunch);
     }
 
-    public void startStory() {
+    public void startStory() throws StoryException, StoryRequirementException {
         Scanner sc = new Scanner(System.in);
 
         addStates();
         addLocations();
-        addItems();
+        //addItems();
         addQuests();
         addCharacters();
         addNodes();
 
         //AND NOW THE STORY BEGINS
         //Your story should always begin with begin! Even before loading saved game
-        SimpleStoryNode current = simpleStory.begin(startNode);
+        SimpleStoryNode current = null;
+        try {
+            current = simpleStory.begin(startNode);
+        } catch (StoryRequirementException e) {
+            System.out.println(e.getMessage());
+        }
         String save = "";
         //You can load your game
         if(save.length() > 0) {
