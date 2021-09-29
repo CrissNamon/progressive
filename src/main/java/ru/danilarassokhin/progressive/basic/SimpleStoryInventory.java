@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.data.StoryInventory;
+import ru.danilarassokhin.progressive.component.StoryInventory;
 
 import java.util.*;
 

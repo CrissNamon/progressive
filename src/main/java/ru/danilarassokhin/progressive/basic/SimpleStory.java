@@ -1,8 +1,8 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Story;
-import ru.danilarassokhin.progressive.data.StoryState;
-import ru.danilarassokhin.progressive.data.StorySystem;
+import ru.danilarassokhin.progressive.component.StoryState;
+import ru.danilarassokhin.progressive.component.StorySystem;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -14,20 +14,12 @@ public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
 
     private transient static SimpleStory INSTANCE;
 
-    private final Map<Long, SimpleStoryCharacter> storyCharacters;
-    private transient final Map<Long, SimpleStoryLocation> storyLocations;
-    private transient final Map<Long, SimpleStoryItem> storyItems;
-    private transient final Map<Long, SimpleStoryQuest> storyQuests;
     private transient final Map<Long, SimpleStoryNode> storyNodes;
     private SimpleStoryNode currentNode;
     private SimpleStoryStateManager stateManager;
     private final Map<Class<? extends StorySystem>, StorySystem> systems;
 
     private SimpleStory() {
-        this.storyCharacters = new HashMap<>();
-        this.storyLocations = new HashMap<>();
-        this.storyItems = new HashMap<>();
-        this.storyQuests = new HashMap<>();
         this.storyNodes = new HashMap<>();
         this.stateManager = SimpleStoryStateManager.getInstance();
         stateManager.setState(StoryState.INIT, this);
@@ -131,7 +123,5 @@ public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
         stateManager.setState(StoryState.NODE_TRANSITION_END, getCurrentNode());
         return currentNode;
     }
-
-
 
 }

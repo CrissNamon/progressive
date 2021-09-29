@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.progressive.data.*;
+import ru.danilarassokhin.progressive.component.*;
 
 import java.util.Map;
 

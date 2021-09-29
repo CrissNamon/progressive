@@ -1,8 +1,8 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.lambdas.StoryAction;
-import ru.danilarassokhin.progressive.data.StoryCharacter;
-import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.component.StoryCharacter;
+import ru.danilarassokhin.progressive.component.StoryState;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 
 import java.io.Serializable;

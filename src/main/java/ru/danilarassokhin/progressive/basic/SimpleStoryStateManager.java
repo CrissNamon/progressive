@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.component.StoryState;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 import ru.danilarassokhin.progressive.managers.StoryStateManager;
 

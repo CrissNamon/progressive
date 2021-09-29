@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.data.StoryItem;
+import ru.danilarassokhin.progressive.component.StoryItem;
 
 import java.io.Serializable;
 

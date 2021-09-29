@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.lambdas.StoryCondition;
-import ru.danilarassokhin.progressive.data.StoryLocation;
+import ru.danilarassokhin.progressive.component.StoryLocation;
 
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.managers;
 
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
-import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.component.StoryState;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.lambdas.StoryCondition;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
-import ru.danilarassokhin.progressive.data.StoryQuest;
+import ru.danilarassokhin.progressive.component.StoryQuest;
 
 import java.io.Serializable;
 

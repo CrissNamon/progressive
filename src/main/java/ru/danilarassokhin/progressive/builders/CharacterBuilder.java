@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.builders;
 
-import ru.danilarassokhin.progressive.data.StoryCharacter;
+import ru.danilarassokhin.progressive.component.StoryCharacter;
 
 /**
  * Represents character builder

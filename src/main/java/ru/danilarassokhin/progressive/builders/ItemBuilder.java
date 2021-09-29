@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.builders;
 
-import ru.danilarassokhin.progressive.data.StoryItem;
+import ru.danilarassokhin.progressive.component.StoryItem;
 
 /**
  * Represents item builder

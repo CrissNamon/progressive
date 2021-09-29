@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.lambdas.StoryAction;
-import ru.danilarassokhin.progressive.data.StoryNodeAnswer;
+import ru.danilarassokhin.progressive.component.StoryNodeAnswer;
 
 import java.io.Serializable;
 

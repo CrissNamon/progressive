@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.data.StoryNode;
+import ru.danilarassokhin.progressive.component.StoryNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
