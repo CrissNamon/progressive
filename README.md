@@ -23,6 +23,7 @@ Progressive have:
     + Represents some story component such as character or location
 + StorySystem
     + Represents some story system such as character system
+    + Systems can be dependent on other systems with custom annotation `@StorySystemRequirement`
 + StoryLocation
     + Represents game story location
     + Location can have a name and entering condition
