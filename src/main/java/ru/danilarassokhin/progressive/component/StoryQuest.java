@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.data;
+package ru.danilarassokhin.progressive.component;
 
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 import ru.danilarassokhin.progressive.lambdas.StoryCondition;
@@ -7,7 +7,7 @@ import ru.danilarassokhin.progressive.lambdas.StoryCondition;
  * Represents story quest
  * @param <I> Quest id type
  */
-public interface StoryQuest<I, Q> {
+public interface StoryQuest<I, Q> extends StoryComponent<I>{
 
     /**
      * Returns quest id

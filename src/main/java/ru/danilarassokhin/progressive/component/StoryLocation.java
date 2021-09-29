@@ -1,10 +1,10 @@
-package ru.danilarassokhin.progressive.data;
+package ru.danilarassokhin.progressive.component;
 
 /**
  * Represents story location
  * @param <I> Location id type
  */
-public interface StoryLocation<I> {
+public interface StoryLocation<I> extends StoryComponent<I>{
 
     /**
      * Returns location id

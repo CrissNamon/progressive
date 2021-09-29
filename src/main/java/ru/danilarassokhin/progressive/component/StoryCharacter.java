@@ -1,22 +1,13 @@
-package ru.danilarassokhin.progressive.data;
+package ru.danilarassokhin.progressive.component;
 
-import ru.danilarassokhin.progressive.lambdas.StoryAction;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
-
-import java.util.Set;
 
 /**
  * Represents story character
  * @param <I> Character ID type
- * @param <N> Character inventory type
- * @param <L> Character location type
- * @param <T> Character items type
- * @param <Q> Character quests type
  * @param <AN> Character action id type
  */
-public interface StoryCharacter<I, C, N extends StoryInventory,
-        L extends StoryLocation, T extends StoryItem,
-        Q extends StoryQuest, AN> {
+public interface StoryCharacter<I, C, AN> extends StoryComponent<I> {
 
     /**
      * Returns character id
@@ -55,47 +46,6 @@ public interface StoryCharacter<I, C, N extends StoryInventory,
      * @param add health to add
      */
     void addHealth(float add);
-
-    /**
-     * Adds quest to character
-     * @param quest quest to add
-     * @return true if quest doesn't exists already
-     */
-    boolean addQuest(Q quest);
-
-    /**
-     * Returns all quests assigned to this character
-     * @return character's quests
-     */
-    Set<Q> getQuests();
-
-    /**
-     * Returns inventory of this character
-     * @return character inventory
-     */
-    N getInventory();
-
-    /**
-     * Returns location of this character
-     * @return character location
-     */
-    L getLocation();
-
-    /**
-     * Sets character location
-     * @param location new character location
-     * @param onSuccess called if location successfully changes
-     * @param onError called if location not changed
-     * @return true if location has been changed
-     */
-    boolean setLocation(L location, StoryAction onSuccess, StoryAction onError);
-
-    /**
-     * Adds item to character
-     * @param item new item
-     * @return true if items has been added
-     */
-    boolean addItem(T item);
 
     /**
      * Does character action with {@code actionName}

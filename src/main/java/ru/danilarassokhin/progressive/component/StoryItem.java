@@ -1,10 +1,10 @@
-package ru.danilarassokhin.progressive.data;
+package ru.danilarassokhin.progressive.component;
 
 /**
  * Represents story item
  * @param <I> Item id type
  */
-public interface StoryItem<I>{
+public interface StoryItem<I> extends StoryComponent<I>{
 
     /**
      * Returns item id

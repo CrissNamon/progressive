@@ -1,6 +1,10 @@
 package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.progressive.data.*;
+import ru.danilarassokhin.progressive.annotations.StorySystemRequirement;
+import ru.danilarassokhin.progressive.component.StoryNode;
+import ru.danilarassokhin.progressive.exception.StoryException;
+import ru.danilarassokhin.progressive.exception.StoryRequirementException;
+import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.util.Map;
 
@@ -9,14 +13,9 @@ import java.util.Map;
  * Represents game story
  * <br>Story must be Singleton!
  * @param <N> Story nodes type {@link StoryNode}
- * @param <C> Story characters type {@link StoryCharacter}
- * @param <L> Story locations type {@link StoryLocation}
- * @param <I> Story item type {@link StoryItem}
- * @param <Q> Story quest type {@link StoryQuest}
+ * @param <I> Story's node id type
  */
-public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
-        L extends StoryLocation, I extends StoryItem,
-        Q extends StoryQuest> {
+public interface Story<I, N extends StoryNode> {
 
     /**
      * Returns current node
@@ -37,132 +36,90 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      */
     N setNext(N node);
 
-    /**
-     * Adds character to story
-     * @param id Character id to add
-     * @return Empty character or null if id already exists
-     */
-    C addStoryCharacter(ID id);
 
     /**
      * Returns all nodes registered in story
      * @return Map of nodes as nodeId - node
      */
-    Map<ID, N> getStoryNodes();
+    Map<I, N> getStoryNodes();
 
     /**
      * Adds node to story
      * @param id Node id to add
      * @return Empty node or null if id already exists
      */
-    N addStoryNode(ID id);
-
-    /**
-     * Returns all characters registered in story
-     * @return Map of characters as characterId - character
-     */
-    Map<ID, C> getStoryCharacters();
-
-    /**
-     * Adds location to story
-     * @param id Location id to add
-     * @return Empty location or null if id already exists
-     */
-    L addStoryLocation(ID id);
-
-    /**
-     * Returns all location registered in story
-     * @return Map of locations as characterId - character
-     */
-    Map<ID, L> getStoryLocations();
-
-    /**
-     * Returns all items registered in story
-     * @return Map of items as characterId - character
-     */
-    Map<ID, I> getStoryItems();
-
-    /**
-     * Adds item to story
-     * @param id Item id to add
-     * @return Empty item or null if id already exists
-     */
-    I addStoryItem(ID id);
-
-    /**
-     * Adds quest to story
-     * @param id Quest id to add
-     * @return Empty item or null if id already exists
-     */
-    Q addStoryQuest(ID id);
-
-    /**
-     * Returns all quests registered in story
-     * @return Map of quests as characterId - character
-     */
-    Map<ID, Q> getStoryQuests();
+    N addStoryNode(I id);
 
     /**
      * Sets current node in Story to {@code startNode}
      * @param startNode Node to set
+     * @throws StoryRequirementException if some systems requirements has been violated
      * @return {@code startNode}
      */
-    N begin(N startNode);
+    N begin(N startNode) throws StoryRequirementException;
 
     /**
-     * Checks if {@code character} registered in Story
-     * @param id Character id to check
-     * @return true if {@code character} is registered
+     * Adds system to story
+     * @param system System class to add
+     * @param <S> System type
+     * @throws StoryException if error occurred while adding system. Systems must have empty non-private constructor
+     * @throws StoryRequirementException if {@code system} requirements has been violated
+     * @return System object or null
      */
-    boolean isCharacterRegistered(ID id);
+   <S extends StorySystem> S addSystem(Class<S> system) throws StoryException, StoryRequirementException;
 
     /**
-     * Checks if {@code location} registered in Story
-     * @param id Location id to check
-     * @return true if {@code location} is registered
+     * Searches for system by it's class
+     * @param systemClass System class to search
+     * @param <S> System type
+     * @return System object or null
      */
-    boolean isLocationRegistered(ID id);
+    <S extends StorySystem> S getSystem(Class<S> systemClass);
 
     /**
-     * Checks if {@code item} registered in Story
-     * @param id Item id to check
-     * @return true if {@code item} is registered
+     * Returns map of all registered systems
+     * @param <S> Story system type
+     * @return Map of systems as system class - system
      */
-    boolean isItemRegistered(ID id);
+    <S extends StorySystem> Map<Class<S>, S> getSystems();
 
     /**
-     * Searches for character registered in story by id
-     * @param id Id to search
-     * @return Character, null otherwise
+     * Checks if system is registered in story
+     * @param systemClass System class to check
+     * @param <S> Story system type
+     * @return true if system is registered in story
      */
-    C getCharacterById(ID id);
-
-    /**
-     * Searches for quest registered in story by id
-     * @param id Id to search
-     * @return Quest, null otherwise
-     */
-    Q getQuestById(ID id);
-
-    /**
-     * Searches for item registered in story by id
-     * @param id Id to search
-     * @return Item, null otherwise
-     */
-    I getItemById(ID id);
-
-    /**
-     * Searches for location registered in story by id
-     * @param id Id to search
-     * @return Location, null otherwise
-     */
-    L getLocationById(ID id);
+    <S extends StorySystem> boolean hasSystem(Class<S> systemClass);
 
     /**
      * Searches for node registered in story by id
      * @param id Id to search
      * @return Node, null otherwise
      */
-    N getNodeById(ID id);
+    N getNodeById(I id);
+
+
+    /**
+     * Checks if required systems by {@code systemClass} are registered in story
+     * <br>
+     * You can set a requirement by {@link ru.danilarassokhin.progressive.annotations.StorySystemRequirement} annotation
+     * @param systemClass System class to check
+     * @param <S> Story system type
+     * @throws StoryRequirementException if requirements violated
+     */
+    default <S extends StorySystem> void checkSystemRequirements(Class<S> systemClass) throws StoryRequirementException {
+       if(systemClass.isAnnotationPresent(StorySystemRequirement.class)) {
+           StorySystemRequirement ann = systemClass.getAnnotation(StorySystemRequirement.class);
+           Class<? extends StorySystem>[] reqs = ann.value();
+           boolean cond = true;
+           for(int i = 0; i < reqs.length && cond; ++i) {
+               cond = hasSystem(reqs[i]);
+               if(!cond) {
+                   throw new StoryRequirementException("Requirement violation! System " + systemClass.toString()
+                           + " requires " + reqs[i].toString() + " system which is not registered in story!");
+               }
+           }
+       }
+   }
 
 }

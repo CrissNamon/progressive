@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.data;
+package ru.danilarassokhin.progressive.component;
 
 import ru.danilarassokhin.progressive.Story;
 import ru.danilarassokhin.progressive.lambdas.StoryAction;
@@ -32,13 +32,13 @@ public enum StoryState {
      */
     NODE_TRANSITION_END,
     /**
-     * Called on {@link StoryCharacter#setLocation(StoryLocation, StoryAction, StoryAction)}
+     * Called on {@link ru.danilarassokhin.progressive.basic.abstraction.AllSystemsCharacter#setLocation(StoryLocation, StoryAction, StoryAction)}
      * <br>
      * Returns old location
      */
     LOCATION_MOVE_START,
     /**
-     * Called on {@link StoryCharacter#setLocation(StoryLocation, StoryAction, StoryAction)} if old location is not null
+     * Called on {@link ru.danilarassokhin.progressive.basic.abstraction.AllSystemsCharacter#setLocation(StoryLocation, StoryAction, StoryAction)} if old location is not null
      * and new location has been set successfully
      */
     LOCATION_MOVE_COMPLETE,

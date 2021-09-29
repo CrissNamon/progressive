@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.builders;
 
 import ru.danilarassokhin.progressive.lambdas.StoryCondition;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
-import ru.danilarassokhin.progressive.data.StoryQuest;
+import ru.danilarassokhin.progressive.component.StoryQuest;
 
 /**
  * Represents builder for quest

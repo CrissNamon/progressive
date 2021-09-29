@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.managers;
 
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
-import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.component.StoryState;
 
 import java.util.List;
 
@@ -30,7 +30,15 @@ public interface StoryStateManager<S extends StoryState> {
      * @param state State to search
      * @return List with actions for {@code state}
      */
+    @Deprecated
     List<StoryActionObject> getActions(S state);
+
+    /**
+     * Returns all listeners attached to {@code state}
+     * @param state State to search
+     * @return List with actions for {@code state}
+     */
+    List<StoryActionObject> getListeners(S state);
 
     /**
      * Adds action to state
@@ -38,7 +46,16 @@ public interface StoryStateManager<S extends StoryState> {
      * @param <V> Action param type
      * @param action Action to add
      */
+    @Deprecated
     <V> void addAction(S state, StoryActionObject<V> action);
+
+    /**
+     * Adds listener to state
+     * @param state State to add action
+     * @param <V> Action param type
+     * @param action Action to add
+     */
+    <V> void addListener(S state, StoryActionObject<V> action);
 
 
 }

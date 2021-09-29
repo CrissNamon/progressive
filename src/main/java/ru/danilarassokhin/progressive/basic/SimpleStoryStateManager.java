@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.component.StoryState;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 import ru.danilarassokhin.progressive.managers.StoryStateManager;
 
@@ -14,10 +14,10 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState>, S
 
     private static SimpleStoryStateManager INSTANCE;
     private StoryState state;
-    private transient Map<StoryState, List<StoryActionObject>> actions;
+    private transient Map<StoryState, List<StoryActionObject>> listeners;
 
     private SimpleStoryStateManager() {
-        actions = new HashMap<>();
+        listeners = new HashMap<>();
         setState(StoryState.UNDEFINED, null);
     }
 
@@ -35,22 +35,34 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState>, S
 
     @Override
     public <O> void setState(StoryState state, O o) {
-        if(actions.containsKey(state)) {
-            actions.get(state).forEach(a -> a.make(o));
+        if(listeners.containsKey(state)) {
+            listeners.get(state).forEach(a -> a.make(o));
         }else{
-            actions.put(state, new ArrayList<>());
+            listeners.put(state, new ArrayList<>());
         }
         this.state = state;
     }
 
     @Override
+    @Deprecated
     public List<StoryActionObject> getActions(StoryState state) {
-        return actions.getOrDefault(state, new ArrayList<>());
+        return getListeners(state);
     }
 
     @Override
+    public List<StoryActionObject> getListeners(StoryState state) {
+        return listeners.getOrDefault(state, new ArrayList<>());
+    }
+
+    @Override
+    @Deprecated
     public <V> void addAction(StoryState state, StoryActionObject<V> action) {
-        actions.putIfAbsent(state, new ArrayList<>());
-        actions.get(state).add(action);
+        addListener(state, action);
+    }
+
+    @Override
+    public <V> void addListener(StoryState state, StoryActionObject<V> action) {
+        listeners.putIfAbsent(state, new ArrayList<>());
+        listeners.get(state).add(action);
     }
 }

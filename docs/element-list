@@ -1,7 +1,11 @@
 ru.danilarassokhin.progressive
+ru.danilarassokhin.progressive.annotations
 ru.danilarassokhin.progressive.basic
+ru.danilarassokhin.progressive.basic.abstraction
 ru.danilarassokhin.progressive.builders
-ru.danilarassokhin.progressive.data
+ru.danilarassokhin.progressive.component
+ru.danilarassokhin.progressive.exception
 ru.danilarassokhin.progressive.lambdas
 ru.danilarassokhin.progressive.managers
+ru.danilarassokhin.progressive.system
 ru.danilarassokhin.progressive.utils

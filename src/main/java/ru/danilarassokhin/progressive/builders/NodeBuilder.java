@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.builders;
 
-import ru.danilarassokhin.progressive.data.StoryNode;
+import ru.danilarassokhin.progressive.component.StoryNode;
 
 /**
  * Represents builder for nodes
