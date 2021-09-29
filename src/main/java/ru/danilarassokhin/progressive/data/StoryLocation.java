@@ -4,7 +4,7 @@ package ru.danilarassokhin.progressive.data;
  * Represents story location
  * @param <I> Location id type
  */
-public interface StoryLocation<I> {
+public interface StoryLocation<I> extends StoryComponent<I>{
 
     /**
      * Returns location id

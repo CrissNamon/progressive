@@ -14,9 +14,7 @@ import java.util.Map;
  * @param <I> Story item type {@link StoryItem}
  * @param <Q> Story quest type {@link StoryQuest}
  */
-public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
-        L extends StoryLocation, I extends StoryItem,
-        Q extends StoryQuest> {
+public interface Story<ID, N extends StoryNode> {
 
     /**
      * Returns current node
@@ -37,12 +35,6 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
      */
     N setNext(N node);
 
-    /**
-     * Adds character to story
-     * @param id Character id to add
-     * @return Empty character or null if id already exists
-     */
-    C addStoryCharacter(ID id);
 
     /**
      * Returns all nodes registered in story
@@ -58,105 +50,15 @@ public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
     N addStoryNode(ID id);
 
     /**
-     * Returns all characters registered in story
-     * @return Map of characters as characterId - character
-     */
-    Map<ID, C> getStoryCharacters();
-
-    /**
-     * Adds location to story
-     * @param id Location id to add
-     * @return Empty location or null if id already exists
-     */
-    L addStoryLocation(ID id);
-
-    /**
-     * Returns all location registered in story
-     * @return Map of locations as characterId - character
-     */
-    Map<ID, L> getStoryLocations();
-
-    /**
-     * Returns all items registered in story
-     * @return Map of items as characterId - character
-     */
-    Map<ID, I> getStoryItems();
-
-    /**
-     * Adds item to story
-     * @param id Item id to add
-     * @return Empty item or null if id already exists
-     */
-    I addStoryItem(ID id);
-
-    /**
-     * Adds quest to story
-     * @param id Quest id to add
-     * @return Empty item or null if id already exists
-     */
-    Q addStoryQuest(ID id);
-
-    /**
-     * Returns all quests registered in story
-     * @return Map of quests as characterId - character
-     */
-    Map<ID, Q> getStoryQuests();
-
-    /**
      * Sets current node in Story to {@code startNode}
      * @param startNode Node to set
      * @return {@code startNode}
      */
     N begin(N startNode);
 
-    /**
-     * Checks if {@code character} registered in Story
-     * @param id Character id to check
-     * @return true if {@code character} is registered
-     */
-    boolean isCharacterRegistered(ID id);
+   <S extends StorySystem> S addSystem(Class<S> system);
 
-    /**
-     * Checks if {@code location} registered in Story
-     * @param id Location id to check
-     * @return true if {@code location} is registered
-     */
-    boolean isLocationRegistered(ID id);
-
-    /**
-     * Checks if {@code item} registered in Story
-     * @param id Item id to check
-     * @return true if {@code item} is registered
-     */
-    boolean isItemRegistered(ID id);
-
-    /**
-     * Searches for character registered in story by id
-     * @param id Id to search
-     * @return Character, null otherwise
-     */
-    C getCharacterById(ID id);
-
-    /**
-     * Searches for quest registered in story by id
-     * @param id Id to search
-     * @return Quest, null otherwise
-     */
-    Q getQuestById(ID id);
-
-    /**
-     * Searches for item registered in story by id
-     * @param id Id to search
-     * @return Item, null otherwise
-     */
-    I getItemById(ID id);
-
-    /**
-     * Searches for location registered in story by id
-     * @param id Id to search
-     * @return Location, null otherwise
-     */
-    L getLocationById(ID id);
+    <S extends StorySystem> S getSystem(Class<S> systemClass);
 
     /**
      * Searches for node registered in story by id

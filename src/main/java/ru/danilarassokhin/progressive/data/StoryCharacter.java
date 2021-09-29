@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public interface StoryCharacter<I, C, N extends StoryInventory,
         L extends StoryLocation, T extends StoryItem,
-        Q extends StoryQuest, AN> {
+        Q extends StoryQuest, AN> extends StoryComponent<I> {
 
     /**
      * Returns character id

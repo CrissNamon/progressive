@@ -46,31 +46,36 @@ public class SimpleAdventure {
             //...or you can use THE OBJECT CASTER
             SimpleObjectCaster simpleObjectCaster = new SimpleObjectCaster();
             //cast will return casted object and make action, you had specified!
-            SimpleStoryLocation castedLocation = simpleObjectCaster.cast(newLocation, SimpleStoryLocation.class, (l) -> System.out.println("MOVE TO LOCATION " + l.getName() + " complete"));
+            SimpleStoryLocation castedLocation = simpleObjectCaster.cast(newLocation, SimpleStoryLocation.class,
+                    (l) -> System.out.println("MOVE TO LOCATION " + l.getName() + " complete")
+            );
         });
     }
 
 
     public void addLocations() {
+        LocationSystem locationSystem = simpleStory.addSystem(LocationSystem.class);
         //Add start location for your hero with builder
-        SimpleStoryLocation startLocation = simpleStory.addStoryLocation(1L);
+        SimpleStoryLocation startLocation = locationSystem.addComponent(1L);
         startLocation.setName("Castle");
         //Add location for your enemies
-        SimpleStoryLocation basement = simpleStory.addStoryLocation(2L);
+        SimpleStoryLocation basement = locationSystem.addComponent(2L);
         basement.setName("Basement");
         basement.setEntryRestriction(() -> mainCharacter.getHealth() > 80);
     }
 
     public void addItems() {
+        ItemSystem itemSystem = simpleStory.addSystem(ItemSystem.class);
         //Add some items, why not?
-        SimpleStoryItem sword = simpleStory.addStoryItem(1L);
+        SimpleStoryItem sword = itemSystem.addComponent(1L);
         sword.setName("Sword");
         sword.setAmount(1);
     }
 
     public void addQuests() {
+        QuestSystem questSystem = simpleStory.addSystem(QuestSystem.class);
         //May be some quest? Hero need to do hero things!
-        SimpleStoryQuest enterBasement = simpleStory.addStoryQuest(1L);
+        SimpleStoryQuest enterBasement = questSystem.addComponent(1L);
         enterBasement.setName("Enter basement");
         enterBasement.setUnique(true);
         enterBasement.setCompleteCondition(
@@ -85,26 +90,27 @@ public class SimpleAdventure {
 
     public void addCharacters() {
         //And your hero...
-        mainCharacter = simpleStory.addStoryCharacter(1L).setHealth(80)
+        CharacterSystem characterSystem = simpleStory.addSystem(CharacterSystem.class);
+        mainCharacter = characterSystem.addComponent(1L).setHealth(80)
                 .setName("Main Character")
                 .setLocation(
-                    simpleStory.getLocationById(1L)
+                    simpleStory.getSystem(LocationSystem.class).getComponentById(1L)
                 );
         //give him a goal...
         mainCharacter.addQuest(
-                simpleStory.getQuestById(1L)
+                simpleStory.getSystem(QuestSystem.class).getComponentById(1L)
         );
         //and an item to achieve it
         mainCharacter.addItem(
-                simpleStory.getItemById(1L)
+                simpleStory.getSystem(ItemSystem.class).getComponentById(1L)
         );
         //hero can punch zombies with actions
         //and action can have some parameters
         mainCharacter.<SimpleStoryCharacter>addAction("Punch", (e) -> e.addHealth(-10));
         mainCharacter.addAction("Open", (o) -> {});
         //Add some enemies
-        enemyCharacter = simpleStory.addStoryCharacter(2L).setHealth(10).setLocation(
-                simpleStory.getLocationById(2L)
+        enemyCharacter = characterSystem.addComponent(2L).setHealth(10).setLocation(
+                simpleStory.getSystem(LocationSystem.class).getComponentById(2L)
         );
     }
 
@@ -120,8 +126,8 @@ public class SimpleAdventure {
         //You can add answers to your scenery nodes
         SimpleStoryNodeAnswer greetingAnswer1 = new SimpleStoryNodeAnswer("Go to basement",
                 //What if answer... answered?
-                () -> simpleStory.getCharacterById(1L).setLocation(
-                        simpleStory.getLocationById(2L),
+                () -> simpleStory.getSystem(CharacterSystem.class).getComponentById(1L).setLocation(
+                        simpleStory.getSystem(LocationSystem.class).getComponentById(2L),
                         //DON'T FORGET TO SET NEXT SCENERY NODE!
                         //of course if you don't want to play current node again
                         () -> simpleStory.setNext(metZombie),
@@ -138,7 +144,7 @@ public class SimpleAdventure {
                 () -> {
                     mainCharacter.addHealth(20);
                     System.out.println("Done! You now have "
-                            + simpleStory.getCharacterById(1L).getHealth() + "HP");
+                            + simpleStory.getSystem(CharacterSystem.class).getComponentById(1L).getHealth() + "HP");
                     simpleStory.setNext(greeting);
                 });
         SimpleStoryNodeAnswer lowHpAnswerNo = new SimpleStoryNodeAnswer("No",

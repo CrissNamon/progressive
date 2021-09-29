@@ -41,20 +41,23 @@ public class SimpleSaveManager implements StorySaveManager<SimpleStory, String> 
                 break;
             }
         }
-        for(SimpleStoryCharacter character : saved.getStoryCharacters().values()) {
-            SimpleStoryCharacter exists = SimpleStory.getInstance().getCharacterById(character.getId());
+        for(SimpleStoryCharacter character : saved.getSystem(CharacterSystem.class).getComponents().values()) {
+            SimpleStoryCharacter exists = SimpleStory.getInstance()
+                    .getSystem(CharacterSystem.class).getComponentById(character.getId());
             if(exists != null) {
                 exists.setHealth(character.getHealth());
                 if(character.getQuests() != null) {
                     for (SimpleStoryQuest q : character.getQuests()) {
-                        SimpleStoryQuest qExists = SimpleStory.getInstance().getQuestById(q.getId());
+                        SimpleStoryQuest qExists = SimpleStory.getInstance()
+                                .getSystem(QuestSystem.class).getComponentById(q.getId());
                         if (qExists != null) {
                             exists.addQuest(q);
                         }
                     }
                 }
                 for(SimpleStoryItem item : character.getInventory().getItems()) {
-                    SimpleStoryItem iExists = SimpleStory.getInstance().getItemById(item.getId());
+                    SimpleStoryItem iExists = SimpleStory.getInstance()
+                            .getSystem(ItemSystem.class).getComponentById(item.getId());
                     if(iExists != null) {
                         exists.addItem(item);
                     }

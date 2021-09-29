@@ -2,13 +2,15 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Story;
 import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.data.StorySystem;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryCharacter,
-        SimpleStoryLocation, SimpleStoryItem, SimpleStoryQuest>, Serializable {
+public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
 
     private transient static SimpleStory INSTANCE;
 
@@ -19,6 +21,7 @@ public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryChar
     private transient final Map<Long, SimpleStoryNode> storyNodes;
     private SimpleStoryNode currentNode;
     private SimpleStoryStateManager stateManager;
+    private final Map<Class<? extends StorySystem>, StorySystem> systems;
 
     private SimpleStory() {
         this.storyCharacters = new HashMap<>();
@@ -28,6 +31,7 @@ public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryChar
         this.storyNodes = new HashMap<>();
         this.stateManager = SimpleStoryStateManager.getInstance();
         stateManager.setState(StoryState.INIT, this);
+        systems = new HashMap<>();
     }
 
     public static SimpleStory getInstance() {
@@ -41,6 +45,45 @@ public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryChar
     public SimpleStoryNode begin(SimpleStoryNode startNode) {
         currentNode = startNode;
         return currentNode;
+    }
+
+    @Override
+    public <S extends StorySystem> S addSystem(Class<S> system) {
+        try {
+            S systemObj = system.getDeclaredConstructor().newInstance();
+            if(systemObj.getRequirements() != null) {
+                if(!checkSystemRequirements(systemObj.getRequirements())) {
+                    return null;
+                }
+            }
+            if(systems.putIfAbsent(system, systemObj) == null) {
+                return systemObj;
+            }else{
+                return null;
+            }
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
+    private boolean checkSystemRequirements(Set<Class<? extends StorySystem>> reqs) {
+        Iterator<Class<? extends StorySystem>> iterator = reqs.iterator();
+        boolean allReqs = true;
+        while(iterator.hasNext() && allReqs) {
+            allReqs = systems.containsKey(iterator.next());
+        }
+        return allReqs;
+    }
+
+    @Override
+    public <S extends StorySystem> S getSystem(Class<S> systemClass) {
+        SimpleObjectCaster objectCaster = new SimpleObjectCaster();
+        return objectCaster.cast(systems.get(systemClass), systemClass, (s) -> {});
+    }
+
+    @Override
+    public SimpleStoryNode getNodeById(Long id) {
+        return storyNodes.getOrDefault(id, null);
     }
 
     @Override
@@ -62,35 +105,6 @@ public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryChar
         return getCurrentNode();
     }
 
-    /**
-     * Go to next node
-     * <br>
-     * Changes StateManager state to NODE_TRANSITION_END(new node)
-     * @return next node
-     */
-    @Override
-    public SimpleStoryNode next() {
-        getStoryCharacters().values()
-                .forEach(character -> {
-                    character.getQuests()
-                            .forEach(SimpleStoryQuest::complete);
-                    character.getQuests()
-                            .removeIf(quest -> quest.isCompleted() && !quest.isUnique());
-                });
-        stateManager.setState(StoryState.NODE_TRANSITION_END, getCurrentNode());
-        return currentNode;
-    }
-
-    @Override
-    public SimpleStoryCharacter addStoryCharacter(Long id) {
-        SimpleStoryCharacter character = new SimpleCharacterBuilder(1L).build();
-        if(storyCharacters.putIfAbsent(id, character) == null) {
-            return character;
-        }else{
-            return null;
-        }
-    }
-
     @Override
     public Map<Long, SimpleStoryNode> getStoryNodes() {
         return storyNodes;
@@ -106,93 +120,18 @@ public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryChar
         }
     }
 
+    /**
+     * Go to next node
+     * <br>
+     * Changes StateManager state to NODE_TRANSITION_END(new node)
+     * @return next node
+     */
     @Override
-    public Map<Long, SimpleStoryCharacter> getStoryCharacters() {
-        return storyCharacters;
+    public SimpleStoryNode next() {
+        stateManager.setState(StoryState.NODE_TRANSITION_END, getCurrentNode());
+        return currentNode;
     }
 
-    @Override
-    public SimpleStoryLocation addStoryLocation(Long id) {
-        SimpleStoryLocation location = new SimpleLocationBuilder(id).build();
-        if(storyLocations.putIfAbsent(id, location) == null) {
-            return location;
-        }else{
-            return null;
-        }
-    }
 
-    @Override
-    public Map<Long, SimpleStoryLocation> getStoryLocations() {
-        return storyLocations;
-    }
-
-    @Override
-    public Map<Long, SimpleStoryItem> getStoryItems() {
-        return storyItems;
-    }
-
-    @Override
-    public SimpleStoryItem addStoryItem(Long id) {
-        SimpleStoryItem item = new SimpleItemBuilder(id).build();
-        if(storyItems.putIfAbsent(id, item) == null) {
-            return item;
-        }else{
-            return null;
-        }
-    }
-
-    @Override
-    public SimpleStoryQuest addStoryQuest(Long id) {
-        SimpleStoryQuest quest = new SimpleQuestBuilder(id).build();
-        if(storyQuests.putIfAbsent(quest.getId(), quest) == null) {
-            return quest;
-        }else{
-            return null;
-        }
-    }
-
-    @Override
-    public Map<Long, SimpleStoryQuest> getStoryQuests() {
-        return storyQuests;
-    }
-
-    @Override
-    public boolean isCharacterRegistered(Long id) {
-        return getStoryCharacters().containsKey(id);
-    }
-
-    @Override
-    public boolean isLocationRegistered(Long id) {
-        return getStoryLocations().containsKey(id);
-    }
-
-    @Override
-    public boolean isItemRegistered(Long id) {
-        return getStoryItems().containsKey(id);
-    }
-
-    public SimpleStoryCharacter getCharacterById(Long id) {
-        return getStoryCharacters().getOrDefault(id, null);
-    }
-
-    @Override
-    public SimpleStoryQuest getQuestById(Long id) {
-        return getStoryQuests().getOrDefault(id, null);
-    }
-
-    @Override
-    public SimpleStoryItem getItemById(Long id) {
-        return getStoryItems().getOrDefault(id, null);
-    }
-
-    @Override
-    public SimpleStoryLocation getLocationById(Long id) {
-        return getStoryLocations().getOrDefault(id, null);
-    }
-
-    @Override
-    public SimpleStoryNode getNodeById(Long id) {
-        return getStoryNodes().getOrDefault(id, null);
-    }
 
 }
