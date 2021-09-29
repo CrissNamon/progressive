@@ -1,6 +1,5 @@
 package ru.danilarassokhin.progressive;
 
-import ru.danilarassokhin.progressive.basic.*;
 import ru.danilarassokhin.progressive.data.*;
 
 import java.util.Map;
@@ -12,8 +11,10 @@ import java.util.Map;
  * @param <N> Story nodes type {@link StoryNode}
  * @param <C> Story characters type {@link StoryCharacter}
  * @param <L> Story locations type {@link StoryLocation}
+ * @param <I> Story item type {@link StoryItem}
+ * @param <Q> Story quest type {@link StoryQuest}
  */
-public interface Story<N extends StoryNode, C extends StoryCharacter,
+public interface Story<ID, N extends StoryNode, C extends StoryCharacter,
         L extends StoryLocation, I extends StoryItem,
         Q extends StoryQuest> {
 
@@ -38,123 +39,130 @@ public interface Story<N extends StoryNode, C extends StoryCharacter,
 
     /**
      * Adds character to story
-     * @param character Character to add
-     * @return true if character doesn't exists already
+     * @param id Character id to add
+     * @return Empty character or null if id already exists
      */
-    boolean addStoryCharacter(C character);
+    C addStoryCharacter(ID id);
 
     /**
      * Returns all nodes registered in story
      * @return Map of nodes as nodeId - node
      */
-    Map<?, N> getStoryNodes();
+    Map<ID, N> getStoryNodes();
 
     /**
      * Adds node to story
-     * @param node Node to add
-     * @return true if node doesn't exists already
+     * @param id Node id to add
+     * @return Empty node or null if id already exists
      */
-    boolean addStoryNode(N node);
+    N addStoryNode(ID id);
 
     /**
      * Returns all characters registered in story
      * @return Map of characters as characterId - character
      */
-    Map<?, C> getStoryCharacters();
+    Map<ID, C> getStoryCharacters();
 
     /**
      * Adds location to story
-     * @param location Location to add
-     * @return true if location doesn't exists already
+     * @param id Location id to add
+     * @return Empty location or null if id already exists
      */
-    boolean addStoryLocation(L location);
+    L addStoryLocation(ID id);
 
     /**
      * Returns all location registered in story
      * @return Map of locations as characterId - character
      */
-    Map<?, L> getStoryLocations();
+    Map<ID, L> getStoryLocations();
 
     /**
      * Returns all items registered in story
      * @return Map of items as characterId - character
      */
-    Map<?, I> getStoryItems();
+    Map<ID, I> getStoryItems();
 
     /**
      * Adds item to story
-     * @param item Item to add
-     * @return true if item doesn't exists already
+     * @param id Item id to add
+     * @return Empty item or null if id already exists
      */
-    boolean addStoryItem(I item);
+    I addStoryItem(ID id);
 
     /**
      * Adds quest to story
-     * @param quest Quest to add
-     * @return true if quest doesn't exists already
+     * @param id Quest id to add
+     * @return Empty item or null if id already exists
      */
-    boolean addStoryQuest(Q quest);
+    Q addStoryQuest(ID id);
 
     /**
      * Returns all quests registered in story
      * @return Map of quests as characterId - character
      */
-    Map<?, Q> getStoryQuests();
+    Map<ID, Q> getStoryQuests();
 
     /**
      * Sets current node in Story to {@code startNode}
      * @param startNode Node to set
      * @return {@code startNode}
      */
-    SimpleStoryNode begin(N startNode);
+    N begin(N startNode);
 
     /**
      * Checks if {@code character} registered in Story
-     * @param character Character to check
+     * @param id Character id to check
      * @return true if {@code character} is registered
      */
-    boolean isCharacterRegistered(C character);
+    boolean isCharacterRegistered(ID id);
 
     /**
      * Checks if {@code location} registered in Story
-     * @param location Location to check
+     * @param id Location id to check
      * @return true if {@code location} is registered
      */
-    boolean isLocationRegistered(L location);
+    boolean isLocationRegistered(ID id);
 
     /**
      * Checks if {@code item} registered in Story
-     * @param item Item to check
+     * @param id Item id to check
      * @return true if {@code item} is registered
      */
-    boolean isItemRegistered(I item);
+    boolean isItemRegistered(ID id);
 
     /**
      * Searches for character registered in story by id
      * @param id Id to search
      * @return Character, null otherwise
      */
-    C getCharacterById(Long id);
+    C getCharacterById(ID id);
 
     /**
      * Searches for quest registered in story by id
      * @param id Id to search
      * @return Quest, null otherwise
      */
-    Q getQuestById(Long id);
+    Q getQuestById(ID id);
 
     /**
      * Searches for item registered in story by id
      * @param id Id to search
      * @return Item, null otherwise
      */
-    I getItemById(Long id);
+    I getItemById(ID id);
 
     /**
      * Searches for location registered in story by id
      * @param id Id to search
      * @return Location, null otherwise
      */
-    L getLocationById(Long id);
+    L getLocationById(ID id);
+
+    /**
+     * Searches for node registered in story by id
+     * @param id Id to search
+     * @return Node, null otherwise
+     */
+    N getNodeById(ID id);
 
 }

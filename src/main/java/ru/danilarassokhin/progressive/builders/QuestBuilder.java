@@ -27,7 +27,7 @@ public interface QuestBuilder<V extends StoryQuest> extends Builder<V> {
     /**
      * Sets quest uniqueness
      * @param unique If quest is unique (one-time)
-     * @return
+     * @return Quest builder
      */
     QuestBuilder setUnique(boolean unique);
 

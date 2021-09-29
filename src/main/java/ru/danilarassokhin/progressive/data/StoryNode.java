@@ -8,7 +8,7 @@ import java.util.List;
  * @param <C> Node content type
  * @param <A> Node answer type
  */
-public interface StoryNode<ID, C, A extends StoryNodeAnswer> {
+public interface StoryNode<ID, N, C, A extends StoryNodeAnswer> {
 
     /**
      * Returns node's content
@@ -50,7 +50,8 @@ public interface StoryNode<ID, C, A extends StoryNodeAnswer> {
     /**
      * Sets content to node
      * @param content New content
+     * @return this node
      */
-    void setContent(C content);
+    N setContent(C content);
 
 }

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
+public class SimpleStory implements Story<Long, SimpleStoryNode, SimpleStoryCharacter,
         SimpleStoryLocation, SimpleStoryItem, SimpleStoryQuest>, Serializable {
 
     private transient static SimpleStory INSTANCE;
@@ -82,8 +82,13 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     }
 
     @Override
-    public boolean addStoryCharacter(SimpleStoryCharacter character) {
-        return storyCharacters.putIfAbsent(character.getId(), character) == null;
+    public SimpleStoryCharacter addStoryCharacter(Long id) {
+        SimpleStoryCharacter character = new SimpleCharacterBuilder(1L).build();
+        if(storyCharacters.putIfAbsent(id, character) == null) {
+            return character;
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -92,8 +97,13 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     }
 
     @Override
-    public boolean addStoryNode(SimpleStoryNode node) {
-        return storyNodes.putIfAbsent(node.getId(), node) == null;
+    public SimpleStoryNode addStoryNode(Long id) {
+        SimpleStoryNode node = new SimpleStoryNode(id);
+        if(storyNodes.putIfAbsent(id, node) == null) {
+            return node;
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -102,8 +112,13 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     }
 
     @Override
-    public boolean addStoryLocation(SimpleStoryLocation location) {
-        return storyLocations.putIfAbsent(location.getId(), location) == null;
+    public SimpleStoryLocation addStoryLocation(Long id) {
+        SimpleStoryLocation location = new SimpleLocationBuilder(id).build();
+        if(storyLocations.putIfAbsent(id, location) == null) {
+            return location;
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -117,13 +132,23 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     }
 
     @Override
-    public boolean addStoryItem(SimpleStoryItem item) {
-        return storyItems.putIfAbsent(item.getId(), item) == null;
+    public SimpleStoryItem addStoryItem(Long id) {
+        SimpleStoryItem item = new SimpleItemBuilder(id).build();
+        if(storyItems.putIfAbsent(id, item) == null) {
+            return item;
+        }else{
+            return null;
+        }
     }
 
     @Override
-    public boolean addStoryQuest(SimpleStoryQuest quest) {
-        return storyQuests.putIfAbsent(quest.getId(), quest) == null;
+    public SimpleStoryQuest addStoryQuest(Long id) {
+        SimpleStoryQuest quest = new SimpleQuestBuilder(id).build();
+        if(storyQuests.putIfAbsent(quest.getId(), quest) == null) {
+            return quest;
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -132,21 +157,20 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     }
 
     @Override
-    public boolean isCharacterRegistered(SimpleStoryCharacter character) {
-        return getStoryCharacters().containsKey(character.getId());
+    public boolean isCharacterRegistered(Long id) {
+        return getStoryCharacters().containsKey(id);
     }
 
     @Override
-    public boolean isLocationRegistered(SimpleStoryLocation location) {
-        return getStoryLocations().containsKey(location.getId());
+    public boolean isLocationRegistered(Long id) {
+        return getStoryLocations().containsKey(id);
     }
 
     @Override
-    public boolean isItemRegistered(SimpleStoryItem item) {
-        return getStoryItems().containsKey(item.getId());
+    public boolean isItemRegistered(Long id) {
+        return getStoryItems().containsKey(id);
     }
 
-    @Override
     public SimpleStoryCharacter getCharacterById(Long id) {
         return getStoryCharacters().getOrDefault(id, null);
     }
@@ -164,6 +188,11 @@ public class SimpleStory implements Story<SimpleStoryNode, SimpleStoryCharacter,
     @Override
     public SimpleStoryLocation getLocationById(Long id) {
         return getStoryLocations().getOrDefault(id, null);
+    }
+
+    @Override
+    public SimpleStoryNode getNodeById(Long id) {
+        return getStoryNodes().getOrDefault(id, null);
     }
 
 }

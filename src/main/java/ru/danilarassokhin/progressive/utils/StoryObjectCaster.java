@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.utils;
 
-import ru.danilarassokhin.progressive.lambdas.StoryActionParam;
+import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 
 /**
  * Casts one object type to another
@@ -15,6 +15,6 @@ public interface StoryObjectCaster {
      * @param <O> Object you want to cast from
      * @return Casted object if casted successfully, null otherwise
      */
-    <T, O> T cast(O from, Class<T> to, StoryActionParam<T> onSuccessCast);
+    <T, O> T cast(O from, Class<T> to, StoryActionObject<T> onSuccessCast);
 
 }

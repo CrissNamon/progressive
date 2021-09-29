@@ -3,6 +3,7 @@ package ru.danilarassokhin.progressive.basic;
 import ru.danilarassokhin.progressive.lambdas.StoryAction;
 import ru.danilarassokhin.progressive.data.StoryCharacter;
 import ru.danilarassokhin.progressive.data.StoryState;
+import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInventory,
+public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryCharacter, SimpleStoryInventory,
         SimpleStoryLocation, SimpleStoryItem,
         SimpleStoryQuest, String>, Serializable, AutoCloseable {
 
@@ -20,7 +21,7 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     private final SimpleStoryInventory inventory;
     private SimpleStoryLocation location;
     private transient final Set<SimpleStoryQuest> quests;
-    private transient final Map<String, StoryAction> actions;
+    private transient final Map<String, StoryActionObject> actions;
 
     protected SimpleStoryCharacter(Long id, String name, float health, SimpleStoryInventory inventory,
                                 SimpleStoryLocation location) {
@@ -63,8 +64,9 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     }
 
     @Override
-    public void setName(String name) {
+    public SimpleStoryCharacter setName(String name) {
         this.name = name;
+        return this;
     }
 
     @Override
@@ -73,8 +75,9 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     }
 
     @Override
-    public void setHealth(float health) {
+    public SimpleStoryCharacter setHealth(float health) {
         this.health = health;
+        return this;
     }
 
     @Override
@@ -138,8 +141,9 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
      * @param location Location to set
      * @return true if location set successfully
      */
-    public boolean setLocation(SimpleStoryLocation location) {
-        return setLocation(location, () -> {}, () -> {});
+    public SimpleStoryCharacter setLocation(SimpleStoryLocation location) {
+        setLocation(location, () -> {}, () -> {});
+        return this;
     }
 
     @Override
@@ -148,12 +152,21 @@ public class SimpleStoryCharacter implements StoryCharacter<Long, SimpleStoryInv
     }
 
     @Override
-    public StoryAction action(String actionName) {
-        return actions.getOrDefault(actionName, () -> {});
+    public <O> boolean action(String actionName, O param) {
+        StoryActionObject<O> action = actions.getOrDefault(actionName, (o) -> {});
+        action.make(param);
+        return true;
     }
 
     @Override
-    public boolean addAction(String actionName, StoryAction action) {
+    public boolean action(String actionName) {
+        StoryActionObject<Object> action = actions.getOrDefault(actionName, (o) -> {});
+        action.make(new Object());
+        return true;
+    }
+
+    @Override
+    public <O> boolean addAction(String actionName, StoryActionObject<O> action) {
         return actions.putIfAbsent(actionName, action) == null;
     }
 

@@ -1,13 +1,13 @@
 package ru.danilarassokhin.progressive.data;
 
-import ru.danilarassokhin.progressive.lambdas.StoryCondition;
 import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
+import ru.danilarassokhin.progressive.lambdas.StoryCondition;
 
 /**
  * Represents story quest
  * @param <I> Quest id type
  */
-public interface StoryQuest<I> {
+public interface StoryQuest<I, Q> {
 
     /**
      * Returns quest id
@@ -43,7 +43,7 @@ public interface StoryQuest<I> {
      * Sets on complete action
      * @param onComplete action to be called on quest complete
      */
-    void setOnComplete(StoryActionObject onComplete);
+    void setOnComplete(StoryActionObject<Q> onComplete);
 
     /**
      * Sets complete condition

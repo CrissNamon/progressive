@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.data;
 
 import ru.danilarassokhin.progressive.lambdas.StoryAction;
+import ru.danilarassokhin.progressive.lambdas.StoryActionObject;
 
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
  * @param <Q> Character quests type
  * @param <AN> Character action id type
  */
-public interface StoryCharacter<I, N extends StoryInventory,
+public interface StoryCharacter<I, C, N extends StoryInventory,
         L extends StoryLocation, T extends StoryItem,
         Q extends StoryQuest, AN> {
 
@@ -32,8 +33,9 @@ public interface StoryCharacter<I, N extends StoryInventory,
     /**
      * Sets character name
      * @param name new name
+     * @return This character
      */
-    void setName(String name);
+    C setName(String name);
 
     /**
      * Returns character's health
@@ -44,8 +46,9 @@ public interface StoryCharacter<I, N extends StoryInventory,
     /**
      * Sets character health
      * @param health new health value
+     * @return This character
      */
-    void setHealth(float health);
+    C setHealth(float health);
 
     /**
      * Adds health to character
@@ -95,18 +98,28 @@ public interface StoryCharacter<I, N extends StoryInventory,
     boolean addItem(T item);
 
     /**
-     * Gets character action by id
+     * Does character action with {@code actionName}
+     * @param actionName Action name to get
+     * @param <O> Action param type to pass
+     * @param param Action parameter
+     * @return true if action is done
+     */
+    <O> boolean action(AN actionName, O param);
+
+    /**
+     * Does character action with {@code actionName} without parameters
      * @param actionName Action name to get
      * @return Action or null
      */
-    StoryAction action(AN actionName);
+    boolean action(AN actionName);
 
     /**
      * Adds action to character
      * @param actionName Action name to add
      * @param action Action to add
+     * @param <O> Action param type to pass
      * @return true if action doesn't exists already
      */
-    boolean addAction(AN actionName, StoryAction action);
+    <O> boolean addAction(AN actionName, StoryActionObject<O> action);
 
 }

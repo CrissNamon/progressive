@@ -6,7 +6,7 @@ import ru.danilarassokhin.progressive.data.StoryQuest;
 
 import java.io.Serializable;
 
-public class SimpleStoryQuest implements StoryQuest<Long>, Serializable, AutoCloseable {
+public class SimpleStoryQuest implements StoryQuest<Long, SimpleStoryQuest>, Serializable, AutoCloseable {
 
     private final Long id;
     private String name;
@@ -72,7 +72,7 @@ public class SimpleStoryQuest implements StoryQuest<Long>, Serializable, AutoClo
     }
 
     @Override
-    public void setOnComplete(StoryActionObject onComplete) {
+    public void setOnComplete(StoryActionObject<SimpleStoryQuest> onComplete) {
         this.onComplete = onComplete;
     }
 
@@ -94,5 +94,10 @@ public class SimpleStoryQuest implements StoryQuest<Long>, Serializable, AutoClo
     @Override
     public void close() throws ClassCastException {
 
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().intValue();
     }
 }
