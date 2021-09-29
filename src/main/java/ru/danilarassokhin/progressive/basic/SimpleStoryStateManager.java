@@ -44,12 +44,24 @@ public class SimpleStoryStateManager implements StoryStateManager<StoryState>, S
     }
 
     @Override
+    @Deprecated
     public List<StoryActionObject> getActions(StoryState state) {
+        return getListeners(state);
+    }
+
+    @Override
+    public List<StoryActionObject> getListeners(StoryState state) {
         return actions.getOrDefault(state, new ArrayList<>());
     }
 
     @Override
+    @Deprecated
     public <V> void addAction(StoryState state, StoryActionObject<V> action) {
+        addListener(state, action);
+    }
+
+    @Override
+    public <V> void addListener(StoryState state, StoryActionObject<V> action) {
         actions.putIfAbsent(state, new ArrayList<>());
         actions.get(state).add(action);
     }

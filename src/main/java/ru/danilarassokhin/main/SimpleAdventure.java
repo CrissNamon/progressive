@@ -26,16 +26,16 @@ public class SimpleAdventure {
 
     public void addStates() {
         //And states can do some actions on change
-        simpleStoryStateManager.<SimpleStory>addAction(StoryState.INIT, (story) -> {
+        simpleStoryStateManager.<SimpleStory>addListener(StoryState.INIT, (story) -> {
             //You can do some stuff after story initialization
             //It will be called one time on Story instance creation
         });
         //Actions have parameters with some cool stuff!
-        simpleStoryStateManager.addAction(StoryState.NODE_TRANSITION_START, (oldNode) -> System.out.println("Node transition start"));
+        simpleStoryStateManager.addListener(StoryState.NODE_TRANSITION_START, (oldNode) -> System.out.println("Node transition start"));
         //You can specify action param type...
-        simpleStoryStateManager.<SimpleStoryNode>addAction(StoryState.NODE_TRANSITION_END, (newNode) -> System.out.println("Node transition end"));
-        simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_START, (oldLocation) -> System.out.println("START MOVE TO LOCATION"));
-        simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_COMPLETE, (newLocation) -> {
+        simpleStoryStateManager.<SimpleStoryNode>addListener(StoryState.NODE_TRANSITION_END, (newNode) -> System.out.println("Node transition end"));
+        simpleStoryStateManager.addListener(StoryState.LOCATION_MOVE_START, (oldLocation) -> System.out.println("START MOVE TO LOCATION"));
+        simpleStoryStateManager.addListener(StoryState.LOCATION_MOVE_COMPLETE, (newLocation) -> {
             //...or get an Object by default
             //You can try-with-resource (yup, some types are AutoClosable)
             try(SimpleStoryLocation l = (SimpleStoryLocation) newLocation) {
