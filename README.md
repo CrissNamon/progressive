@@ -72,7 +72,7 @@ simpleStoryStateManager.addAction(StoryState.LOCATION_MOVE_COMPLETE, (newLocatio
     try(SimpleStoryLocation l = (SimpleStoryLocation) newLocation) {
         System.out.println("MOVE TO LOCATION " + l.getName() + " complete");
     }catch (Exception e) {
-        System.out.println("NOT AN ITEM!");
+        System.out.println("NOT A LOCATION!");
     }
     //...or you can use THE OBJECT CASTER
     SimpleObjectCaster simpleObjectCaster = new SimpleObjectCaster();
