@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Story;
 import ru.danilarassokhin.progressive.component.StoryState;
-import ru.danilarassokhin.progressive.component.StorySystem;
+import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.component.StorySystem;
+import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.util.HashMap;
 import java.util.Map;

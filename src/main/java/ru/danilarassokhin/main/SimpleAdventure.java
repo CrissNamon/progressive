@@ -54,6 +54,7 @@ public class SimpleAdventure {
 
 
     public void addLocations() {
+        //Register location system in story
         LocationSystem locationSystem = simpleStory.addSystem(LocationSystem.class);
         //Add start location for your hero with builder
         SimpleStoryLocation startLocation = locationSystem.addComponent(1L);
@@ -65,6 +66,7 @@ public class SimpleAdventure {
     }
 
     public void addItems() {
+        //Register item system in story
         ItemSystem itemSystem = simpleStory.addSystem(ItemSystem.class);
         //Add some items, why not?
         SimpleStoryItem sword = itemSystem.addComponent(1L);
@@ -73,6 +75,7 @@ public class SimpleAdventure {
     }
 
     public void addQuests() {
+        //Register quest system in story
         QuestSystem questSystem = simpleStory.addSystem(QuestSystem.class);
         //May be some quest? Hero need to do hero things!
         SimpleStoryQuest enterBasement = questSystem.addComponent(1L);
@@ -90,6 +93,7 @@ public class SimpleAdventure {
 
     public void addCharacters() {
         //And your hero...
+        //Register character system
         CharacterSystem characterSystem = simpleStory.addSystem(CharacterSystem.class);
         mainCharacter = characterSystem.addComponent(1L).setHealth(80)
                 .setName("Main Character")
@@ -126,16 +130,19 @@ public class SimpleAdventure {
         //You can add answers to your scenery nodes
         SimpleStoryNodeAnswer greetingAnswer1 = new SimpleStoryNodeAnswer("Go to basement",
                 //What if answer... answered?
-                () -> simpleStory.getSystem(CharacterSystem.class).getComponentById(1L).setLocation(
-                        simpleStory.getSystem(LocationSystem.class).getComponentById(2L),
-                        //DON'T FORGET TO SET NEXT SCENERY NODE!
-                        //of course if you don't want to play current node again
-                        () -> simpleStory.setNext(metZombie),
-                        () -> {
-                            System.out.println("You have " + mainCharacter.getHealth() + "HP. Not enough for basement");
-                            simpleStory.setNext(lowHp);
-                        }
-                )
+                //Get character from character system
+                () -> simpleStory.getSystem(CharacterSystem.class).getComponentById(1L)
+                        .setLocation(
+                            //Get location from location system
+                            simpleStory.getSystem(LocationSystem.class).getComponentById(2L),
+                            //DON'T FORGET TO SET NEXT SCENERY NODE!
+                            //of course if you don't want to play current node again
+                            () -> simpleStory.setNext(metZombie),
+                            () -> {
+                                System.out.println("You have " + mainCharacter.getHealth() + "HP. Not enough for basement");
+                                simpleStory.setNext(lowHp);
+                            }
+                        )
         );
         //Don't forget to connect nodes with answers! It's important
         greeting.addAnswer(greetingAnswer1);
