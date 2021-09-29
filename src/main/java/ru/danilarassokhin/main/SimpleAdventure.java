@@ -81,7 +81,6 @@ public class SimpleAdventure {
                         //What if quest will be completed?
                         (q) -> System.out.println("QUEST COMPLETED: " + q.getName())
                 );
-
     }
 
     public void addCharacters() {
