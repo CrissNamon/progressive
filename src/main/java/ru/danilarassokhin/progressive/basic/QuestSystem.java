@@ -4,7 +4,6 @@ import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class QuestSystem implements StorySystem<Long, SimpleStoryQuest> {
 
@@ -32,11 +31,6 @@ public class QuestSystem implements StorySystem<Long, SimpleStoryQuest> {
     @Override
     public void removeComponent(Long id) {
         quests.remove(id);
-    }
-
-    @Override
-    public Set<Class<? extends StorySystem>> getRequirements() {
-        return null;
     }
 
     @Override

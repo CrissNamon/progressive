@@ -58,7 +58,7 @@ public class SimpleAdventure {
     public void addLocations() throws StoryException, StoryRequirementException {
         //Register location system in story
         LocationSystem locationSystem = simpleStory.addSystem(LocationSystem.class);
-        //Add start location for your hero with builder
+        //Add start location for your hero
         SimpleStoryLocation startLocation = locationSystem.addComponent(1L);
         startLocation.setName("Castle");
         //Add location for your enemies

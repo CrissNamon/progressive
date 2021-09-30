@@ -24,8 +24,8 @@ public class SimpleStory implements Story<Long, SimpleStoryNode>, Serializable {
     private SimpleStory() {
         this.storyNodes = new HashMap<>();
         this.stateManager = SimpleStoryStateManager.getInstance();
-        stateManager.setState(StoryState.INIT, this);
         systems = new HashMap<>();
+        stateManager.setState(StoryState.INIT, this);
     }
 
     public static SimpleStory getInstance() {

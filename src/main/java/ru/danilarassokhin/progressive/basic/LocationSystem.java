@@ -4,7 +4,6 @@ import ru.danilarassokhin.progressive.system.StorySystem;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class LocationSystem implements StorySystem<Long, SimpleStoryLocation> {
     private final Map<Long, SimpleStoryLocation> locations;
@@ -31,11 +30,6 @@ public class LocationSystem implements StorySystem<Long, SimpleStoryLocation> {
     @Override
     public void removeComponent(Long id) {
         locations.remove(id);
-    }
-
-    @Override
-    public Set<Class<? extends StorySystem>> getRequirements() {
-        return null;
     }
 
     @Override

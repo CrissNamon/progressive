@@ -1,7 +1,9 @@
 package ru.danilarassokhin.progressive.system;
 
+import ru.danilarassokhin.progressive.annotations.StorySystemRequirement;
 import ru.danilarassokhin.progressive.component.StoryComponent;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +37,17 @@ public interface StorySystem<I, C extends StoryComponent> {
      * Returns requirements of this system
      * @return Set of required systems classes
      */
-    Set<Class<? extends  StorySystem>> getRequirements();
+    default Set<Class<? extends  StorySystem>> getRequirements() {
+        Class<?> c = this.getClass();
+        Set<Class<? extends StorySystem>> requirements = new HashSet<>();
+        if(c.isAnnotationPresent(StorySystemRequirement.class)) {
+            Class<? extends StorySystem>[] req = c.getAnnotation(StorySystemRequirement.class).value();
+            for(int i = 0; i < req.length; ++i) {
+                requirements.add(req[i]);
+            }
+        }
+        return requirements;
+    }
 
     /**
      * Searches for component by id
