@@ -16,6 +16,7 @@ import java.util.Set;
 @isGameScript
 public class CharacterSystem extends AbstractGameScript {
 
+    @Autofill
     private InventorySystem inventorySystem;
 
     @Autofill
@@ -29,11 +30,9 @@ public class CharacterSystem extends AbstractGameScript {
     private transient final Set<? extends GameQuest> quests;
     private transient final Map<String, GameActionObject> actions;
 
-    @Autofill
-    public CharacterSystem(InventorySystem inventorySystem) {
+    public CharacterSystem() {
         this.quests = new HashSet<>();
         this.actions = new HashMap<>();
-        this.inventorySystem = inventorySystem;
     }
 
     public float getHealth() {
