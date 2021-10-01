@@ -1,7 +1,9 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.Parentwired;
-import ru.danilarassokhin.progressive.annotation.RequiredScript;
+import ru.danilarassokhin.progressive.annotation.Autofill;
+import ru.danilarassokhin.progressive.annotation.FromParent;
+import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.annotation.isGameScript;
 import ru.danilarassokhin.progressive.basic.component.GameQuest;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 
@@ -10,16 +12,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@RequiredScript({InventorySystem.class, LocationSystem.class, QuestSystem.class})
+//@RequiredGameScript({InventorySystem.class, LocationSystem.class, QuestSystem.class})
+@isGameScript
 public class CharacterSystem extends AbstractGameScript {
 
-    @Parentwired
     private InventorySystem inventorySystem;
 
-    @Parentwired
+    @Autofill
     private LocationSystem locationSystem;
 
-    @Parentwired
+    @Autofill
     private QuestSystem questSystem;
 
     private String name;
@@ -27,9 +29,11 @@ public class CharacterSystem extends AbstractGameScript {
     private transient final Set<? extends GameQuest> quests;
     private transient final Map<String, GameActionObject> actions;
 
-    public CharacterSystem() {
+    @Autofill
+    public CharacterSystem(InventorySystem inventorySystem) {
         this.quests = new HashSet<>();
         this.actions = new HashMap<>();
+        this.inventorySystem = inventorySystem;
     }
 
     public float getHealth() {
@@ -50,5 +54,13 @@ public class CharacterSystem extends AbstractGameScript {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public InventorySystem getInventory() {
+        return inventorySystem;
+    }
+
+    public LocationSystem getLocationSystem() {
+        return locationSystem;
     }
 }

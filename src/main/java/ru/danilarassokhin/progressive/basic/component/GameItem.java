@@ -24,4 +24,5 @@ public class GameItem extends AbstractGameComponent{
     public void setAmount(float amount) {
         this.amount = amount;
     }
+
 }

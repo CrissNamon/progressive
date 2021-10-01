@@ -1,11 +1,13 @@
 package ru.danilarassokhin.progressive.util;
 
-import ru.danilarassokhin.progressive.annotation.Script;
+import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.annotation.isGameScript;
 
 import java.lang.annotation.Annotation;
 
 public enum GameAnnotation {
-    IS_GAME_SCRIPT(Script.class)
+    IS_GAME_SCRIPT(isGameScript.class),
+    IS_GAME_BEAN(GameBean.class)
     ;
 
     private Class<? extends Annotation> annotation;

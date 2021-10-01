@@ -4,6 +4,7 @@ import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.util.GameObjectCaster;
 
 public final class BasicObjectCaster implements GameObjectCaster {
+
     @Override
     public <T, O> T cast(O from, Class<T> to, GameActionObject<T> onSuccessCast) {
         try {

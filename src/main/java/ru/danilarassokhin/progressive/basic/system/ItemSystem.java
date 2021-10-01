@@ -1,8 +1,9 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.Script;
+import ru.danilarassokhin.progressive.annotation.isGameScript;
 
-@Script
+@isGameScript
 public class ItemSystem extends AbstractGameScript {
+
 
 }

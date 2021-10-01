@@ -1,14 +1,12 @@
 package ru.danilarassokhin.progressive.annotation;
 
-import ru.danilarassokhin.progressive.component.GameScript;
-
 import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Script
-public @interface RequiredScript {
-    Class<? extends GameScript>[] value() default {};
+@isGameScript
+public @interface RequiredGameScript {
+    Class<? extends ru.danilarassokhin.progressive.component.GameScript>[] value() default {};
 }

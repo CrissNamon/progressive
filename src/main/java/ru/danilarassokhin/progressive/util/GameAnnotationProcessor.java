@@ -1,17 +1,19 @@
 package ru.danilarassokhin.progressive.util;
 
-import ru.danilarassokhin.progressive.annotation.Script;
-
-import java.lang.annotation.Annotation;
+import java.lang.annotation.*;
 
 public interface GameAnnotationProcessor {
 
-    static boolean isAnnotationPresent(GameAnnotation checker, Class<?> c) {
-        return findAnnotation(c, checker.getAnnotation()) != null;
+    static boolean isAnnotationPresent(Class<? extends Annotation> an, Class<?> c) {
+        return findAnnotation(c, an) != null;
     }
 
     @SuppressWarnings("unchecked")
     static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
+        if(clazz.equals(Target.class) || clazz.equals(Documented.class) || clazz.equals(Retention.class)
+                || clazz.equals(Inherited.class) || clazz.equals(Deprecated.class)) {
+            return null;
+        }
         Annotation[] anns = clazz.getDeclaredAnnotations();
         for (Annotation ann : anns) {
             if (ann.annotationType() == annotationType) {

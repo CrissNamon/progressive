@@ -1,6 +1,9 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.RequiredScript;
+import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.annotation.GameBeanCreationPolicy;
+import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.annotation.isGameScript;
 import ru.danilarassokhin.progressive.basic.component.GameItem;
 import ru.danilarassokhin.progressive.util.GameComponentInstantiator;
 
@@ -9,7 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@RequiredScript(ItemSystem.class)
+@GameBean(policy = GameBeanCreationPolicy.OBJECT)
 public class InventorySystem extends AbstractGameScript {
 
     private final Map<Long, GameItem> items;
@@ -25,12 +28,7 @@ public class InventorySystem extends AbstractGameScript {
     }
 
     public <I extends GameItem> boolean addItem(I item) {
-        if(items.putIfAbsent(item.getId(), item) == null) {
-            return true;
-        }else {
-            System.out.println("ITEM WITH ID " + item.getId() + " ALREADY EXISTS! SKIPPING...");
-            return false;
-        }
+        return items.putIfAbsent(item.getId(), item) == null;
     }
     
     public boolean hasItem(Long id) {

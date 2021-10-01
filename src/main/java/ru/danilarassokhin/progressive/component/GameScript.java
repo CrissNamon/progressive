@@ -1,8 +1,10 @@
 package ru.danilarassokhin.progressive.component;
 
-import ru.danilarassokhin.progressive.annotation.Parentwired;
+import ru.danilarassokhin.progressive.annotation.FromParent;
+import ru.danilarassokhin.progressive.annotation.isGameScript;
 import ru.danilarassokhin.progressive.util.GameAnnotation;
 import ru.danilarassokhin.progressive.util.GameAnnotationProcessor;
+
 
 import java.lang.reflect.Field;
 
@@ -16,12 +18,12 @@ public interface GameScript {
         Field[] scriptFields = getClass().getDeclaredFields();
         for(Field f : scriptFields) {
             f.setAccessible(true);
-            if(f.isAnnotationPresent(Parentwired.class)) {
-                if(GameAnnotationProcessor.isAnnotationPresent(GameAnnotation.IS_GAME_SCRIPT, f.getType())) {
+            if(f.isAnnotationPresent(FromParent.class)) {
+                if(GameAnnotationProcessor.isAnnotationPresent(isGameScript.class, f.getType())) {
                     f.set(this, getParent().getGameScript(f.getType().asSubclass(GameScript.class)));
                 }else{
                     throw new RuntimeException("Could not autowire field " + f.getName() + " in " + getClass().getName()
-                            + "! Only fields of type GameScript and annotated with @Script supported for autowire");
+                            + "! Only fields of type isGameScript and annotated with @isGameScript supported for autowire");
                 }
             }
         }

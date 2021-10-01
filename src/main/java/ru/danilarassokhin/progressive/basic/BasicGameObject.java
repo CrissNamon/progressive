@@ -1,13 +1,13 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.annotation.RequiredScript;
+import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.annotation.isGameScript;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
-import ru.danilarassokhin.progressive.util.GameAnnotation;
 import ru.danilarassokhin.progressive.util.GameAnnotationProcessor;
+import ru.danilarassokhin.progressive.util.GameComponentInstantiator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public final class BasicGameObject implements GameObject {
 
     private Long id;
 
-    private final Map<Class<? extends GameScript>, GameScript> scripts;
+    private final Map<Class<? extends ru.danilarassokhin.progressive.component.GameScript>, ru.danilarassokhin.progressive.component.GameScript> scripts;
 
     protected BasicGameObject(Long id) {
         this.id = id;
@@ -24,31 +24,31 @@ public final class BasicGameObject implements GameObject {
 
     @Override
     public <V extends GameScript> V getGameScript(Class<V> gameScriptClass) {
-        if(!GameAnnotationProcessor.isAnnotationPresent(GameAnnotation.IS_GAME_SCRIPT, gameScriptClass)) {
-            throw new RuntimeException(gameScriptClass.getName() + " has no @Script annotation. All GameScripts must be annotated with @Script!");
+        if(!GameAnnotationProcessor.isAnnotationPresent(isGameScript.class, gameScriptClass)) {
+            throw new RuntimeException(gameScriptClass.getName() + " has no @isGameScript annotation. All GameScripts must be annotated with @isGameScript!");
         }
         BasicObjectCaster objectCaster = new BasicObjectCaster();
-        GameScript script = scripts.getOrDefault(gameScriptClass, null);
-        if(script != null) {
-            return objectCaster.cast(script, gameScriptClass, (o) -> {});
+        GameScript gameScript = scripts.getOrDefault(gameScriptClass, null);
+        if(gameScript != null) {
+            return objectCaster.cast(gameScript, gameScriptClass, (o) -> {});
         }
         try {
-            script = gameScriptClass.getDeclaredConstructor().newInstance();
-            script.setParent(this);
-            if(gameScriptClass.isAnnotationPresent(RequiredScript.class)) {
-                RequiredScript requiredScripts = gameScriptClass.getAnnotation(RequiredScript.class);
-                for(Class<? extends GameScript> req : requiredScripts.value()) {
+            gameScript = GameComponentInstantiator.instantiate(gameScriptClass);
+            gameScript.setParent(this);
+            if(gameScriptClass.isAnnotationPresent(RequiredGameScript.class)) {
+                RequiredGameScript requiredGameScripts = gameScriptClass.getAnnotation(RequiredGameScript.class);
+                for(Class<? extends GameScript> req : requiredGameScripts.value()) {
                     getGameScript(req);
                 }
             }
-            script.wireFields();
-            if(scripts.putIfAbsent(gameScriptClass, script) != null) {
-                throw new RuntimeException("Could not register GameScript " + gameScriptClass.getName() + "! GameScript already exists");
+            gameScript.wireFields();
+            if(scripts.putIfAbsent(gameScriptClass, gameScript) != null) {
+                throw new RuntimeException("Could not register isGameScript " + gameScriptClass.getName() + "! isGameScript already exists");
             }
-            return objectCaster.cast(script, gameScriptClass, (o) -> {});
-        } catch (InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            return objectCaster.cast(gameScript, gameScriptClass, (o) -> {});
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("Script creation failure! GameScript must have public empty constructor! Exception: " + e.getMessage());
+            throw new RuntimeException("isGameScript creation failure! isGameScript must have public empty constructor! Exception: " + e.getMessage());
         }
     }
 
