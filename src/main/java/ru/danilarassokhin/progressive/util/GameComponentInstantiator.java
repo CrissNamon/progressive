@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.util;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
+import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 
 import java.lang.reflect.Constructor;
@@ -14,7 +15,7 @@ public interface GameComponentInstantiator {
             for (int i = 0; i < args.length; ++i) {
                 argsTypes[i] = args[i].getClass();
             }
-            BasicGame game = BasicGame.getInstance();
+            BasicDIContainer diContainer = BasicDIContainer.getInstance();
             Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
             for(Constructor<?> constructor : constructors) {
                 if(constructor.isAnnotationPresent(Autofill.class)) {
@@ -22,7 +23,7 @@ public interface GameComponentInstantiator {
                     argsTypes = constructor.getParameterTypes();
                     Autofill autofill = constructor.getAnnotation(Autofill.class);
                     for(int i = 0; i < constructor.getParameterCount(); ++i) {
-                        args[i] = game.getBean("", argsTypes[i]);
+                        args[i] = diContainer.getBean("", argsTypes[i]);
                     }
                     break;
                 }
@@ -33,7 +34,7 @@ public interface GameComponentInstantiator {
                 f.setAccessible(true);
                 if(f.isAnnotationPresent(Autofill.class)) {
                     Autofill autofill = f.getAnnotation(Autofill.class);
-                    f.set(instance, game.getBean(autofill.value(), f.getType()));
+                    f.set(instance, diContainer.getBean(autofill.value(), f.getType()));
                 }
             }
             return instance;

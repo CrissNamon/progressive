@@ -1,21 +1,21 @@
 package ru.danilarassokhin.main;
 
+import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.component.GameNode;
 import ru.danilarassokhin.progressive.basic.component.NodeBundle;
 import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.system.CharacterSystem;
-import ru.danilarassokhin.progressive.basic.system.InventorySystem;
 import ru.danilarassokhin.progressive.basic.system.ItemSystem;
 import ru.danilarassokhin.progressive.basic.system.NodeSystem;
-import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 
 public class Main {
 
     public static void main(String[] args) {
         BasicGame game = BasicGame.getInstance();
-        game.loadConfiguration(BasicConfiguration.class);
+        BasicDIContainer diContainer = BasicDIContainer.getInstance();
+        diContainer.loadConfiguration(BasicConfiguration.class);
 
         GameObject nodeFlow = game.addGameObject();
 
