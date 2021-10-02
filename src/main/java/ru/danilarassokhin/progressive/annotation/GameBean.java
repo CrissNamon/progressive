@@ -14,4 +14,5 @@ import java.lang.annotation.*;
 public @interface GameBean {
     GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
     String name() default "";
+    String[] qualifiers() default {};
 }

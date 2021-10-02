@@ -11,4 +11,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Autofill {
     String value() default "";
+    String[] qualifiers() default {};
 }

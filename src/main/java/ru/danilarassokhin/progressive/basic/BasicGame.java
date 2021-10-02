@@ -18,7 +18,7 @@ public final class BasicGame implements Game {
 
     private BasicGame() {
         gameObjects = new HashMap<>();
-        stateManager = new BasicGameStateManager();
+        stateManager = BasicGameStateManager.getInstance();
         stateManager.setState(GameState.INIT, this);
     }
 
@@ -58,6 +58,5 @@ public final class BasicGame implements Game {
     public boolean isGameObjectClassSet() {
         return gameObjClass != null;
     }
-
 
 }

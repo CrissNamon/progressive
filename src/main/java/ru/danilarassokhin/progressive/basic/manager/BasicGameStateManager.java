@@ -14,9 +14,16 @@ public class BasicGameStateManager implements GameStateManager<GameState> {
     private GameState state;
     private transient Map<GameState, List<GameActionObject>> listeners;
 
-    public BasicGameStateManager() {
+    private BasicGameStateManager() {
         listeners = new HashMap<>();
         setState(GameState.UNDEFINED, null);
+    }
+
+    public static BasicGameStateManager getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new BasicGameStateManager();
+        }
+        return INSTANCE;
     }
 
     @Override

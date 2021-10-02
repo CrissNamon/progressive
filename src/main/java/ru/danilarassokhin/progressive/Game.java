@@ -1,6 +1,8 @@
 package ru.danilarassokhin.progressive;
 
 import ru.danilarassokhin.progressive.component.GameObject;
+import ru.danilarassokhin.progressive.lambda.GameActionObject;
+import ru.danilarassokhin.progressive.manager.GameState;
 
 /**
  * Represents game

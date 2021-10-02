@@ -3,6 +3,7 @@ package ru.danilarassokhin.progressive.basic;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.component.AbstractGameComponent;
+import ru.danilarassokhin.progressive.basic.system.AbstractGameScript;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
