@@ -15,10 +15,15 @@ public interface GameScript {
 
     default void wireFields() throws IllegalAccessException {
         Field[] scriptFields = getClass().getDeclaredFields();
+        GameObject parent = getParent();
+        if(parent == null) {
+            throw new RuntimeException("Could not autowire fields from parent in " + getClass().getName() + ": parent object is not set");
+        }
         for(Field f : scriptFields) {
             f.setAccessible(true);
             if(f.isAnnotationPresent(FromParent.class)) {
                 if(ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, f.getType())) {
+
                     f.set(this, getParent().getGameScript(f.getType().asSubclass(GameScript.class)));
                 }else{
                     throw new RuntimeException("Could not autowire field " + f.getName() + " in " + getClass().getName()

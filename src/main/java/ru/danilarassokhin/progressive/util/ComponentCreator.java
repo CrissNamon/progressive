@@ -2,7 +2,6 @@ package ru.danilarassokhin.progressive.util;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.basic.BasicDIContainer;
-import ru.danilarassokhin.progressive.basic.BasicGame;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -15,6 +14,7 @@ public interface ComponentCreator {
             for (int i = 0; i < args.length; ++i) {
                 argsTypes[i] = args[i].getClass();
             }
+            C instance = null;
             BasicDIContainer diContainer = BasicDIContainer.getInstance();
             Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
             for(Constructor<?> constructor : constructors) {
@@ -25,10 +25,16 @@ public interface ComponentCreator {
                     for(int i = 0; i < constructor.getParameterCount(); ++i) {
                         args[i] = diContainer.getBean("", argsTypes[i]);
                     }
+                    constructor.setAccessible(true);
+                    instance = (C) constructor.newInstance(args);
                     break;
                 }
             }
-            C instance = componentClass.getDeclaredConstructor(argsTypes).newInstance(args);
+            if(instance == null) {
+                Constructor<C> constructor = componentClass.getDeclaredConstructor(argsTypes);
+                constructor.setAccessible(true);
+                instance = constructor.newInstance(args);
+            }
             Field[] fields = instance.getClass().getDeclaredFields();
             for(Field f : fields) {
                 f.setAccessible(true);

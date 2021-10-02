@@ -6,4 +6,7 @@ public interface Game {
 
     GameObject addGameObject();
 
+    boolean setGameObjectClass(Class<? extends GameObject> c);
+
+    boolean isGameObjectClassSet();
 }

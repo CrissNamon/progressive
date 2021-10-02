@@ -2,6 +2,7 @@ package ru.danilarassokhin.main;
 
 import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.BasicGame;
+import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameNode;
 import ru.danilarassokhin.progressive.basic.component.NodeBundle;
 import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
@@ -15,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         BasicGame game = BasicGame.getInstance();
+        game.setGameObjectClass(BasicGameObject.class);
         BasicDIContainer diContainer = BasicDIContainer.getInstance();
         diContainer.loadConfiguration(BasicConfiguration.class);
 
@@ -37,8 +39,5 @@ public class Main {
         System.out.println(characterSystem.getInventory().getItemSystem());
 
         MyClass myClass = ComponentCreator.create(MyClass.class);
-        System.out.println(myClass.getBasicObjectCaster());
-        myClass = ComponentCreator.create(MyClass.class);
-        System.out.println(myClass.getBasicObjectCaster());
     }
 }

@@ -11,4 +11,8 @@ public class MyClass {
     public BasicObjectCaster getBasicObjectCaster() {
         return basicObjectCaster;
     }
+
+    private MyClass() {
+        System.out.println("UWU");
+    }
 }
