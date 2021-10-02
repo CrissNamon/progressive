@@ -7,7 +7,17 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Creates components from their classes
+ */
 public interface ComponentCreator {
+    /**
+     * Creates object from given class
+     * @param componentClass Object class to instantiate
+     * @param args Parameters to pass in class constructor
+     * @param <C> Object to instantiate
+     * @return Instantiated object of null
+     */
     static  <C> C create(Class<C> componentClass, Object... args) {
         try {
             Class<?>[] argsTypes = new Class[args.length];

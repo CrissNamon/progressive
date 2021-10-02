@@ -6,11 +6,8 @@ import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameNode;
 import ru.danilarassokhin.progressive.basic.component.NodeBundle;
 import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
-import ru.danilarassokhin.progressive.basic.system.CharacterSystem;
-import ru.danilarassokhin.progressive.basic.system.ItemSystem;
 import ru.danilarassokhin.progressive.basic.system.NodeSystem;
 import ru.danilarassokhin.progressive.component.GameObject;
-import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 public class Main {
 
@@ -31,13 +28,5 @@ public class Main {
         node1.setBundle(nodeBundle);
         node1.setBundle(nodeBundle);
 
-        GameObject mainCharacter = game.addGameObject();
-        CharacterSystem characterSystem = mainCharacter.getGameScript(CharacterSystem.class);
-        characterSystem.setHealth(80);
-
-        ItemSystem itemSystem = mainCharacter.getGameScript(ItemSystem.class);
-        System.out.println(characterSystem.getInventory().getItemSystem());
-
-        MyClass myClass = ComponentCreator.create(MyClass.class);
     }
 }

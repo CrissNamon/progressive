@@ -4,6 +4,9 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
 import java.lang.annotation.*;
 
+/**
+ * Marks class of method as bean provider for Dependency Injection container
+ */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

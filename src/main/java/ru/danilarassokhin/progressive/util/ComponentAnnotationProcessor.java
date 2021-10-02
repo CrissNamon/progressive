@@ -2,12 +2,28 @@ package ru.danilarassokhin.progressive.util;
 
 import java.lang.annotation.*;
 
+/**
+ * Processes annotations
+ */
 public interface ComponentAnnotationProcessor {
 
+    /**
+     * Checks if class annotated with annotation
+     * @param an Annotation to check
+     * @param c Class to check
+     * @return true if class is annotated with given annotation
+     */
     static boolean isAnnotationPresent(Class<? extends Annotation> an, Class<?> c) {
         return findAnnotation(c, an) != null;
     }
 
+    /**
+     * Searches for annotation on class
+     * @param clazz Class to search in
+     * @param annotationType Annotation class to search
+     * @param <A> Annotation to search
+     * @return Annotation or null
+     */
     @SuppressWarnings("unchecked")
     static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
         if(clazz.equals(Target.class) || clazz.equals(Documented.class) || clazz.equals(Retention.class)

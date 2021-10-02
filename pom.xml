@@ -7,7 +7,7 @@
     <artifactId>progressive</artifactId>
     <version>0.1.0</version>
     <name>Progressive</name>
-    <description>Interactive fiction game library</description>
+    <description>Game creation framework</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

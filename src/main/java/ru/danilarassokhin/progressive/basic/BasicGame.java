@@ -41,6 +41,11 @@ public final class BasicGame implements Game {
     }
 
     @Override
+    public boolean removeGameObject(GameObject o) {
+        return gameObjects.remove(o.getId()) != null;
+    }
+
+    @Override
     public boolean setGameObjectClass(Class<? extends GameObject> c) {
         if(gameObjClass != null) {
             return false;

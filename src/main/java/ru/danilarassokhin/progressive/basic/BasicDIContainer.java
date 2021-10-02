@@ -6,6 +6,7 @@ import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
+import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -114,14 +115,10 @@ public class BasicDIContainer implements DIContainer {
         if(exists == null) {
             throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
         }
-        try {
-            if(b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
-                exists = beanClass.getDeclaredConstructor().newInstance();
-                b.setBean(exists);
-                beans.get(beanClass).put(name, b);
-            }
-        }catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(beanClass.getName() + " annotated as GameBean but doesn't have an empty public constructor!");
+        if(b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
+            exists = ComponentCreator.create(beanClass);
+            b.setBean(exists);
+            beans.get(beanClass).put(name, b);
         }
         return exists;
     }

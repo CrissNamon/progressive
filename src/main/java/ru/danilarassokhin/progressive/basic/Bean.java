@@ -2,6 +2,9 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
+/**
+ * Represents bean for Dependency Injection container
+ */
 public final class Bean {
 
     private Object bean;

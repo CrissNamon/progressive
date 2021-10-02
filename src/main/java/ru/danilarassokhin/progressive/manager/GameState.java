@@ -16,25 +16,25 @@ public enum GameState {
 
     START,
     /**
-     * Called on {@link Story#setNext(StoryNode)}
+     * Called on
      * <br>
      * Returns old node
      */
     NODE_TRANSITION_START,
     /**
-     * Called on {@link Story#next()}
+     * Called on
      * <br>
      * Returns new node
      */
     NODE_TRANSITION_END,
     /**
-     * Called on {@link ru.danilarassokhin.progressive.basic.abstraction.AllSystemsCharacter#setLocation(StoryLocation, StoryAction, StoryAction)}
+     * Called on
      * <br>
      * Returns old location
      */
     LOCATION_MOVE_START,
     /**
-     * Called on {@link ru.danilarassokhin.progressive.basic.abstraction.AllSystemsCharacter#setLocation(StoryLocation, StoryAction, StoryAction)} if old location is not null
+     * Called on  if old location is not null
      * and new location has been set successfully
      */
     LOCATION_MOVE_COMPLETE,
