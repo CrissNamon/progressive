@@ -36,8 +36,14 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
             gameScript.setParent(this);
             if(gameScriptClass.isAnnotationPresent(RequiredGameScript.class)) {
                 RequiredGameScript requiredGameScripts = gameScriptClass.getAnnotation(RequiredGameScript.class);
-                for(Class<? extends GameScript> req : requiredGameScripts.value()) {
-                    getGameScript(req);
+                for (Class<? extends GameScript> req : requiredGameScripts.value()) {
+                    if(!requiredGameScripts.lazy()) {
+                        getGameScript(req);
+                    }else {
+                       if(!hasGameScript(req)) {
+                           throw new RuntimeException(gameScriptClass.getName() + " requires " + req.getName() + " which is not attached to " + this);
+                       }
+                    }
                 }
             }
             gameScript.wireFields();
@@ -49,5 +55,10 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
             e.printStackTrace();
             throw new RuntimeException("IsGameScript creation failure! IsGameScript must have public empty constructor! Exception: " + e.getMessage());
         }
+    }
+
+    @Override
+    public <V extends GameScript> boolean hasGameScript(Class<V> gameScriptClass) {
+        return scripts.containsKey(gameScriptClass);
     }
 }

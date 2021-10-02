@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@RequiredGameScript({InventorySystem.class, LocationSystem.class, QuestSystem.class})
+@RequiredGameScript(value = {InventorySystem.class, LocationSystem.class, QuestSystem.class})
 public class CharacterSystem extends AbstractGameScript {
 
     @FromParent

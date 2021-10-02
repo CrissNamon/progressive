@@ -9,4 +9,5 @@ import java.lang.annotation.*;
 @IsGameScript
 public @interface RequiredGameScript {
     Class<? extends ru.danilarassokhin.progressive.component.GameScript>[] value() default {};
+    boolean lazy() default false;
 }
