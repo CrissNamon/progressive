@@ -7,6 +7,7 @@ import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -66,16 +67,20 @@ public final class BasicGame implements Game {
         }
         try {
             Long lastId = gameObjects.keySet().stream().max(Long::compareTo).orElse(0L);
-            GameObject gameObject = ComponentCreator.create(gameObjClass, ++lastId, this);
+            GameObject gameObject = ComponentCreator.create(gameObjClass, ++lastId);
             gameObjects.putIfAbsent(lastId, gameObject);
             Method update = gameObject.getClass().getDeclaredMethod("update");
             Method start = gameObject.getClass().getDeclaredMethod("start");
+            if(!ComponentCreator.isModifierSet(update.getModifiers(), Modifier.PRIVATE)
+                || !ComponentCreator.isModifierSet(start.getModifiers(), Modifier.PRIVATE)) {
+                throw new RuntimeException("GameObject must have methods private void update() and private void start() in " + gameObjClass.getName());
+            }
             update.setAccessible(true);
             start.setAccessible(true);
             gameObjectWorkers.add(new GameObjectWorker(update, start, lastId));
             return gameObject;
         }catch (NoSuchMethodException e) {
-            throw new RuntimeException("void update() method not found in " + gameObjClass.getName());
+            throw new RuntimeException("GameObject must have methods private void update() and private void start() in " + gameObjClass.getName());
         }
     }
 

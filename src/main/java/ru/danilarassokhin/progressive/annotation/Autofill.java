@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * Represents field or constructor which can be injected with some value from Dependency Injection container
  */
-@Target({ElementType.FIELD, ElementType.CONSTRUCTOR})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited

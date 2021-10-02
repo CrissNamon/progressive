@@ -22,12 +22,10 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
 
     private final Map<Long, GameScript> scripts;
     private final Set<GameObjectWorker> scriptWorkers;
-    private final BasicGame game;
     private Long scriptIdGenerator;
 
-    protected BasicGameObject(Long id, BasicGame game) {
+    protected BasicGameObject(Long id) {
         super(id);
-        this.game = game;
         scripts = new HashMap<>();
         scriptWorkers = new HashSet<>();
         scriptIdGenerator = 0L;
@@ -90,7 +88,7 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
         return scripts.containsKey(gameScriptClass);
     }
 
-    protected void start() {
+    private void start() {
         scriptWorkers.forEach(s -> ComponentCreator.invoke(s.getStartMethod(), scripts.get(s.getGameObjId())));
     }
 

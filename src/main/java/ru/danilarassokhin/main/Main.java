@@ -29,7 +29,6 @@ public class Main {
 
         GameObject echoObject = game.addGameObject();
         EchoSystem echoSystem = echoObject.getGameScript(EchoSystem.class);
-
         game.start();
         String message = " ";
         Scanner sc = new Scanner(System.in);

@@ -63,6 +63,24 @@ public interface ComponentCreator {
                     f.set(instance, diContainer.getBean(name, f.getType()));
                 }
             }
+            Method[] methods = instance.getClass().getDeclaredMethods();
+            for(Method m : methods) {
+                m.setAccessible(true);
+                if(m.isAnnotationPresent(Autofill.class)) {
+                    Autofill autofill = m.getAnnotation(Autofill.class);
+                    String[] names = autofill.qualifiers();
+                    if(names.length != m.getParameterCount()) {
+                        throw new RuntimeException("Could not Autofill method " + m.getName() + " in " + instance.getClass().getName()
+                        + "! Wrong qualifiers count: " + names.length + ", need: " + m.getParameterCount());
+                    }
+                    argsTypes = m.getParameterTypes();
+                    for(int i = 0; i < m.getParameterCount(); ++i) {
+                        args[i] = diContainer.getBean(names[i], argsTypes[i]);
+                    }
+                    invoke(m, instance, args);
+                }
+            }
+
             return instance;
         }catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
