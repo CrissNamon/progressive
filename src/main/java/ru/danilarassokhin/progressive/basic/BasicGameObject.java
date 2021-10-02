@@ -32,20 +32,20 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
             return objectCaster.cast(gameScript, gameScriptClass, (o) -> {});
         }
         try {
-            gameScript = ComponentCreator.create(gameScriptClass);
-            gameScript.setParent(this);
             if(gameScriptClass.isAnnotationPresent(RequiredGameScript.class)) {
                 RequiredGameScript requiredGameScripts = gameScriptClass.getAnnotation(RequiredGameScript.class);
                 for (Class<? extends GameScript> req : requiredGameScripts.value()) {
                     if(!requiredGameScripts.lazy()) {
                         getGameScript(req);
                     }else {
-                       if(!hasGameScript(req)) {
-                           throw new RuntimeException(gameScriptClass.getName() + " requires " + req.getName() + " which is not attached to " + this);
-                       }
+                        if(!hasGameScript(req)) {
+                            throw new RuntimeException(gameScriptClass.getName() + " requires " + req.getName() + " which is not attached to " + this);
+                        }
                     }
                 }
             }
+            gameScript = ComponentCreator.create(gameScriptClass);
+            gameScript.setParent(this);
             gameScript.wireFields();
             if(scripts.putIfAbsent(gameScriptClass, gameScript) != null) {
                 throw new RuntimeException("Could not register IsGameScript " + gameScriptClass.getName() + "! IsGameScript already exists");
