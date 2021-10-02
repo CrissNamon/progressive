@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.annotation.GameBeanCreationPolicy;
+import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
 public final class Bean {
 

@@ -1,5 +1,7 @@
 package ru.danilarassokhin.progressive.annotation;
 
+import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
+
 import java.lang.annotation.*;
 
 @Target({ElementType.TYPE, ElementType.METHOD})

@@ -9,7 +9,7 @@ import ru.danilarassokhin.progressive.manager.GameState;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasicGame implements Game {
+public final class BasicGame implements Game {
 
     private static BasicGame INSTANCE;
 
@@ -17,11 +17,10 @@ public class BasicGame implements Game {
     private Map<Long, GameObject> gameObjects;
     private BasicGameStateManager stateManager;
 
-
     private BasicGame() {
         gameNodes = new HashMap<>();
         gameObjects = new HashMap<>();
-        stateManager = BasicGameStateManager.getInstance();
+        stateManager = new BasicGameStateManager();
         stateManager.setState(GameState.INIT, this);
     }
 

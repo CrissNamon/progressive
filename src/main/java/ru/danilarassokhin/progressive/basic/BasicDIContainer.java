@@ -1,11 +1,11 @@
 package ru.danilarassokhin.progressive.basic;
 
-import ru.danilarassokhin.progressive.DIContainer;
+import ru.danilarassokhin.progressive.injection.DIContainer;
 import ru.danilarassokhin.progressive.annotation.ComponentScan;
 import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.annotation.GameBeanCreationPolicy;
+import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
-import ru.danilarassokhin.progressive.util.GameAnnotationProcessor;
+import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ public class BasicDIContainer implements DIContainer {
 
     private void loadBeanFrom(Class<?> beanClass) {
         try {
-            GameBean annotation = GameAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
+            GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
             if (annotation != null) {
                 System.out.println("Found GameBean annotation in " + beanClass.getName() + ". Trying to make bean...");
                 Object o = beanClass.getDeclaredConstructor().newInstance();

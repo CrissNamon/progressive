@@ -1,19 +1,20 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.annotation.GameBeanCreationPolicy;
+import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
-import ru.danilarassokhin.progressive.annotation.isGameScript;
 import ru.danilarassokhin.progressive.basic.component.GameItem;
-import ru.danilarassokhin.progressive.util.GameComponentInstantiator;
+import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@GameBean(policy = GameBeanCreationPolicy.OBJECT)
+@RequiredGameScript(ItemSystem.class)
 public class InventorySystem extends AbstractGameScript {
+
+    @FromParent
+    private ItemSystem itemSystem;
 
     private final Map<Long, GameItem> items;
 
@@ -23,7 +24,7 @@ public class InventorySystem extends AbstractGameScript {
 
     public <I extends GameItem> I createItem(Class<I> item) {
         Long lastId = items.keySet().stream().max(Long::compareTo).orElse(0L);
-        I instance = GameComponentInstantiator.instantiate(item, ++lastId);
+        I instance = ComponentCreator.create(item, ++lastId);
         return instance;
     }
 
@@ -50,5 +51,9 @@ public class InventorySystem extends AbstractGameScript {
                     item.getAmount() + add
             );
         }
+    }
+
+    public ItemSystem getItemSystem() {
+        return itemSystem;
     }
 }

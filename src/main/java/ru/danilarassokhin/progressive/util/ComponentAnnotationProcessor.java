@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.util;
 
 import java.lang.annotation.*;
 
-public interface GameAnnotationProcessor {
+public interface ComponentAnnotationProcessor {
 
     static boolean isAnnotationPresent(Class<? extends Annotation> an, Class<?> c) {
         return findAnnotation(c, an) != null;

@@ -9,6 +9,7 @@ import ru.danilarassokhin.progressive.basic.system.CharacterSystem;
 import ru.danilarassokhin.progressive.basic.system.ItemSystem;
 import ru.danilarassokhin.progressive.basic.system.NodeSystem;
 import ru.danilarassokhin.progressive.component.GameObject;
+import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 public class Main {
 
@@ -33,8 +34,11 @@ public class Main {
         characterSystem.setHealth(80);
 
         ItemSystem itemSystem = mainCharacter.getGameScript(ItemSystem.class);
-        System.out.println(characterSystem.getInventory());
-        System.out.println(characterSystem.getLocationSystem());
-        System.out.println(characterSystem.getLocationSystem());
+        System.out.println(characterSystem.getInventory().getItemSystem());
+
+        MyClass myClass = ComponentCreator.create(MyClass.class);
+        System.out.println(myClass.getBasicObjectCaster());
+        myClass = ComponentCreator.create(MyClass.class);
+        System.out.println(myClass.getBasicObjectCaster());
     }
 }

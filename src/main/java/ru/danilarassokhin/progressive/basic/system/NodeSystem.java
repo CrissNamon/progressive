@@ -1,13 +1,13 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.isGameScript;
+import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.component.GameNode;
-import ru.danilarassokhin.progressive.util.GameComponentInstantiator;
+import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@isGameScript
+@IsGameScript
 public class NodeSystem extends AbstractGameScript {
 
     private Map<Long, GameNode> nodes;
@@ -18,7 +18,7 @@ public class NodeSystem extends AbstractGameScript {
 
     public <N extends GameNode> N createNode(Class<N> nodeClass) {
         Long lastId = nodes.keySet().stream().max(Long::compareTo).orElse(0L);
-        N node = GameComponentInstantiator.instantiate(nodeClass, ++lastId);
+        N node = ComponentCreator.create(nodeClass, ++lastId);
         nodes.putIfAbsent(lastId, node);
         return node;
     }

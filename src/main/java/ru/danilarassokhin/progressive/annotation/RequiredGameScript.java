@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@isGameScript
+@IsGameScript
 public @interface RequiredGameScript {
     Class<? extends ru.danilarassokhin.progressive.component.GameScript>[] value() default {};
 }

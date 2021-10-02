@@ -8,8 +8,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-public interface GameComponentInstantiator {
-    static  <C> C instantiate(Class<C> componentClass, Object... args) {
+public interface ComponentCreator {
+    static  <C> C create(Class<C> componentClass, Object... args) {
         try {
             Class<?>[] argsTypes = new Class[args.length];
             for (int i = 0; i < args.length; ++i) {

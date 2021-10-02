@@ -1,9 +1,7 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
-import ru.danilarassokhin.progressive.annotation.isGameScript;
 import ru.danilarassokhin.progressive.basic.component.GameQuest;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 
@@ -12,17 +10,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-//@RequiredGameScript({InventorySystem.class, LocationSystem.class, QuestSystem.class})
-@isGameScript
+@RequiredGameScript({InventorySystem.class, LocationSystem.class, QuestSystem.class})
 public class CharacterSystem extends AbstractGameScript {
 
-    @Autofill
+    @FromParent
     private InventorySystem inventorySystem;
 
-    @Autofill
+    @FromParent
     private LocationSystem locationSystem;
 
-    @Autofill
+    @FromParent
     private QuestSystem questSystem;
 
     private String name;

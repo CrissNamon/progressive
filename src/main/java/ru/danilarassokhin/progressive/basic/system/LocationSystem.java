@@ -1,10 +1,7 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.annotation.GameBeanCreationPolicy;
-import ru.danilarassokhin.progressive.annotation.isGameScript;
+import ru.danilarassokhin.progressive.annotation.IsGameScript;
 
-@isGameScript
-@GameBean(policy = GameBeanCreationPolicy.OBJECT)
+@IsGameScript
 public class LocationSystem extends AbstractGameScript{
 }

@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive;
+package ru.danilarassokhin.progressive.injection;
 
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 
