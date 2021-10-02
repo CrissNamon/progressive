@@ -1,8 +1,10 @@
 package ru.danilarassokhin.progressive.basic.system;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
+import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameNode;
 import ru.danilarassokhin.progressive.basic.component.NodeBundle;
+import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.util.HashMap;
@@ -13,8 +15,10 @@ public class NodeSystem<B extends NodeBundle> extends AbstractGameScript {
 
     private Map<Long, GameNode<B>> nodes;
 
-    public NodeSystem() {
+    public NodeSystem(BasicGameObject parent) {
+        super(parent);
         nodes = new HashMap<>();
+        BasicGamePublisher.getInstance().<Long>subscribeOn("NodeSystemInput", (d) -> System.out.println("OUTPUT IN NODESYSTEM: " + d));
     }
 
     public <N extends GameNode<B>> N createNode(Class<N> nodeClass) {
@@ -28,4 +32,11 @@ public class NodeSystem<B extends NodeBundle> extends AbstractGameScript {
         return nodes.getOrDefault(id, null);
     }
 
+    protected void start() {
+        System.out.println("NODE SYSTEM START");
+    }
+
+    protected void update() {
+
+    }
 }

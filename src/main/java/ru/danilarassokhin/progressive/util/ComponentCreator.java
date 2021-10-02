@@ -2,14 +2,11 @@ package ru.danilarassokhin.progressive.util;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.basic.BasicDIContainer;
-import ru.danilarassokhin.progressive.basic.Bean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Creates components from their classes
@@ -67,8 +64,25 @@ public interface ComponentCreator {
                 }
             }
             return instance;
-        }catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Could not instantiate component " + componentClass.getName() + "! Component must have non-private constructor!");
+        }catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not instantiate component " + componentClass.getName() + "! Exception: " + e.getMessage());
+        }catch (NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not instantiate component " + componentClass.getName() + "! Component must have such a constructor: " + e.getMessage());
         }
+    }
+
+    static void invoke(Method method, Object from, Object... args) {
+        try {
+            method.invoke(from, args);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while method " + method.getName() + " invocation! Exception: " + e.getMessage());
+        }
+    }
+
+    static boolean isModifierSet(int allModifiers, int specificModifier) {
+        return (allModifiers & specificModifier) > 0;
     }
 }

@@ -1,5 +1,7 @@
 package ru.danilarassokhin.progressive.component;
 
+import ru.danilarassokhin.progressive.basic.system.AbstractGameScript;
+
 /**
  * Represents abstract GameObject
  */
@@ -11,7 +13,7 @@ public interface GameObject extends GameComponent{
      * @param <V> GameScript to return
      * @return Game script
      */
-    <V extends GameScript> V getGameScript(Class<V> gameScriptClass);
+    <V extends AbstractGameScript> V getGameScript(Class<V> gameScriptClass);
 
     /**
      * Checks if this object has given GameScript attached to this object
@@ -19,5 +21,6 @@ public interface GameObject extends GameComponent{
      * @param <V> GameScript type
      * @return true if given script is attached
      */
-    <V extends GameScript> boolean hasGameScript(Class<V> gameScriptClass);
+    <V extends AbstractGameScript> boolean hasGameScript(Class<V> gameScriptClass);
+
 }

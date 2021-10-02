@@ -2,7 +2,9 @@ package ru.danilarassokhin.progressive.basic.system;
 
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameItem;
+import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.util.HashMap;
@@ -18,7 +20,8 @@ public class InventorySystem extends AbstractGameScript {
 
     private final Map<Long, GameItem> items;
 
-    public InventorySystem() {
+    public InventorySystem(BasicGameObject parent) {
+        super(parent);
         this.items = new HashMap<>();
     }
 
@@ -56,4 +59,5 @@ public class InventorySystem extends AbstractGameScript {
     public ItemSystem getItemSystem() {
         return itemSystem;
     }
+
 }

@@ -3,8 +3,10 @@ package ru.danilarassokhin.progressive.basic.system;
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameQuest;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
+import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 
 import java.util.HashMap;
@@ -24,15 +26,14 @@ public class CharacterSystem extends AbstractGameScript {
     @FromParent
     private QuestSystem questSystem;
 
-    @Autofill
-    private BasicObjectCaster objectCaster;
 
     private String name;
     private float health;
     private transient final Set<? extends GameQuest> quests;
     private transient final Map<String, GameActionObject> actions;
 
-    public CharacterSystem() {
+    public CharacterSystem(BasicGameObject parent) {
+        super(parent);
         this.quests = new HashSet<>();
         this.actions = new HashMap<>();
     }
@@ -65,7 +66,4 @@ public class CharacterSystem extends AbstractGameScript {
         return locationSystem;
     }
 
-    public BasicObjectCaster getObjectCaster() {
-        return objectCaster;
-    }
 }

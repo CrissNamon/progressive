@@ -2,6 +2,7 @@ package ru.danilarassokhin.progressive.component;
 
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
+import ru.danilarassokhin.progressive.basic.system.AbstractGameScript;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 
@@ -16,14 +17,7 @@ public interface GameScript {
      * Gets parent GameObject
      * @return
      */
-    GameObject getParent();
-
-    /**
-     * Sets parent GameObject this script is attached to
-     * @param object Object to set
-     * @param <O> Object type
-     */
-    <O extends GameObject> void setParent(O object);
+    GameObject gameObject();
 
     /**
      * Fills GameScript fields annotated as @FromParent from parent GameObject this script if attached to
@@ -31,7 +25,7 @@ public interface GameScript {
      */
     default void wireFields() throws IllegalAccessException {
         Field[] scriptFields = getClass().getDeclaredFields();
-        GameObject parent = getParent();
+        GameObject parent = gameObject();
         if(parent == null) {
             throw new RuntimeException("Could not autowire fields from parent in " + getClass().getName() + ": parent object is not set");
         }
@@ -39,7 +33,7 @@ public interface GameScript {
             f.setAccessible(true);
             if(f.isAnnotationPresent(FromParent.class)) {
                 if(ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, f.getType())) {
-                    f.set(this, getParent().getGameScript(f.getType().asSubclass(GameScript.class)));
+                    f.set(this, gameObject().getGameScript(f.getType().asSubclass(AbstractGameScript.class)));
                 }else{
                     throw new RuntimeException("Could not autowire field " + f.getName() + " in " + getClass().getName()
                             + "! Only fields of type IsGameScript and annotated with @IsGameScript supported for autowire");

@@ -5,16 +5,14 @@ import ru.danilarassokhin.progressive.component.GameScript;
 
 public abstract class AbstractGameScript implements GameScript {
 
-    private GameObject parent;
+    protected final GameObject parent;
+
+    protected AbstractGameScript(GameObject parent) {
+        this.parent = parent;
+    }
 
     @Override
-    public GameObject getParent() {
+    public final GameObject gameObject() {
         return parent;
     }
-
-    @Override
-    public <O extends GameObject> void setParent(O object) {
-        this.parent = object;
-    }
-
 }
