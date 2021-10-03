@@ -70,6 +70,7 @@ public class BasicDIContainer implements DIContainer {
                 beansOfClass.putIfAbsent(name, b);
                 beans.putIfAbsent(beanClass, beansOfClass);
                 System.out.println("GameBean with name " + name + "created for " + beanClass.getName());
+                System.out.println();
             } else {
                 Method[] methods = beanClass.getDeclaredMethods();
                 for (Method m : methods) {
@@ -118,6 +119,7 @@ public class BasicDIContainer implements DIContainer {
             beans.putIfAbsent(result.getClass(), beansOfClass);
             System.out.println("GameBean with name " + name + " created for "
                     + result.getClass().getName() + " from method " + m.getName());
+            System.out.println();
         }
     }
 
@@ -194,7 +196,6 @@ public class BasicDIContainer implements DIContainer {
             scanFrom = config;
             Components components = config.getAnnotation(Components.class);
             loadBeansFrom(components.value());
-            return;
         }
         if (config.isAnnotationPresent(ComponentScan.class)) {
             scanFrom = config;

@@ -25,19 +25,23 @@ public class Main {
 
         BasicGame game = BasicGame.getInstance();
         game.setGameObjectClass(BasicGameObject.class);
-        game.setTickRate(100);
+        game.setTickRate(17);
         game.setStatic(false);
 
         GameObject echoObject = game.addGameObject();
         EchoSystem echoSystem = echoObject.getGameScript(EchoSystem.class);
         LocationSystem locationSystem = echoObject.getGameScript(LocationSystem.class);
+        for(int i = 0; i < 100; ++i) {
+            game.addGameObject().getGameScript(EchoSystem.class);
+            game.addGameObject().getGameScript(LocationSystem.class);
+        }
         game.start();
         String message = " ";
         Scanner sc = new Scanner(System.in);
-        while(!message.isEmpty()) {
-            System.out.println("ECHO INPUT: ");
-            message = sc.nextLine();
-            BasicGamePublisher.getInstance().sendTo("EchoInput", message);
+        int i = 1000;
+        while(i > 1) {
+            i--;
+            BasicGamePublisher.getInstance().sendTo("EchoInput", i);
         }
         game.stop();
     }

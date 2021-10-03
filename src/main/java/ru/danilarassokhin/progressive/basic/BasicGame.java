@@ -5,6 +5,7 @@ import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
+import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -28,12 +29,16 @@ public final class BasicGame implements Game {
     private final ScheduledExecutorService scheduler;
     private boolean isStatic;
 
+    private boolean isStarted;
+
     private BasicGame() {
         gameObjects = new HashMap<>();
         stateManager = BasicGameStateManager.getInstance();
         gameObjectWorkers = new HashSet<>();
         scheduler = Executors.newScheduledThreadPool(2);
         stateManager.setState(GameState.INIT, this);
+
+        isStarted = false;
     }
 
     public static BasicGame getInstance() {
@@ -44,16 +49,27 @@ public final class BasicGame implements Game {
     }
 
     public void start() {
+        GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
+        isStarted = true;
         gameObjectWorkers.forEach(w -> ComponentCreator.invoke(w.getStartMethod(), gameObjects.get(w.getGameObjId())));
         if(!isStatic) {
-            gameObjectWorkers.forEach(w -> {
-                ScheduledFuture resultFuture = scheduler
-                        .scheduleAtFixedRate(() -> ComponentCreator.invoke(w.getUpdateMethod(), gameObjects.get(w.getGameObjId())), 0, tick, TimeUnit.MILLISECONDS);
-            });
+            update();
         }
     }
 
+    public void update() {
+        GameSecurityManager.allowAccessIf("Game param isStatic is set to false. Can't update manually!",
+                () -> isStatic && isStarted
+        || GameSecurityManager.getCallerClass().equals(BasicGame.class));
+        gameObjectWorkers.forEach(w -> {
+            ScheduledFuture resultFuture = scheduler
+                    .scheduleAtFixedRate(() -> ComponentCreator.invoke(w.getUpdateMethod(), gameObjects.get(w.getGameObjId())), 0, tick, TimeUnit.MILLISECONDS);
+        });
+    }
+
     public void stop() throws InterruptedException {
+        GameSecurityManager.allowAccessIf("Game hasn't been started!", () -> isStarted);
+        isStarted = false;
         scheduler.shutdown();
         if(scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
             scheduler.shutdownNow();
@@ -104,8 +120,8 @@ public final class BasicGame implements Game {
     }
 
     public void setTickRate(int milliseconds) {
-        if(milliseconds < 100) {
-            milliseconds = 100;
+        if(milliseconds < 1) {
+            throw new RuntimeException("Tick rate can't be less than 1 millisecond!");
         }
         this.tick = milliseconds;
     }
