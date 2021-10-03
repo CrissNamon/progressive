@@ -1,24 +1,25 @@
 package ru.danilarassokhin.progressive.basic;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 
 public final class GameObjectWorker {
 
-    private final Method updateMethod;
-    private final Method startMethod;
+    private final MethodHandle updateMethod;
+    private final MethodHandle startMethod;
     private final Long gameObjId;
 
-    public GameObjectWorker(Method updateMethod, Method startMethod, Long gameObjId) {
+    public GameObjectWorker(MethodHandle updateMethod, MethodHandle startMethod, Long gameObjId) {
         this.updateMethod = updateMethod;
         this.startMethod = startMethod;
         this.gameObjId = gameObjId;
     }
 
-    public Method getUpdateMethod() {
+    public MethodHandle getUpdateMethod() {
         return updateMethod;
     }
 
-    public Method getStartMethod() {
+    public MethodHandle getStartMethod() {
         return startMethod;
     }
 

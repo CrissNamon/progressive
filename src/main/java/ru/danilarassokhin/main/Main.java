@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Throwable {
         BasicDIContainer diContainer = BasicDIContainer.getInstance();
         diContainer.loadConfiguration(BasicConfiguration.class);
         BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
@@ -32,6 +32,8 @@ public class Main {
         EchoSystem echoSystem = echoObject.getGameScript(EchoSystem.class);
         LocationSystem locationSystem = echoObject.getGameScript(LocationSystem.class);
         for(int i = 0; i < 100; ++i) {
+            game.addGameObject().getGameScript(EchoSystem.class);
+            game.addGameObject().getGameScript(LocationSystem.class);
             game.addGameObject().getGameScript(EchoSystem.class);
             game.addGameObject().getGameScript(LocationSystem.class);
         }

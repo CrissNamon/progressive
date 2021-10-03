@@ -2,11 +2,15 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
+import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -48,23 +52,48 @@ public final class BasicGame implements Game {
         return INSTANCE;
     }
 
-    public void start() {
+    public void start() throws Throwable {
+        BasicObjectCaster basicObjectCaster = new BasicObjectCaster();
         GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
         isStarted = true;
-        gameObjectWorkers.forEach(w -> ComponentCreator.invoke(w.getStartMethod(), gameObjects.get(w.getGameObjId())));
+        gameObjectWorkers.parallelStream().forEach(this::callStartInGameObject);
         if(!isStatic) {
             update();
         }
+    }
+
+    private void callStartInGameObject(GameObjectWorker worker) {
+        try {
+            worker.getStartMethod()
+                    .invoke(
+                            gameObjects.get(worker.getGameObjId())
+                    );
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException("Error occurred during calling start method on GameObject " + worker.getGameObjId());
+        }
+    }
+
+    private void callUpdateInGameObject(GameObjectWorker worker) {
+        scheduler
+                .scheduleAtFixedRate(() -> {
+                    try {
+                        worker.getUpdateMethod().invoke(
+                                gameObjects.get(
+                                        worker.getGameObjId()
+                                )
+                        );
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }, 0, tick, TimeUnit.MILLISECONDS);
     }
 
     public void update() {
         GameSecurityManager.allowAccessIf("Game param isStatic is set to false. Can't update manually!",
                 () -> isStatic && isStarted
         || GameSecurityManager.getCallerClass().equals(BasicGame.class));
-        gameObjectWorkers.forEach(w -> {
-            ScheduledFuture resultFuture = scheduler
-                    .scheduleAtFixedRate(() -> ComponentCreator.invoke(w.getUpdateMethod(), gameObjects.get(w.getGameObjId())), 0, tick, TimeUnit.MILLISECONDS);
-        });
+        gameObjectWorkers.parallelStream().forEach(this::callUpdateInGameObject);
     }
 
     public void stop() throws InterruptedException {
@@ -85,17 +114,18 @@ public final class BasicGame implements Game {
             Long lastId = gameObjects.keySet().stream().max(Long::compareTo).orElse(0L);
             GameObject gameObject = ComponentCreator.create(gameObjClass, ++lastId);
             gameObjects.putIfAbsent(lastId, gameObject);
-            Method update = gameObject.getClass().getDeclaredMethod("update");
-            Method start = gameObject.getClass().getDeclaredMethod("start");
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            Method update = gameObjClass.getDeclaredMethod("update");
+            Method start = gameObjClass.getDeclaredMethod("start");
             if(!ComponentCreator.isModifierSet(update.getModifiers(), Modifier.PRIVATE)
                 || !ComponentCreator.isModifierSet(start.getModifiers(), Modifier.PRIVATE)) {
                 throw new RuntimeException("GameObject must have methods private void update() and private void start() in " + gameObjClass.getName());
             }
             update.setAccessible(true);
             start.setAccessible(true);
-            gameObjectWorkers.add(new GameObjectWorker(update, start, lastId));
+            gameObjectWorkers.add(new GameObjectWorker(lookup.unreflect(update), lookup.unreflect(start), lastId));
             return gameObject;
-        }catch (NoSuchMethodException e) {
+        }catch (NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException("GameObject must have methods private void update() and private void start() in " + gameObjClass.getName());
         }
     }

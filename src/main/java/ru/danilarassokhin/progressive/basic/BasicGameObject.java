@@ -10,6 +10,7 @@ import ru.danilarassokhin.progressive.component.GameScript;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public final class BasicGameObject extends AbstractGameComponent implements GameObject {
 
@@ -60,6 +62,7 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
             }
             gameScript = ComponentCreator.create(gameScriptClass, this);
             gameScript.wireFields();
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
             Method update = gameScript.getClass().getDeclaredMethod("update");
             Method start = gameScript.getClass().getDeclaredMethod("start");
             if(!ComponentCreator.isModifierSet(update.getModifiers(), Modifier.PRIVATE)
@@ -68,7 +71,7 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
             }
             update.setAccessible(true);
             start.setAccessible(true);
-            scriptWorkers.add(new GameObjectWorker(update, start, ++scriptIdGenerator));
+            scriptWorkers.add(new GameObjectWorker(lookup.unreflect(update), lookup.unreflect(start), ++scriptIdGenerator));
             if(scripts.putIfAbsent(scriptIdGenerator, gameScript) != null) {
                 throw new RuntimeException("Could not register IsGameScript " + gameScriptClass.getName() + "! IsGameScript already exists");
             }
@@ -89,11 +92,35 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
     }
 
     private void start() {
-        scriptWorkers.forEach(s -> ComponentCreator.invoke(s.getStartMethod(), scripts.get(s.getGameObjId())));
+        scriptWorkers.parallelStream().forEach(this::callStartInGameScript);
     }
 
     private void update() {
-        scriptWorkers.forEach(s -> ComponentCreator.invoke(s.getUpdateMethod(), scripts.get(s.getGameObjId())));
+        scriptWorkers.parallelStream().forEach(this::callUpdateInGameScript);
+    }
+
+    private void callStartInGameScript(GameObjectWorker worker) {
+        try {
+            worker.getStartMethod()
+                    .invoke(
+                            scripts.get(worker.getGameObjId())
+                    );
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException("Error occurred during calling start method on GameObject " + worker.getGameObjId());
+        }
+    }
+
+    private void callUpdateInGameScript(GameObjectWorker worker) {
+        try {
+            worker.getUpdateMethod()
+                    .invoke(
+                            scripts.get(worker.getGameObjId())
+                    );
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException("Error occurred during calling start method on GameObject " + worker.getGameObjId());
+        }
     }
 
 }
