@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.basic;
+package ru.danilarassokhin.progressive.basic.injection;
 
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 

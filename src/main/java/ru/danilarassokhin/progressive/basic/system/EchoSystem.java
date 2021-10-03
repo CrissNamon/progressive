@@ -1,9 +1,8 @@
-package ru.danilarassokhin.main;
+package ru.danilarassokhin.progressive.basic.system;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
-import ru.danilarassokhin.progressive.basic.system.AbstractGameScript;
 
 @IsGameScript
 public class EchoSystem extends AbstractGameScript {
@@ -13,7 +12,7 @@ public class EchoSystem extends AbstractGameScript {
     }
 
     private void start() {
-        System.out.println("ECHO START");
+        System.out.println("ECHO SYSTEM START");
         BasicGamePublisher.getInstance().subscribeOn("EchoInput", (input) -> System.out.println("ECHO OUTPUT: " + input));
     }
 

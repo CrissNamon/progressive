@@ -53,9 +53,18 @@
                 <version>3.2.0</version>
                 <configuration>
                     <includes>
+                        <include>ru/danilarassokhin/progressive/*.*</include>
                         <include>ru/danilarassokhin/progressive/*/*.*</include>
                         <include>ru/danilarassokhin/progressive/*/*/*.*</include>
                     </includes>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>

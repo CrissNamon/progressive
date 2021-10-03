@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.util;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
-import ru.danilarassokhin.progressive.basic.BasicDIContainer;
+import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

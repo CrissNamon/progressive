@@ -1,8 +1,12 @@
 package ru.danilarassokhin.progressive.basic.manager;
 
+import ru.danilarassokhin.progressive.Game;
+import ru.danilarassokhin.progressive.annotation.Protected;
+import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.manager.GameStateManager;
+import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +36,10 @@ public class BasicGameStateManager implements GameStateManager<GameState> {
     }
 
     @Override
+    @Protected("This method is secured. Only game class can call it")
     public <O> void setState(GameState state, O o) {
+        GameSecurityManager.allowAccessTo("This method can be called only from Game class. " +
+                "Access denied", BasicGame.class, BasicGameStateManager.class);
         if(listeners.containsKey(state)) {
             listeners.get(state).forEach(a -> a.make(o));
         }else{
@@ -51,4 +58,5 @@ public class BasicGameStateManager implements GameStateManager<GameState> {
         listeners.putIfAbsent(state, new ArrayList<>());
         listeners.get(state).add(action);
     }
+
 }
