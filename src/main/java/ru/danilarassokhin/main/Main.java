@@ -3,21 +3,15 @@ package ru.danilarassokhin.main;
 import ru.danilarassokhin.progressive.GameTickRateType;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
-import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
-import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.system.CharacterSystem;
-import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
-
-import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws Throwable {
         BasicDIContainer diContainer = BasicDIContainer.getInstance();
-        diContainer.loadConfiguration(BasicConfiguration.class);
         BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
         stateManager.<BasicGame>addListener(GameState.INIT, (g) -> {
             System.out.println("GAME INITIATED");

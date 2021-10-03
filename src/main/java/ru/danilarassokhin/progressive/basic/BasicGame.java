@@ -2,6 +2,8 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameTickRateType;
+import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
+import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
@@ -44,6 +46,7 @@ public final class BasicGame implements Game {
         scheduler = Executors.newScheduledThreadPool(2);
         isStarted = false;
         stateManager.setState(GameState.INIT, this);
+        BasicDIContainer.getInstance().loadConfiguration(TestConfiguration.class);
     }
 
     public static BasicGame getInstance() {

@@ -5,7 +5,9 @@ import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
+import ru.danilarassokhin.progressive.basic.component.GameItem;
 import ru.danilarassokhin.progressive.basic.component.GameQuest;
+import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
@@ -21,17 +23,6 @@ import java.util.Set;
 @IsGameScript
 public class CharacterSystem implements GameScript {
 
-    /*
-    @FromParent
-    private InventorySystem inventorySystem;
-
-    @FromParent
-    private LocationSystem locationSystem;
-
-    @FromParent
-    private QuestSystem questSystem;
-
-     */
     @FromParent
     private EchoSystem echoSystem;
 
@@ -79,6 +70,8 @@ public class CharacterSystem implements GameScript {
 
     private void start() {
         echoSystem.say("Hello");
+        System.out.println(BasicDIContainer.getInstance().getBean("gameItem", GameItem.class).getId());
+        System.out.println(BasicDIContainer.getInstance().getBean("gameItem", GameItem.class).getId());
     }
 
     private void update() {

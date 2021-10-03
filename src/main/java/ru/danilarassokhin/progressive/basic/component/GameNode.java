@@ -1,12 +1,11 @@
 package ru.danilarassokhin.progressive.basic.component;
 
-public class GameNode<B extends NodeBundle> extends AbstractGameComponent {
+import ru.danilarassokhin.progressive.component.GameComponent;
+
+public class GameNode<B extends NodeBundle> implements GameComponent {
 
     private B bundle;
-
-    public GameNode(Long id) {
-        super(id);
-    }
+    private Long id;
 
     public B getBundle() {
         return bundle;
@@ -14,5 +13,10 @@ public class GameNode<B extends NodeBundle> extends AbstractGameComponent {
 
     public void setBundle(B bundle) {
         this.bundle = bundle;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

@@ -3,6 +3,7 @@ package ru.danilarassokhin.progressive.basic.injection;
 import ru.danilarassokhin.progressive.annotation.ComponentScan;
 import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.injection.DIContainer;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
@@ -59,7 +60,7 @@ public class BasicDIContainer implements DIContainer {
                         + beanClass.getName() + ". Trying to make bean...");
                 Object o = null;
                 if (annotation.policy().equals(GameBeanCreationPolicy.SINGLETON)) {
-                    o = beanClass.getDeclaredConstructor().newInstance();
+                    o = ComponentCreator.create(beanClass);
                 }
                 Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
                 Bean b = new Bean(o, annotation.policy());
@@ -69,7 +70,7 @@ public class BasicDIContainer implements DIContainer {
                 }
                 beansOfClass.putIfAbsent(name, b);
                 beans.putIfAbsent(beanClass, beansOfClass);
-                System.out.println("GameBean with name " + name + "created for " + beanClass.getName());
+                System.out.println("GameBean with name " + name + " created for " + beanClass.getName());
                 System.out.println();
             } else {
                 Method[] methods = beanClass.getDeclaredMethods();
@@ -86,7 +87,7 @@ public class BasicDIContainer implements DIContainer {
                     }
                 }
             }
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(beanClass.getName()
                     + " annotated as GameBean has no public empty constructor " +
@@ -173,7 +174,7 @@ public class BasicDIContainer implements DIContainer {
             throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
         }
         V exists = (V) b.getBean();
-        if (exists == null) {
+        if (exists == null && b.getCreationPolicy().equals(GameBeanCreationPolicy.SINGLETON)) {
             throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
         }
         if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
