@@ -92,11 +92,27 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
     }
 
     private void start() {
-        scriptWorkers.parallelStream().forEach(this::callStartInGameScript);
+        switch (BasicGame.getInstance().getGameTickRateType()) {
+            case PARALLEL:
+                scriptWorkers.parallelStream().forEach(this::callStartInGameScript);
+                break;
+            case SEQUENCE:
+                for(GameObjectWorker worker : scriptWorkers) {
+                    callStartInGameScript(worker);
+                }
+        }
     }
 
     private void update() {
-        scriptWorkers.parallelStream().forEach(this::callUpdateInGameScript);
+        switch (BasicGame.getInstance().getGameTickRateType()) {
+            case PARALLEL:
+                scriptWorkers.parallelStream().forEach(this::callUpdateInGameScript);
+                break;
+            case SEQUENCE:
+                for(GameObjectWorker worker : scriptWorkers) {
+                    callUpdateInGameScript(worker);
+                }
+        }
     }
 
     private void callStartInGameScript(GameObjectWorker worker) {

@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
+import ru.danilarassokhin.progressive.GameTickRateType;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
@@ -8,9 +9,7 @@ import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -19,30 +18,32 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public final class BasicGame implements Game {
 
     private static BasicGame INSTANCE;
+
+    private GameTickRateType gameTickRateType;
+    private boolean isStatic;
+    private int tick;
+
     private final Map<Long, GameObject> gameObjects;
     private final Set<GameObjectWorker> gameObjectWorkers;
     private BasicGameStateManager stateManager;
     private Class<? extends GameObject> gameObjClass;
-    private int tick;
     private final ScheduledExecutorService scheduler;
-    private boolean isStatic;
 
     private boolean isStarted;
 
     private BasicGame() {
+        gameTickRateType = GameTickRateType.PARALLEL;
         gameObjects = new HashMap<>();
         stateManager = BasicGameStateManager.getInstance();
         gameObjectWorkers = new HashSet<>();
         scheduler = Executors.newScheduledThreadPool(2);
-        stateManager.setState(GameState.INIT, this);
-
         isStarted = false;
+        stateManager.setState(GameState.INIT, this);
     }
 
     public static BasicGame getInstance() {
@@ -52,11 +53,19 @@ public final class BasicGame implements Game {
         return INSTANCE;
     }
 
-    public void start() throws Throwable {
-        BasicObjectCaster basicObjectCaster = new BasicObjectCaster();
+    public void start() {
         GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
+        switch (gameTickRateType) {
+            case PARALLEL:
+                gameObjectWorkers.parallelStream().forEach(this::callStartInGameObject);
+                break;
+            case SEQUENCE:
+                for(GameObjectWorker worker : gameObjectWorkers) {
+                    callStartInGameObject(worker);
+                }
+                break;
+        }
         isStarted = true;
-        gameObjectWorkers.parallelStream().forEach(this::callStartInGameObject);
         if(!isStatic) {
             update();
         }
@@ -93,7 +102,16 @@ public final class BasicGame implements Game {
         GameSecurityManager.allowAccessIf("Game param isStatic is set to false. Can't update manually!",
                 () -> isStatic && isStarted
         || GameSecurityManager.getCallerClass().equals(BasicGame.class));
-        gameObjectWorkers.parallelStream().forEach(this::callUpdateInGameObject);
+        switch (gameTickRateType) {
+            case PARALLEL:
+                gameObjectWorkers.parallelStream().forEach(this::callUpdateInGameObject);
+                break;
+            case SEQUENCE:
+                for(GameObjectWorker worker : gameObjectWorkers) {
+                    callUpdateInGameObject(worker);
+                }
+                break;
+        }
     }
 
     public void stop() throws InterruptedException {
@@ -165,4 +183,11 @@ public final class BasicGame implements Game {
         this.isStatic = isStatic;
     }
 
+    public GameTickRateType getGameTickRateType() {
+        return gameTickRateType;
+    }
+
+    public void setGameTickRateType(GameTickRateType gameTickRateType) {
+        this.gameTickRateType = gameTickRateType;
+    }
 }

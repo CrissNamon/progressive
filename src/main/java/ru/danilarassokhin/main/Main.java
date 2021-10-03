@@ -1,5 +1,6 @@
 package ru.danilarassokhin.main;
 
+import ru.danilarassokhin.progressive.GameTickRateType;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
@@ -31,12 +32,14 @@ public class Main {
         GameObject echoObject = game.addGameObject();
         EchoSystem echoSystem = echoObject.getGameScript(EchoSystem.class);
         LocationSystem locationSystem = echoObject.getGameScript(LocationSystem.class);
-        for(int i = 0; i < 100; ++i) {
+        for(int i = 0; i < 10000; ++i) {
             game.addGameObject().getGameScript(EchoSystem.class);
             game.addGameObject().getGameScript(LocationSystem.class);
             game.addGameObject().getGameScript(EchoSystem.class);
             game.addGameObject().getGameScript(LocationSystem.class);
         }
+        Long start = System.currentTimeMillis();
+        game.setGameTickRateType(GameTickRateType.PARALLEL);
         game.start();
         String message = " ";
         Scanner sc = new Scanner(System.in);
@@ -46,5 +49,6 @@ public class Main {
             BasicGamePublisher.getInstance().sendTo("EchoInput", i);
         }
         game.stop();
+        System.out.println((System.currentTimeMillis() - start)/1000);
     }
 }

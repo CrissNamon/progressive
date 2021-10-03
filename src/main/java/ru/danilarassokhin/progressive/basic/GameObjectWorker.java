@@ -1,7 +1,6 @@
 package ru.danilarassokhin.progressive.basic;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Method;
 
 public final class GameObjectWorker {
 
