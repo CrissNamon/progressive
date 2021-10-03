@@ -12,8 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@RequiredGameScript(ItemSystem.class)
-public class InventorySystem extends AbstractGameScript {
+public class InventorySystem{
 
     @FromParent
     private ItemSystem itemSystem;
@@ -21,7 +20,7 @@ public class InventorySystem extends AbstractGameScript {
     private final Map<Long, GameItem> items;
 
     public InventorySystem(BasicGameObject parent) {
-        super(parent);
+
         this.items = new HashMap<>();
     }
 

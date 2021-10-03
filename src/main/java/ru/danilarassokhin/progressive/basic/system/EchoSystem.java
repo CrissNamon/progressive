@@ -1,14 +1,17 @@
 package ru.danilarassokhin.progressive.basic.system;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
-import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
+import ru.danilarassokhin.progressive.component.GameObject;
+import ru.danilarassokhin.progressive.component.GameScript;
 
 @IsGameScript
-public class EchoSystem extends AbstractGameScript {
+public class EchoSystem implements GameScript {
 
-    private EchoSystem(BasicGameObject parent) {
-        super(parent);
+    private GameObject parent;
+
+    public EchoSystem() {
+
     }
 
     private void start() {
@@ -20,4 +23,17 @@ public class EchoSystem extends AbstractGameScript {
 
     }
 
+    @Override
+    public GameObject gameObject() {
+        return parent;
+    }
+
+    @Override
+    public void setGameObject(GameObject parent) {
+        this.parent = parent;
+    }
+
+    public void say(String message) {
+        System.out.println(message);
+    }
 }

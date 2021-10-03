@@ -7,8 +7,7 @@ import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
-import ru.danilarassokhin.progressive.basic.system.EchoSystem;
-import ru.danilarassokhin.progressive.basic.system.LocationSystem;
+import ru.danilarassokhin.progressive.basic.system.CharacterSystem;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 
@@ -29,25 +28,11 @@ public class Main {
         game.setTickRate(17);
         game.setStatic(false);
 
-        GameObject echoObject = game.addGameObject();
-        EchoSystem echoSystem = echoObject.getGameScript(EchoSystem.class);
-        LocationSystem locationSystem = echoObject.getGameScript(LocationSystem.class);
-        for(int i = 0; i < 10000; ++i) {
-            game.addGameObject().getGameScript(EchoSystem.class);
-            game.addGameObject().getGameScript(LocationSystem.class);
-            game.addGameObject().getGameScript(EchoSystem.class);
-            game.addGameObject().getGameScript(LocationSystem.class);
-        }
+        BasicGameObject echoObject = (BasicGameObject) game.addGameObject();
+        CharacterSystem characterSystem = echoObject.getGameScript(CharacterSystem.class);
         Long start = System.currentTimeMillis();
         game.setGameTickRateType(GameTickRateType.PARALLEL);
         game.start();
-        String message = " ";
-        Scanner sc = new Scanner(System.in);
-        int i = 1000;
-        while(i > 1) {
-            i--;
-            BasicGamePublisher.getInstance().sendTo("EchoInput", i);
-        }
         game.stop();
         System.out.println((System.currentTimeMillis() - start)/1000);
     }

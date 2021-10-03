@@ -5,11 +5,9 @@ import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 
 @IsGameScript
-public class LocationSystem extends AbstractGameScript{
+public class LocationSystem{
 
-    private LocationSystem(BasicGameObject parent) {
-        super(parent);
-    }
+
 
     private void start() {
         System.out.println("LOCATION SYSTEM START");

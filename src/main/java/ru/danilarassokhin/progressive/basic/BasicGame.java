@@ -67,7 +67,7 @@ public final class BasicGame implements Game {
         }
         isStarted = true;
         if(!isStatic) {
-            update();
+            scheduler.scheduleAtFixedRate(this::update, 0, tick, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -84,18 +84,15 @@ public final class BasicGame implements Game {
     }
 
     private void callUpdateInGameObject(GameObjectWorker worker) {
-        scheduler
-                .scheduleAtFixedRate(() -> {
-                    try {
-                        worker.getUpdateMethod().invoke(
-                                gameObjects.get(
-                                        worker.getGameObjId()
-                                )
-                        );
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                }, 0, tick, TimeUnit.MILLISECONDS);
+        try {
+            worker.getUpdateMethod().invoke(
+                    gameObjects.get(
+                            worker.getGameObjId()
+                    )
+            );
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public void update() {

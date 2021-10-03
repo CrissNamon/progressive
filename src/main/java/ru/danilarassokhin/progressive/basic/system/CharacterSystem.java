@@ -2,11 +2,14 @@ package ru.danilarassokhin.progressive.basic.system;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.FromParent;
+import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameQuest;
+import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
+import ru.danilarassokhin.progressive.component.GameScript;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 
 import java.util.HashMap;
@@ -14,9 +17,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@RequiredGameScript(value = {InventorySystem.class, LocationSystem.class, QuestSystem.class})
-public class CharacterSystem extends AbstractGameScript {
+@RequiredGameScript(value = {EchoSystem.class})
+@IsGameScript
+public class CharacterSystem implements GameScript {
 
+    /*
     @FromParent
     private InventorySystem inventorySystem;
 
@@ -26,14 +31,18 @@ public class CharacterSystem extends AbstractGameScript {
     @FromParent
     private QuestSystem questSystem;
 
+     */
+    @FromParent
+    private EchoSystem echoSystem;
+
+    private GameObject parent;
 
     private String name;
     private float health;
     private transient final Set<? extends GameQuest> quests;
     private transient final Map<String, GameActionObject> actions;
 
-    public CharacterSystem(BasicGameObject parent) {
-        super(parent);
+    public CharacterSystem() {
         this.quests = new HashSet<>();
         this.actions = new HashMap<>();
     }
@@ -58,12 +67,21 @@ public class CharacterSystem extends AbstractGameScript {
         this.name = name;
     }
 
-    public InventorySystem getInventory() {
-        return inventorySystem;
+    @Override
+    public GameObject gameObject() {
+        return parent;
     }
 
-    public LocationSystem getLocationSystem() {
-        return locationSystem;
+    @Override
+    public void setGameObject(GameObject parent) {
+        this.parent = parent;
     }
 
+    private void start() {
+        echoSystem.say("Hello");
+    }
+
+    private void update() {
+
+    }
 }

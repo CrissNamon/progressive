@@ -5,10 +5,10 @@ import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.component.GameObject;
 
 @IsGameScript
-public class QuestSystem extends AbstractGameScript {
+public class QuestSystem {
 
     public QuestSystem(BasicGameObject parent) {
-        super(parent);
+
     }
 
 

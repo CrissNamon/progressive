@@ -5,9 +5,7 @@ import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.component.GameObject;
 
 @IsGameScript
-public class ItemSystem extends AbstractGameScript {
+public class ItemSystem {
 
-    public ItemSystem(BasicGameObject parent) {
-        super(parent);
-    }
+
 }

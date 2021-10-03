@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IsGameScript
-public class NodeSystem<B extends NodeBundle> extends AbstractGameScript {
+public class NodeSystem<B extends NodeBundle>  {
 
     private Map<Long, GameNode<B>> nodes;
 
     public NodeSystem(BasicGameObject parent) {
-        super(parent);
+
         nodes = new HashMap<>();
         BasicGamePublisher.getInstance().<Long>subscribeOn("NodeSystemInput", (d) -> System.out.println("OUTPUT IN NODESYSTEM: " + d));
     }
