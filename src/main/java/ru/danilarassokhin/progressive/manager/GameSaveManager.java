@@ -12,6 +12,7 @@ public interface GameSaveManager {
 
     /**
      * Saves story
+     * @param <T> return save type
      * @return Save
      */
     <T> T save();
@@ -19,6 +20,7 @@ public interface GameSaveManager {
     /**
      * Loads story from save
      * @param save Save to load
+     * @param <G> Game class
      * @return Loaded story
      */
     <G extends Game> G load(Object save);

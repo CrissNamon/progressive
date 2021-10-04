@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
-import ru.danilarassokhin.progressive.GameTickRateType;
+import ru.danilarassokhin.progressive.GameFrameRateType;
 import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
@@ -22,7 +22,7 @@ public final class BasicGame implements Game {
     private static BasicGame INSTANCE;
     private long idGenerator;
 
-    private GameTickRateType gameTickRateType;
+    private GameFrameRateType gameFrameRateType;
     private boolean isStatic;
     private int fps;
 
@@ -32,11 +32,10 @@ public final class BasicGame implements Game {
     private final ScheduledExecutorService scheduler;
 
     private boolean isStarted;
-
     private long deltaTime;
 
     private BasicGame() {
-        gameTickRateType = GameTickRateType.PARALLEL;
+        gameFrameRateType = GameFrameRateType.PARALLEL;
         gameObjects = new HashMap<>();
         idGenerator = 0;
         stateManager = BasicGameStateManager.getInstance();
@@ -55,11 +54,13 @@ public final class BasicGame implements Game {
 
     public void start() {
         GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
+        stateManager.setState(GameState.START, true);
         BasicGamePublisher.getInstance().sendTo("start", true);
         isStarted = true;
         if(!isStatic) {
             scheduler.scheduleAtFixedRate(this::update, 0, fps, TimeUnit.MILLISECONDS);
         }
+        stateManager.setState(GameState.PLAYING, null);
         deltaTime = System.currentTimeMillis();
     }
 
@@ -77,8 +78,9 @@ public final class BasicGame implements Game {
         BasicGamePublisher.getInstance().sendTo("update", delta);
     }
 
-    public void stop() throws InterruptedException {
+    public void stop() {
         GameSecurityManager.allowAccessIf("Game hasn't been started!", () -> isStarted);
+        stateManager.setState(GameState.STOPPED, null);
         isStarted = false;
         scheduler.shutdownNow();
     }
@@ -123,11 +125,11 @@ public final class BasicGame implements Game {
         this.isStatic = isStatic;
     }
 
-    public GameTickRateType getGameTickRateType() {
-        return gameTickRateType;
+    public GameFrameRateType getGameFrameRateType() {
+        return gameFrameRateType;
     }
 
-    public void setGameTickRateType(GameTickRateType gameTickRateType) {
-        this.gameTickRateType = gameTickRateType;
+    public void setGameTickRateType(GameFrameRateType gameFrameRateType) {
+        this.gameFrameRateType = gameFrameRateType;
     }
 }

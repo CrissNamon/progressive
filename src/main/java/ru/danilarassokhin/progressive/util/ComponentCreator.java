@@ -8,13 +8,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Creates components from their classes
  */
 public interface ComponentCreator {
     /**
-     * Creates object from given class
+     * Creates object from given class and makes autoinjection for fields and methods if they annotated as @Autofill
      * @param componentClass Object class to instantiate
      * @param args Parameters to pass in class constructor
      * @param <C> Object to instantiate
@@ -65,6 +67,7 @@ public interface ComponentCreator {
                 }
             }
             Method[] methods = instance.getClass().getDeclaredMethods();
+            Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
             for(Method m : methods) {
                 m.setAccessible(true);
                 if(m.isAnnotationPresent(Autofill.class)) {
@@ -87,7 +90,6 @@ public interface ComponentCreator {
                     invoke(m, instance, args);
                 }
             }
-
             return instance;
         }catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
@@ -98,6 +100,12 @@ public interface ComponentCreator {
         }
     }
 
+    /**
+     * Invokes method from given object and given args
+     * @param method Method to invoke
+     * @param from Object to invoke method from
+     * @param args Parameters to invoke method with
+     */
     static void invoke(Method method, Object from, Object... args) {
         try {
             method.invoke(from, args);
@@ -107,6 +115,13 @@ public interface ComponentCreator {
         }
     }
 
+    /**
+     * Check if given modifier is included in all modifiers
+     * <p>You can check if method or field you got from Reflection have some modifiers like private, public, etc</p>
+     * @param allModifiers All modifiers field or method has
+     * @param specificModifier Modifier to check
+     * @return true if given modifier presented in all modifiers
+     */
     static boolean isModifierSet(int allModifiers, int specificModifier) {
         return (allModifiers & specificModifier) > 0;
     }

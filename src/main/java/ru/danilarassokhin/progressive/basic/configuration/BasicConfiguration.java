@@ -1,6 +1,5 @@
 package ru.danilarassokhin.progressive.basic.configuration;
 
-import ru.danilarassokhin.progressive.annotation.ComponentScan;
 import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;

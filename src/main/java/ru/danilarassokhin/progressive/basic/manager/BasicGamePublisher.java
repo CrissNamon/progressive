@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic.manager;
 
-import ru.danilarassokhin.progressive.lambda.GameAction;
+import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.manager.GamePublisher;
 
@@ -26,19 +26,26 @@ public final class BasicGamePublisher implements GamePublisher {
     @Override
     public void sendTo(String topic, Object message) {
         List<GameActionObject<Object>> subscribers = feed.getOrDefault(topic, new ArrayList<>());
-        /* To speed test
-        Iterator<GameActionObject<Object>> iterator = subscribers.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().make(message);
-        }
-
-         */
-        subscribers.parallelStream().forEach(s -> s.make(message));
+        send(message, subscribers);
     }
 
     @Override
     public <V> void subscribeOn(String topic, GameActionObject<V> action) {
         feed.putIfAbsent(topic, new ArrayList<>());
         feed.get(topic).add((GameActionObject) action);
+    }
+
+    private void send(Object message, Collection<GameActionObject<Object>> subscribers) {
+        switch (BasicGame.getInstance().getGameFrameRateType()) {
+            case SEQUENCE:
+                Iterator<GameActionObject<Object>> iterator = subscribers.iterator();
+                while (iterator.hasNext()) {
+                    iterator.next().make(message);
+                }
+                break;
+            case PARALLEL:
+                subscribers.parallelStream().forEach(s -> s.make(message));
+                break;
+        }
     }
 }

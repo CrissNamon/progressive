@@ -15,10 +15,14 @@ public interface GameScript extends Serializable {
 
     /**
      * Gets parent GameObject
-     * @return
+     * @return Parent game object with this script is attached to
      */
     GameObject gameObject();
 
+    /**
+     * Sets parent game object
+     * @param parent Object to set as parent
+     */
     void setGameObject(GameObject parent);
 
     /**

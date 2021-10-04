@@ -11,7 +11,7 @@ public class EchoSystem implements GameScript {
     private GameObject parent;
 
     public EchoSystem() {
-        BasicGamePublisher.getInstance().subscribeOn("update", delta -> {});
+        BasicGamePublisher.getInstance().subscribeOn("update", this::say);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class EchoSystem implements GameScript {
         this.parent = parent;
     }
 
-    public void say(String message) {
+    private void say(Object message) {
         System.out.println(message);
     }
 }

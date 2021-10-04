@@ -1,15 +1,9 @@
 package ru.danilarassokhin.progressive.basic.system;
 
-import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.FromParent;
-import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
-import ru.danilarassokhin.progressive.basic.BasicGameObject;
-import ru.danilarassokhin.progressive.basic.component.GameItem;
 import ru.danilarassokhin.progressive.basic.component.GameQuest;
-import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
-import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
@@ -27,9 +21,6 @@ public class CharacterSystem implements GameScript {
 
     private GameObject parent;
 
-    private long t = 0;
-    private long last = 0;
-
     private String name;
     private float health;
     private transient final Set<? extends GameQuest> quests;
@@ -38,12 +29,7 @@ public class CharacterSystem implements GameScript {
     public CharacterSystem() {
         this.quests = new HashSet<>();
         this.actions = new HashMap<>();
-        t = 0;
-
-        BasicGamePublisher.getInstance().subscribeOn("update", (delta) -> {
-            last = System.currentTimeMillis();
-            t++;
-        });
+        BasicGamePublisher.getInstance().subscribeOn("update", this::update);
     }
 
     public float getHealth() {
@@ -76,7 +62,9 @@ public class CharacterSystem implements GameScript {
         this.parent = parent;
     }
 
-    public long getT() {
-        return t;
+    private void update(long delta) {
+
     }
+
+
 }

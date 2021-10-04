@@ -1,6 +1,5 @@
 package ru.danilarassokhin.progressive.basic.manager;
 
-import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.annotation.Protected;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;

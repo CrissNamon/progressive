@@ -19,7 +19,11 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BasicDIContainer implements DIContainer {
+/**
+ * Basic DI container implementation
+ * <p color="orange">Can't be extended</p>
+ */
+public final class BasicDIContainer implements DIContainer {
 
     private static BasicDIContainer INSTANCE;
     private final Map<Class<?>, Map<String, Bean>> beans;

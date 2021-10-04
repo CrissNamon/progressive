@@ -15,6 +15,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Basic game object contains all necessary logic for simple objects
+ * <p color="orange">This class is not extendable. Create game object from zero if you need to</red>
+ */
 public final class BasicGameObject implements GameObject {
 
     private Long id;
@@ -26,6 +30,10 @@ public final class BasicGameObject implements GameObject {
         scripts = new HashMap<>();
     }
 
+    /**
+     * Returns all attached scripts
+     * @return All scripts attached to this object
+     */
     public Collection<GameScript> scripts() {
         return scripts.values();
     }

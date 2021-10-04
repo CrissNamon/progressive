@@ -24,7 +24,7 @@ public interface DIContainer {
     <V> V getBean(String name, Class<V> beanClass);
 
     /**
-     * Gets bean by it's class
+     * Gets random bean bean with given class
      * @param beanClass Bean class to find
      * @param <V> Bean object to return
      * @return Bean object or throws RuntimeException if bean not found
