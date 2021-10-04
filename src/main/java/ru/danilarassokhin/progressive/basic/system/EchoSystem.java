@@ -11,16 +11,7 @@ public class EchoSystem implements GameScript {
     private GameObject parent;
 
     public EchoSystem() {
-
-    }
-
-    private void start() {
-        System.out.println("ECHO SYSTEM START");
-        BasicGamePublisher.getInstance().subscribeOn("EchoInput", (input) -> System.out.println("ECHO OUTPUT: " + input));
-    }
-
-    private void update() {
-
+        BasicGamePublisher.getInstance().subscribeOn("update", delta -> {});
     }
 
     @Override

@@ -27,6 +27,9 @@ public class CharacterSystem implements GameScript {
 
     private GameObject parent;
 
+    private long t = 0;
+    private long last = 0;
+
     private String name;
     private float health;
     private transient final Set<? extends GameQuest> quests;
@@ -35,6 +38,12 @@ public class CharacterSystem implements GameScript {
     public CharacterSystem() {
         this.quests = new HashSet<>();
         this.actions = new HashMap<>();
+        t = 0;
+
+        BasicGamePublisher.getInstance().subscribeOn("update", (delta) -> {
+            last = System.currentTimeMillis();
+            t++;
+        });
     }
 
     public float getHealth() {
@@ -67,15 +76,7 @@ public class CharacterSystem implements GameScript {
         this.parent = parent;
     }
 
-    private void start() {
-        echoSystem.say("Hello");
-        System.out.println(BasicDIContainer.getInstance().getBean("gameItem", GameItem.class).getId());
-        System.out.println(BasicDIContainer.getInstance().getBean("gameItem", GameItem.class).getId());
-        System.out.println(BasicDIContainer.getInstance().getBean("generator", Long.class));
-        System.out.println(BasicDIContainer.getInstance().getBean("test", Long.class));
-    }
-
-    private void update() {
-
+    public long getT() {
+        return t;
     }
 }

@@ -5,12 +5,13 @@ import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 /**
  * Represents game script
  */
-public interface GameScript {
+public interface GameScript extends Serializable {
 
     /**
      * Gets parent GameObject

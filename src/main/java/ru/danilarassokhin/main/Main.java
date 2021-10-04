@@ -6,6 +6,7 @@ import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.system.CharacterSystem;
+import ru.danilarassokhin.progressive.basic.system.EchoSystem;
 import ru.danilarassokhin.progressive.manager.GameState;
 
 public class Main {
@@ -19,18 +20,15 @@ public class Main {
 
         BasicGame game = BasicGame.getInstance();
         game.setGameObjectClass(BasicGameObject.class);
-        game.setTickRate(17);
+        game.setFrameRate(16);
         game.setStatic(false);
-
-        BasicGameObject echoObject = (BasicGameObject) game.addGameObject();
-        CharacterSystem characterSystem = echoObject.getGameScript(CharacterSystem.class);
-        Long start = System.currentTimeMillis();
         game.setGameTickRateType(GameTickRateType.PARALLEL);
-        for(int i = 0; i < 1000; ++i) {
-            game.addGameObject().getGameScript(CharacterSystem.class);
+
+        for(int i = 0; i < 1; ++i) {
+            game.addGameObject().getGameScript(EchoSystem.class);
         }
+
         game.start();
         game.stop();
-        System.out.println((System.currentTimeMillis() - start)/1000);
     }
 }
