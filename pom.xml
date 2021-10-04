@@ -5,19 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.danilarassokhin</groupId>
     <artifactId>progressive</artifactId>
-    <version>0.0.4</version>
+    <version>0.1.0</version>
     <name>Progressive</name>
-    <description>Interactive fiction game library</description>
+    <description>Game creation framework</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.8</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -26,7 +21,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <source>11</source>
+                    <doclint>none</doclint>
+                    <source>1.8</source>
                     <excludePackageNames>ru.danilarassokhin.main:ru.danilarassokhin.main.*</excludePackageNames>
                 </configuration>
                 <executions>
@@ -43,8 +39,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -53,9 +49,18 @@
                 <version>3.2.0</version>
                 <configuration>
                     <includes>
+                        <include>ru/danilarassokhin/progressive/*.*</include>
                         <include>ru/danilarassokhin/progressive/*/*.*</include>
                         <include>ru/danilarassokhin/progressive/*/*/*.*</include>
                     </includes>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
