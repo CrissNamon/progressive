@@ -3,23 +3,21 @@ package ru.danilarassokhin.progressive.basic.injection;
 import ru.danilarassokhin.progressive.annotation.ComponentScan;
 import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
+import ru.danilarassokhin.progressive.exception.BeanNotFoundException;
 import ru.danilarassokhin.progressive.injection.DIContainer;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 import ru.danilarassokhin.progressive.injection.PackageLoader;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
+import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BasicDIContainer implements DIContainer {
@@ -74,6 +72,9 @@ public class BasicDIContainer implements DIContainer {
                 System.out.println();
             } else {
                 Method[] methods = beanClass.getDeclaredMethods();
+                Arrays.asList(methods).removeIf(m -> !m.isAnnotationPresent(GameBean.class));
+                Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
+                Arrays.sort(methods, Comparator.comparingInt(m -> m.getAnnotation(GameBean.class).order()));
                 for (Method m : methods) {
                     if (viewedMethods.contains(m)) {
                         continue;
@@ -97,6 +98,7 @@ public class BasicDIContainer implements DIContainer {
 
     private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
             IllegalAccessException, NoSuchMethodException {
+        m.setAccessible(true);
         if (!m.getReturnType().equals(Void.TYPE)) {
             GameBean annotation = m.getAnnotation(GameBean.class);
             String name = annotation.name();
@@ -106,12 +108,19 @@ public class BasicDIContainer implements DIContainer {
             Map<String, Bean> beansOfClass = beans.getOrDefault(
                     m.getReturnType(), new HashMap<>()
             );
+            Object result;
+            Bean b;
             if (m.getParameterCount() > 0) {
-                invoke(m, o);
+                b = invoke(m, o);
+                result = b.getBean();
+            }else{
+                result = m.invoke(o);
+                b = new Bean(result);
             }
-            Object result = m.invoke(o);
             viewedMethods.add(m);
-            Bean b = new Bean(result, annotation.policy());
+            b.setCreationPolicy(annotation.policy());
+            b.setMethod(m);
+            b.setMethodCaller(o);
             if (beansOfClass.containsKey(name)) {
                 throw new RuntimeException("GameBean name duplication "
                         + name + " in " + o.getClass().getName());
@@ -124,18 +133,45 @@ public class BasicDIContainer implements DIContainer {
         }
     }
 
-    private Object invoke(Method m, Object obj) throws InvocationTargetException, IllegalAccessException, ArrayIndexOutOfBoundsException, NoSuchMethodException {
+    private Bean invoke(Method m, Object obj) throws InvocationTargetException, IllegalAccessException, ArrayIndexOutOfBoundsException, NoSuchMethodException {
         Class<?>[] paramTypes = m.getParameterTypes();
         Object[] args = new Object[paramTypes.length];
-        String[] names = m.getAnnotation(GameBean.class).qualifiers();
+        GameBean annotation = m.getAnnotation(GameBean.class);
+        String[] names = annotation.qualifiers();
+        if(names.length != args.length && names.length != 0) {
+            throw new RuntimeException("You must set all qualifiers for GameBean method "
+            + m.getDeclaringClass().getName() + " "
+                    + m.getName() + " or doesn't set them at all!");
+        }
         for (int i = 0; i < paramTypes.length; ++i) {
             if (!beans.containsKey(paramTypes[i])) {
-                createBeanFromMethod(obj.getClass().getMethod(names[i]), obj);
+                if(annotation.strict()) {
+                    throw new RuntimeException("GameBean method " + m.getDeclaringClass().getName() + " "
+                            + m.getName() + " annotated as strict, but not bean found for " + paramTypes[i].getName());
+                }
+                try {
+                    createBeanFromMethod(obj.getClass().getMethod(names[i], paramTypes[i]), obj);
+                    --i;
+                }catch (NoSuchMethodException e) {
+                    loadBeanFrom(paramTypes[i]);
+                    --i;
+                }
+            }else if (beans.get(paramTypes[i]).containsKey(names[i].toLowerCase())) {
+                args[i] = getBean(names[i].toLowerCase(), paramTypes[i]);
+            }else{
+                if(annotation.strict()) {
+                    throw new RuntimeException("GameBean method " + m.getDeclaringClass().getName() + " "
+                            + m.getName() + " annotated as strict, but not bean found for " + paramTypes[i].getName());
+                }
+                args[i] = getBean(paramTypes[i]);
             }
-            args[i] = getBean(names[i].toLowerCase(), paramTypes[i]);
         }
+        Object o = m.invoke(obj, args);
+        Bean b = new Bean(o);
+        b.setMethod(m);
+        b.setMethodArgs(args);
         viewedMethods.add(m);
-        return m.invoke(obj, args);
+        return b;
     }
 
     private Set<Class> findAllClassesUsingClassLoader(String packageName) {
@@ -162,7 +198,44 @@ public class BasicDIContainer implements DIContainer {
     }
 
     public <V> V getBean(Class<V> beanClass) {
-        return getBean("", beanClass);
+        Map.Entry<String, Bean> bean = beans.get(beanClass).entrySet().stream().findFirst().orElse(null);
+        if(bean == null) {
+            throw new RuntimeException("There is no beans for " + beanClass.getName() + " were found!");
+        }
+        V exists = (V) bean.getValue().getBean();
+        if (bean.getValue().getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
+            if(bean.getValue().getMethod() != null) {
+                try {
+                    exists = (V)(bean.getValue().getMethod().invoke(
+                            bean.getValue().getMethodCaller(), bean.getValue().getMethodArgs()
+                    ));
+
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }else {
+                exists = ComponentCreator.create(beanClass);
+            }
+            bean.getValue().setBean(exists);
+            beans.get(beanClass).put(bean.getKey(), bean.getValue());
+        }
+        return exists;
+    }
+
+    public <V> V tryGetBean(String name, Class<V> beanClass) throws BeanNotFoundException {
+        try{
+           return getBean(name, beanClass);
+        }catch (Exception e) {
+            throw new BeanNotFoundException("Bean with name " + name + " and type " + beanClass.getName() + " not found");
+        }
+    }
+
+    public <V> V tryGetBean(Class<V> beanClass) throws BeanNotFoundException {
+        try{
+            return getBean(beanClass);
+        }catch (Exception e) {
+            throw new BeanNotFoundException("Bean with type " + beanClass.getName() + " not found");
+        }
     }
 
     public <V> V getBean(String name, Class<V> beanClass) {
@@ -178,7 +251,19 @@ public class BasicDIContainer implements DIContainer {
             throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
         }
         if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
-            exists = ComponentCreator.create(beanClass);
+            if(b.getMethod() != null) {
+                try {
+                    System.out.println("EXISTS: " + b.getMethodCaller());
+                    exists = (V)(b.getMethod().invoke(
+                            b.getMethodCaller(), b.getMethodArgs()
+                    ));
+
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }else {
+                exists = ComponentCreator.create(beanClass);
+            }
             b.setBean(exists);
             beans.get(beanClass).put(name, b);
         }

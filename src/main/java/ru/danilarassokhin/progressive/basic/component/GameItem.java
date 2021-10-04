@@ -35,8 +35,8 @@ public class GameItem implements GameComponent {
     }
 
     @Autofill
-    public void setId() {
-        this.id = idGenerator.next();
+    public void setId(GlobalIdGenerator generator) {
+        this.id = generator.next();
     }
 
     @Override

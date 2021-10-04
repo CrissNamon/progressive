@@ -72,6 +72,8 @@ public class CharacterSystem implements GameScript {
         echoSystem.say("Hello");
         System.out.println(BasicDIContainer.getInstance().getBean("gameItem", GameItem.class).getId());
         System.out.println(BasicDIContainer.getInstance().getBean("gameItem", GameItem.class).getId());
+        System.out.println(BasicDIContainer.getInstance().getBean("generator", Long.class));
+        System.out.println(BasicDIContainer.getInstance().getBean("test", Long.class));
     }
 
     private void update() {

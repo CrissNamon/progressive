@@ -2,6 +2,7 @@ package ru.danilarassokhin.progressive.util;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
+import ru.danilarassokhin.progressive.exception.BeanNotFoundException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -69,13 +70,19 @@ public interface ComponentCreator {
                 if(m.isAnnotationPresent(Autofill.class)) {
                     Autofill autofill = m.getAnnotation(Autofill.class);
                     String[] names = autofill.qualifiers();
-                    if(names.length != m.getParameterCount()) {
-                        throw new RuntimeException("Could not Autofill method " + m.getName() + " in " + instance.getClass().getName()
-                        + "! Wrong qualifiers count: " + names.length + ", need: " + m.getParameterCount());
-                    }
                     argsTypes = m.getParameterTypes();
+                    args = new Object[argsTypes.length];
                     for(int i = 0; i < m.getParameterCount(); ++i) {
-                        args[i] = diContainer.getBean(names[i], argsTypes[i]);
+                        try {
+                            if (names.length != argsTypes.length) {
+                                args[i] = diContainer.tryGetBean(argsTypes[i]);
+                            } else {
+                                args[i] = diContainer.tryGetBean(names[i], argsTypes[i]);
+                            }
+                        }catch (BeanNotFoundException e) {
+                            throw new RuntimeException("Could not Autofill method " + m.getName() + " in " + instance.getClass().getName()
+                                    + "! Beans for " + argsTypes[i].getName() + " not found...");
+                        }
                     }
                     invoke(m, instance, args);
                 }

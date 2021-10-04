@@ -15,4 +15,6 @@ public @interface GameBean {
     GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
     String name() default "";
     String[] qualifiers() default {};
+    boolean strict() default false;
+    int order() default 0;
 }
