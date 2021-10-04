@@ -41,7 +41,7 @@ public class BasicGameStateManager implements GameStateManager<GameState> {
         GameSecurityManager.allowAccessTo("This method can be called only from Game class. " +
                 "Access denied", BasicGame.class, BasicGameStateManager.class);
         if(listeners.containsKey(state)) {
-            listeners.get(state).forEach(a -> a.make(o));
+            listeners.getOrDefault(state, new ArrayList<>()).parallelStream().forEach(a -> a.make(o));
         }else{
             listeners.put(state, new ArrayList<>());
         }

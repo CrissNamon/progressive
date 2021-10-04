@@ -2,7 +2,6 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
-import ru.danilarassokhin.progressive.basic.component.AbstractGameComponent;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
@@ -15,14 +14,16 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-public final class BasicGameObject extends AbstractGameComponent implements GameObject {
+public final class BasicGameObject implements GameObject {
+
+    private Long id;
 
     private final Map<Class<? extends GameScript>, GameScript> scripts;
     private final Set<GameScriptWorker> scriptWorkers;
     private Long scriptIdGenerator;
 
     protected BasicGameObject(Long id) {
-        super(id);
+        this.id = id;
         scripts = new HashMap<>();
         scriptWorkers = new HashSet<>();
         scriptIdGenerator = 0L;
@@ -149,4 +150,8 @@ public final class BasicGameObject extends AbstractGameComponent implements Game
         }
     }
 
+    @Override
+    public Long getId() {
+        return id;
+    }
 }

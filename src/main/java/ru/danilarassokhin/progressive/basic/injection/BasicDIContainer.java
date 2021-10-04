@@ -10,7 +10,6 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 import ru.danilarassokhin.progressive.injection.PackageLoader;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
-import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -50,26 +49,7 @@ public class BasicDIContainer implements DIContainer {
         try {
             GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
             if (annotation != null) {
-                String name = annotation.name();
-                if (name.isEmpty()) {
-                    name = beanClass.getName().toLowerCase();
-                }
-                System.out.println("Found GameBean annotation in "
-                        + beanClass.getName() + ". Trying to make bean...");
-                Object o = null;
-                if (annotation.policy().equals(GameBeanCreationPolicy.SINGLETON)) {
-                    o = ComponentCreator.create(beanClass);
-                }
-                Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
-                Bean b = new Bean(o, annotation.policy());
-                if (beansOfClass.containsKey(name)) {
-                    throw new RuntimeException("GameBean name duplication "
-                            + name + " in " + beanClass.getName());
-                }
-                beansOfClass.putIfAbsent(name, b);
-                beans.putIfAbsent(beanClass, beansOfClass);
-                System.out.println("GameBean with name " + name + " created for " + beanClass.getName());
-                System.out.println();
+                createBeanFromClass(beanClass);
             } else {
                 Method[] methods = beanClass.getDeclaredMethods();
                 Arrays.asList(methods).removeIf(m -> !m.isAnnotationPresent(GameBean.class));
@@ -94,6 +74,30 @@ public class BasicDIContainer implements DIContainer {
                     + " annotated as GameBean has no public empty constructor " +
                     "which is required for beans! Exception: " + e.getMessage());
         }
+    }
+
+    private void createBeanFromClass(Class beanClass) {
+        GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
+        String name = annotation.name();
+        if (name.isEmpty()) {
+            name = beanClass.getName().toLowerCase();
+        }
+        System.out.println("Found GameBean annotation in "
+                + beanClass.getName() + ". Trying to make bean...");
+        Object o = null;
+        if (annotation.policy().equals(GameBeanCreationPolicy.SINGLETON)) {
+            o = ComponentCreator.create(beanClass);
+        }
+        Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
+        Bean b = new Bean(o, annotation.policy());
+        if (beansOfClass.containsKey(name)) {
+            throw new RuntimeException("GameBean name duplication "
+                    + name + " in " + beanClass.getName());
+        }
+        beansOfClass.putIfAbsent(name, b);
+        beans.putIfAbsent(beanClass, beansOfClass);
+        System.out.println("GameBean with name " + name + " created for " + beanClass.getName());
+        System.out.println();
     }
 
     private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,

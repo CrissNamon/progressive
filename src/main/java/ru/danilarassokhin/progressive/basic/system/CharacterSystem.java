@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 @RequiredGameScript(value = {EchoSystem.class})
-@IsGameScript
 public class CharacterSystem implements GameScript {
 
     @FromParent

@@ -28,7 +28,7 @@ public final class BasicGamePublisher implements GamePublisher {
     @Override
     public void sendTo(String topic, Object message) {
         List<GameActionObject> subscribers = feed.getOrDefault(topic, new ArrayList<>());
-        subscribers.forEach(s -> s.make(message));
+        subscribers.parallelStream().forEach(s -> s.make(message));
     }
 
     @Override

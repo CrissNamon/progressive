@@ -3,7 +3,7 @@ package ru.danilarassokhin.progressive.basic.component;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.lambda.GameCondition;
 
-public class GameQuest extends AbstractGameComponent {
+public class GameQuest {
 
     private String name;
     private GameCondition completeCondition;
@@ -12,7 +12,7 @@ public class GameQuest extends AbstractGameComponent {
     private boolean unique;
 
     public GameQuest(Long id){
-        super(id);
+
     }
 
     public boolean isCompleted() {
@@ -47,7 +47,4 @@ public class GameQuest extends AbstractGameComponent {
 
     }
 
-    public int hashCode() {
-        return getId().intValue();
-    }
 }
