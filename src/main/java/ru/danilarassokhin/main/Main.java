@@ -26,6 +26,9 @@ public class Main {
         CharacterSystem characterSystem = echoObject.getGameScript(CharacterSystem.class);
         Long start = System.currentTimeMillis();
         game.setGameTickRateType(GameTickRateType.PARALLEL);
+        for(int i = 0; i < 1000; ++i) {
+            game.addGameObject().getGameScript(CharacterSystem.class);
+        }
         game.start();
         game.stop();
         System.out.println((System.currentTimeMillis() - start)/1000);
