@@ -36,7 +36,7 @@ public final class BasicGamePublisher implements GamePublisher {
     }
 
     private void send(Object message, Collection<GameActionObject<Object>> subscribers) {
-        switch (BasicGame.getInstance().getGameFrameRateType()) {
+        switch (BasicGame.getInstance().getFrameTimeType()) {
             case SEQUENCE:
                 Iterator<GameActionObject<Object>> iterator = subscribers.iterator();
                 while (iterator.hasNext()) {
