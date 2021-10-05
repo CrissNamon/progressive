@@ -1,6 +1,6 @@
 package ru.danilarassokhin.main;
 
-import ru.danilarassokhin.progressive.GameFrameRateType;
+import ru.danilarassokhin.progressive.GameFrameTimeType;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
@@ -17,9 +17,9 @@ public class Main {
 
         BasicGame game = BasicGame.getInstance();
         game.setGameObjectClass(BasicGameObject.class);
-        game.setFrameRate(16);
+        game.setFrameTime(16);
         game.setStatic(false);
-        game.setGameTickRateType(GameFrameRateType.PARALLEL);
+        game.setFrameTimeType(GameFrameTimeType.PARALLEL);
 
         for(int i = 0; i < 1; ++i) {
             game.addGameObject().getGameScript(EchoSystem.class);

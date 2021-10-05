@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
-import ru.danilarassokhin.progressive.GameFrameRateType;
+import ru.danilarassokhin.progressive.GameFrameTimeType;
 import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
@@ -22,9 +22,9 @@ public final class BasicGame implements Game {
     private static BasicGame INSTANCE;
     private long idGenerator;
 
-    private GameFrameRateType gameFrameRateType;
+    private GameFrameTimeType gameFrameTimeType;
     private boolean isStatic;
-    private int fps;
+    private int frameTime;
 
     private final Map<Long, GameObject> gameObjects;
     private BasicGameStateManager stateManager;
@@ -35,7 +35,7 @@ public final class BasicGame implements Game {
     private long deltaTime;
 
     private BasicGame() {
-        gameFrameRateType = GameFrameRateType.PARALLEL;
+        gameFrameTimeType = GameFrameTimeType.PARALLEL;
         gameObjects = new HashMap<>();
         idGenerator = 0;
         stateManager = BasicGameStateManager.getInstance();
@@ -58,7 +58,7 @@ public final class BasicGame implements Game {
         BasicGamePublisher.getInstance().sendTo("start", true);
         isStarted = true;
         if(!isStatic) {
-            scheduler.scheduleAtFixedRate(this::update, 0, fps, TimeUnit.MILLISECONDS);
+            scheduler.scheduleAtFixedRate(this::update, 0, frameTime, TimeUnit.MILLISECONDS);
         }
         stateManager.setState(GameState.PLAYING, null);
         deltaTime = System.currentTimeMillis();
@@ -109,11 +109,11 @@ public final class BasicGame implements Game {
         return true;
     }
 
-    public void setFrameRate(int milliseconds) {
+    public void setFrameTime(int milliseconds) {
         if(milliseconds < 1) {
             throw new RuntimeException("Frame rate can't be less than 1 millisecond!");
         }
-        this.fps = milliseconds;
+        this.frameTime = milliseconds;
     }
 
     @Override
@@ -125,11 +125,11 @@ public final class BasicGame implements Game {
         this.isStatic = isStatic;
     }
 
-    public GameFrameRateType getGameFrameRateType() {
-        return gameFrameRateType;
+    public GameFrameTimeType getFrameTimeType() {
+        return gameFrameTimeType;
     }
 
-    public void setGameTickRateType(GameFrameRateType gameFrameRateType) {
-        this.gameFrameRateType = gameFrameRateType;
+    public void setFrameTimeType(GameFrameTimeType gameFrameTimeType) {
+        this.gameFrameTimeType = gameFrameTimeType;
     }
 }

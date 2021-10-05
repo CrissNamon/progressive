@@ -3,7 +3,7 @@ package ru.danilarassokhin.progressive;
 /**
  * Frame rate type defines strategy of game scripts notification about update
  */
-public enum GameFrameRateType {
+public enum GameFrameTimeType {
     /**
      * All scripts will be notified in sequence they were subscribed
      */
