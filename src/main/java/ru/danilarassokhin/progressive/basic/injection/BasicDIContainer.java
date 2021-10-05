@@ -3,6 +3,7 @@ package ru.danilarassokhin.progressive.basic.injection;
 import ru.danilarassokhin.progressive.annotation.ComponentScan;
 import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.exception.BeanNotFoundException;
 import ru.danilarassokhin.progressive.injection.DIContainer;
@@ -31,6 +32,14 @@ public final class BasicDIContainer implements DIContainer {
     private Class<?> scanFrom;
 
     private BasicDIContainer() {
+        if (System.console() == null) {
+            System.setProperty("jansi.passthrough", "true");
+        }
+        System.out.println("\n" +
+                "╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╦╦  ╦╔═╗\n" +
+                "╠═╝╠╦╝║ ║║ ╦╠╦╝║╣ ╚═╗╚═╗║╚╗╔╝║╣ \n" +
+                "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n");
+        BasicGameLogger.info("Progressive DI initialization...\n");
         beans = new HashMap<>();
     }
 
@@ -116,15 +125,7 @@ public final class BasicDIContainer implements DIContainer {
             Map<String, Bean> beansOfClass = beans.getOrDefault(
                     m.getReturnType(), new HashMap<>()
             );
-            Object result;
-            Bean b;
-            if (m.getParameterCount() > 0) {
-                b = invoke(m, o);
-                result = b.getBean();
-            }else{
-                result = m.invoke(o);
-                b = new Bean(result);
-            }
+            Bean b = invoke(m, o);
             viewedMethods.add(m);
             b.setCreationPolicy(annotation.policy());
             b.setMethod(m);
@@ -134,9 +135,9 @@ public final class BasicDIContainer implements DIContainer {
                         + name + " in " + o.getClass().getName());
             }
             beansOfClass.putIfAbsent(name, b);
-            beans.putIfAbsent(result.getClass(), beansOfClass);
+            beans.putIfAbsent(b.getBean().getClass(), beansOfClass);
             System.out.println("GameBean with name " + name + " created for "
-                    + result.getClass().getName() + " from method " + m.getName());
+                    + b.getBean().getClass().getName() + " from method " + m.getName());
             System.out.println();
         }
     }
@@ -158,9 +159,12 @@ public final class BasicDIContainer implements DIContainer {
                             + m.getName() + " annotated as strict, but not bean found for " + paramTypes[i].getName());
                 }
                 try {
+                    System.out.println("GameBean of class " + paramTypes[i].getName()
+                    + " not found! Trying to create it from existing method...");
                     createBeanFromMethod(obj.getClass().getMethod(names[i], paramTypes[i]), obj);
                     --i;
                 }catch (NoSuchMethodException e) {
+                    System.out.println("Well, it didn't work... " + "Trying to create GameBean from method return type...");
                     loadBeanFrom(paramTypes[i]);
                     --i;
                 }

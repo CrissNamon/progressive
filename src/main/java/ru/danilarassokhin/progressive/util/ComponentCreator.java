@@ -14,7 +14,7 @@ import java.util.Comparator;
 /**
  * Creates components from their classes
  */
-public interface ComponentCreator {
+public final class ComponentCreator {
     /**
      * Creates object from given class and makes autoinjection for fields and methods if they annotated as @Autofill
      * @param componentClass Object class to instantiate
@@ -22,7 +22,7 @@ public interface ComponentCreator {
      * @param <C> Object to instantiate
      * @return Instantiated object of null
      */
-    static <C> C create(Class<C> componentClass, Object... args) {
+    public static <C> C create(Class<C> componentClass, Object... args) {
         try {
             Class<?>[] argsTypes = new Class[args.length];
             for (int i = 0; i < args.length; ++i) {
@@ -106,7 +106,7 @@ public interface ComponentCreator {
      * @param from Object to invoke method from
      * @param args Parameters to invoke method with
      */
-    static void invoke(Method method, Object from, Object... args) {
+    public static void invoke(Method method, Object from, Object... args) {
         try {
             method.invoke(from, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -122,7 +122,7 @@ public interface ComponentCreator {
      * @param specificModifier Modifier to check
      * @return true if given modifier presented in all modifiers
      */
-    static boolean isModifierSet(int allModifiers, int specificModifier) {
+    public static boolean isModifierSet(int allModifiers, int specificModifier) {
         return (allModifiers & specificModifier) > 0;
     }
 }

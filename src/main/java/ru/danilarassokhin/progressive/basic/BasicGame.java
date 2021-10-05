@@ -6,6 +6,7 @@ import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
+import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.util.ComponentCreator;
@@ -35,6 +36,7 @@ public final class BasicGame implements Game {
     private long deltaTime;
 
     private BasicGame() {
+        BasicGameLogger.info("Progressive IoC initialization...\n");
         gameFrameTimeType = GameFrameTimeType.PARALLEL;
         gameObjects = new HashMap<>();
         idGenerator = 0;
@@ -72,9 +74,8 @@ public final class BasicGame implements Game {
     }
 
     public void update(long delta) {
-        GameSecurityManager.allowAccessIf("Game param isStatic is set to false. Can't update manually!",
-                () -> isStatic && isStarted
-                        || GameSecurityManager.getCallerClass().equals(BasicGame.class));
+        GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
+                () -> !isStatic && !GameSecurityManager.getCallerClass().equals(BasicGame.class));
         BasicGamePublisher.getInstance().sendTo("update", delta);
     }
 

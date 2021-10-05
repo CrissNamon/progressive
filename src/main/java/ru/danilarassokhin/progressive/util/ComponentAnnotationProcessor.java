@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * Processes annotations
  */
-public interface ComponentAnnotationProcessor {
+public final class ComponentAnnotationProcessor {
 
     /**
      * Checks if class annotated with annotation
@@ -13,7 +13,7 @@ public interface ComponentAnnotationProcessor {
      * @param c Class to check
      * @return true if class is annotated with given annotation
      */
-    static boolean isAnnotationPresent(Class<? extends Annotation> an, Class<?> c) {
+    public static boolean isAnnotationPresent(Class<? extends Annotation> an, Class<?> c) {
         return findAnnotation(c, an) != null;
     }
 
@@ -25,7 +25,7 @@ public interface ComponentAnnotationProcessor {
      * @return Annotation or null
      */
     @SuppressWarnings("unchecked")
-    static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
+    public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
         if(clazz.equals(Target.class) || clazz.equals(Documented.class) || clazz.equals(Retention.class)
                 || clazz.equals(Inherited.class) || clazz.equals(Deprecated.class)) {
             return null;

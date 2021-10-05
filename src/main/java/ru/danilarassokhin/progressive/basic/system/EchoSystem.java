@@ -9,6 +9,7 @@ import ru.danilarassokhin.progressive.component.GameScript;
 public class EchoSystem implements GameScript {
 
     private GameObject parent;
+    private int id;
 
     public EchoSystem() {
         BasicGamePublisher.getInstance().subscribeOn("update", this::say);
