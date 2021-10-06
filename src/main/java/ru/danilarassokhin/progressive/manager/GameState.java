@@ -15,25 +15,25 @@ public enum GameState {
     /**
      * Indicates that game instance has been created, but game hasn't been started yet
      * <p>Called only once</p>
-     * <p>Returns game object in callback</p>
+     * <p>Returns true in callback</p>
      */
     INIT,
 
     /**
      * Game's start method called
-     * <p>Returns null in callback</p>
+     * <p>Returns true in callback</p>
      */
-    START,
+    STARTED,
 
     /**
      * Game's will be called after this
-     * <p>Returns null in callback</p>
+     * <p>Returns true in callback</p>
      */
     PLAYING,
 
     /**
      * Game has been stopped
-     * <p>Returns null in callback</p>
+     * <p>Returns true in callback</p>
      */
     STOPPED
 }

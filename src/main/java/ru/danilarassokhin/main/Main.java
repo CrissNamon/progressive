@@ -7,7 +7,7 @@ import ru.danilarassokhin.progressive.basic.component.GameItem;
 import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
-import ru.danilarassokhin.progressive.basic.system.EchoSystem;
+import ru.danilarassokhin.progressive.basic.script.EchoSystem;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.manager.GameState;

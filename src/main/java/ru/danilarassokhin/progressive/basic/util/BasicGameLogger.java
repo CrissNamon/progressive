@@ -1,5 +1,8 @@
 package ru.danilarassokhin.progressive.basic.util;
 
+/**
+ * Simple logger
+ */
 public class BasicGameLogger {
 
     public static final String RESET = "\033[0m";  // Text Reset

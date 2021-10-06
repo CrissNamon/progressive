@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.basic.system;
+package ru.danilarassokhin.progressive.basic.script;
 
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;

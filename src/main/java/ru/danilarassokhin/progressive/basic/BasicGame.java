@@ -17,6 +17,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Basic implementation of {@link ru.danilarassokhin.progressive.Game}
+ */
 public final class BasicGame implements Game {
 
     private static BasicGame INSTANCE;
@@ -56,13 +59,13 @@ public final class BasicGame implements Game {
     @Override
     public void start() {
         GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
-        stateManager.setState(GameState.START, true);
+        stateManager.setState(GameState.STARTED, true);
         BasicGamePublisher.getInstance().sendTo("start", true);
         isStarted = true;
         if(!isStatic) {
             scheduler.scheduleAtFixedRate(this::update, 0, frameTime, TimeUnit.MILLISECONDS);
         }
-        stateManager.setState(GameState.PLAYING, null);
+        stateManager.setState(GameState.PLAYING, true);
         deltaTime = System.currentTimeMillis();
     }
 
@@ -82,7 +85,7 @@ public final class BasicGame implements Game {
 
     public void stop() {
         GameSecurityManager.allowAccessIf("Game hasn't been started!", () -> isStarted);
-        stateManager.setState(GameState.STOPPED, null);
+        stateManager.setState(GameState.STOPPED, true);
         isStarted = false;
         scheduler.shutdownNow();
     }
