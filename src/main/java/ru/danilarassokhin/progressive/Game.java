@@ -33,4 +33,21 @@ public interface Game {
      */
     boolean isGameObjectClassSet();
 
+
+    /**
+     * Starts the game
+     */
+    void start();
+
+    /**
+     * Calls global update
+     * @param deltaTime Time passed since last update call
+     */
+    void update(long deltaTime);
+
+    /**
+     * Stops the game
+     */
+    void stop();
+
 }

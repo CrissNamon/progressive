@@ -21,4 +21,6 @@ public interface GameObject extends GameComponent{
      */
     <V extends GameScript> boolean hasGameScript(Class<V> gameScriptClass);
 
+    void dispose();
+
 }

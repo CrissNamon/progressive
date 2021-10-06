@@ -32,9 +32,6 @@ public final class BasicDIContainer implements DIContainer {
     private Class<?> scanFrom;
 
     private BasicDIContainer() {
-        if (System.console() == null) {
-            System.setProperty("jansi.passthrough", "true");
-        }
         System.out.println("\n" +
                 "╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╦╦  ╦╔═╗\n" +
                 "╠═╝╠╦╝║ ║║ ╦╠╦╝║╣ ╚═╗╚═╗║╚╗╔╝║╣ \n" +
@@ -63,7 +60,7 @@ public final class BasicDIContainer implements DIContainer {
             GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
             if (annotation != null) {
                 createBeanFromClass(beanClass);
-            } else {
+            } else if (beanClass.getSuperclass().equals(AbstractConfiguration.class)){
                 Method[] methods = beanClass.getDeclaredMethods();
                 Arrays.asList(methods).removeIf(m -> !m.isAnnotationPresent(GameBean.class));
                 Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
@@ -80,6 +77,8 @@ public final class BasicDIContainer implements DIContainer {
                         createBeanFromMethod(m, o);
                     }
                 }
+            }else {
+                throw new RuntimeException(beanClass.getName() + " is not a game bean or configuration");
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
@@ -153,29 +152,34 @@ public final class BasicDIContainer implements DIContainer {
                     + m.getName() + " or doesn't set them at all!");
         }
         for (int i = 0; i < paramTypes.length; ++i) {
-            if (!beans.containsKey(paramTypes[i])) {
-                if(annotation.strict()) {
-                    throw new RuntimeException("GameBean method " + m.getDeclaringClass().getName() + " "
-                            + m.getName() + " annotated as strict, but not bean found for " + paramTypes[i].getName());
-                }
+            if (names.length == 0) {
                 try {
-                    System.out.println("GameBean of class " + paramTypes[i].getName()
-                    + " not found! Trying to create it from existing method...");
-                    createBeanFromMethod(obj.getClass().getMethod(names[i], paramTypes[i]), obj);
-                    --i;
-                }catch (NoSuchMethodException e) {
-                    System.out.println("Well, it didn't work... " + "Trying to create GameBean from method return type...");
+                    args[i] = tryGetBean(paramTypes[i]);
+                } catch (BeanNotFoundException e) {
+                    if (annotation.strict()) {
+                        throw new RuntimeException(m.getName() + " in " + m.getDeclaringClass().getName()
+                        + " annotated as strict but not beans found for " + paramTypes[i].getName());
+                    }
                     loadBeanFrom(paramTypes[i]);
                     --i;
                 }
-            }else if (beans.get(paramTypes[i]).containsKey(names[i].toLowerCase())) {
-                args[i] = getBean(names[i].toLowerCase(), paramTypes[i]);
-            }else{
-                if(annotation.strict()) {
-                    throw new RuntimeException("GameBean method " + m.getDeclaringClass().getName() + " "
-                            + m.getName() + " annotated as strict, but not bean found for " + paramTypes[i].getName());
+            } else {
+                try {
+                    args[i] = tryGetBean(names[i], paramTypes[i]);
+                } catch (BeanNotFoundException beanNotFoundException) {
+                    if (annotation.strict()) {
+                        throw new RuntimeException(m.getName() + " in " + m.getDeclaringClass().getName()
+                                + " annotated as strict but not beans found for " + paramTypes[i].getName());
+                    }
+                    try {
+                        System.out.println("GameBean of class " + paramTypes[i].getName()
+                                + " not found! Trying to create it from existing method...");
+                        createBeanFromMethod(obj.getClass().getMethod(names[i], paramTypes[i]), obj);
+                    } catch (NoSuchMethodException | ArrayIndexOutOfBoundsException e) {
+                        loadBeanFrom(paramTypes[i]);
+                    }
+                    --i;
                 }
-                args[i] = getBean(paramTypes[i]);
             }
         }
         Object o = m.invoke(obj, args);
@@ -265,7 +269,6 @@ public final class BasicDIContainer implements DIContainer {
         if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
             if(b.getMethod() != null) {
                 try {
-                    System.out.println("EXISTS: " + b.getMethodCaller());
                     exists = (V)(b.getMethod().invoke(
                             b.getMethodCaller(), b.getMethodArgs()
                     ));

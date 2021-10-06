@@ -1,6 +1,5 @@
 package ru.danilarassokhin.progressive.basic.component;
 
-import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.component.GameComponent;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
@@ -11,9 +10,6 @@ public class GameItem implements GameComponent {
     private String name;
     private float amount;
     private Long id;
-
-    @Autofill(value = "globalIdGenerator")
-    private GlobalIdGenerator idGenerator;
 
     public GameItem() {
     }
@@ -32,11 +28,6 @@ public class GameItem implements GameComponent {
 
     public void setAmount(float amount) {
         this.amount = amount;
-    }
-
-    @Autofill
-    public void setId(GlobalIdGenerator generator) {
-        this.id = generator.next();
     }
 
     @Override

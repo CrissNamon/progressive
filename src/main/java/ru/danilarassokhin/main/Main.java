@@ -7,6 +7,7 @@ import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.system.EchoSystem;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
+import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 
 public class Main {
@@ -29,6 +30,6 @@ public class Main {
         }
 
         game.start();
-        //game.stop();
+        game.stop();
     }
 }

@@ -2,7 +2,7 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
-import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
+import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
@@ -36,6 +36,7 @@ public final class BasicGame implements Game {
     private long deltaTime;
 
     private BasicGame() {
+        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
         BasicGameLogger.info("Progressive IoC initialization...\n");
         gameFrameTimeType = GameFrameTimeType.PARALLEL;
         gameObjects = new HashMap<>();
@@ -44,7 +45,6 @@ public final class BasicGame implements Game {
         scheduler = Executors.newScheduledThreadPool(2);
         isStarted = false;
         stateManager.setState(GameState.INIT, this);
-        BasicDIContainer.getInstance().loadConfiguration(TestConfiguration.class);
     }
 
     public static BasicGame getInstance() {
@@ -54,6 +54,7 @@ public final class BasicGame implements Game {
         return INSTANCE;
     }
 
+    @Override
     public void start() {
         GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
         stateManager.setState(GameState.START, true);
@@ -73,6 +74,7 @@ public final class BasicGame implements Game {
         update(delta);
     }
 
+    @Override
     public void update(long delta) {
         GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
                 () -> !isStatic && !GameSecurityManager.getCallerClass().equals(BasicGame.class));
@@ -98,7 +100,13 @@ public final class BasicGame implements Game {
 
     @Override
     public boolean removeGameObject(GameObject o) {
-        return gameObjects.remove(o.getId()) != null;
+        if(!gameObjects.containsKey(o.getId())) {
+            return false;
+        }
+        GameObject gameObject = gameObjects.get(o.getId());
+        gameObject.dispose();
+        gameObject = null;
+        return true;
     }
 
     @Override

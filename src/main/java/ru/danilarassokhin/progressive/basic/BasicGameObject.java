@@ -61,7 +61,6 @@ public final class BasicGameObject implements GameObject {
                     }
                 }
             }
-            Constructor gameScriptConstructor = gameScriptClass.getDeclaredConstructor();
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             gameScript = ComponentCreator.create(gameScriptClass);
             Method setGameObject = gameScript.getClass().getDeclaredMethod("setGameObject", GameObject.class);
@@ -93,5 +92,22 @@ public final class BasicGameObject implements GameObject {
     @Override
     public Long getId() {
         return id;
+    }
+
+    public <V extends GameScript> boolean removeScript(Class<V> scriptClass) {
+        if(!scripts.containsKey(scriptClass)) {
+            return false;
+        }
+        GameScript script = scripts.get(scriptClass);
+        scripts.remove(scriptClass);
+        script = null;
+        return true;
+    }
+
+    @Override
+    public void dispose() {
+        for(Class script : scripts.keySet()) {
+            removeScript(script);
+        }
     }
 }
