@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.basic.system;
+package ru.danilarassokhin.progressive.basic.script;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
@@ -9,6 +9,7 @@ import ru.danilarassokhin.progressive.component.GameScript;
 public class EchoSystem implements GameScript {
 
     private GameObject parent;
+    private int id;
 
     public EchoSystem() {
         BasicGamePublisher.getInstance().subscribeOn("update", this::say);

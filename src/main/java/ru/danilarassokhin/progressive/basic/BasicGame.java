@@ -2,13 +2,13 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
-import ru.danilarassokhin.progressive.basic.configuration.TestConfiguration;
+import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
+import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
-import ru.danilarassokhin.progressive.util.ComponentCreator;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 import java.util.HashMap;
@@ -17,6 +17,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Basic implementation of {@link ru.danilarassokhin.progressive.Game}
+ */
 public final class BasicGame implements Game {
 
     private static BasicGame INSTANCE;
@@ -35,6 +38,8 @@ public final class BasicGame implements Game {
     private long deltaTime;
 
     private BasicGame() {
+        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
+        BasicGameLogger.info("Progressive IoC initialization...\n");
         gameFrameTimeType = GameFrameTimeType.PARALLEL;
         gameObjects = new HashMap<>();
         idGenerator = 0;
@@ -42,7 +47,6 @@ public final class BasicGame implements Game {
         scheduler = Executors.newScheduledThreadPool(2);
         isStarted = false;
         stateManager.setState(GameState.INIT, this);
-        BasicDIContainer.getInstance().loadConfiguration(TestConfiguration.class);
     }
 
     public static BasicGame getInstance() {
@@ -52,15 +56,16 @@ public final class BasicGame implements Game {
         return INSTANCE;
     }
 
+    @Override
     public void start() {
         GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
-        stateManager.setState(GameState.START, true);
+        stateManager.setState(GameState.STARTED, true);
         BasicGamePublisher.getInstance().sendTo("start", true);
         isStarted = true;
         if(!isStatic) {
             scheduler.scheduleAtFixedRate(this::update, 0, frameTime, TimeUnit.MILLISECONDS);
         }
-        stateManager.setState(GameState.PLAYING, null);
+        stateManager.setState(GameState.PLAYING, true);
         deltaTime = System.currentTimeMillis();
     }
 
@@ -71,16 +76,16 @@ public final class BasicGame implements Game {
         update(delta);
     }
 
+    @Override
     public void update(long delta) {
-        GameSecurityManager.allowAccessIf("Game param isStatic is set to false. Can't update manually!",
-                () -> isStatic && isStarted
-                        || GameSecurityManager.getCallerClass().equals(BasicGame.class));
+        GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
+                () -> !isStatic && !GameSecurityManager.getCallerClass().equals(BasicGame.class));
         BasicGamePublisher.getInstance().sendTo("update", delta);
     }
 
     public void stop() {
         GameSecurityManager.allowAccessIf("Game hasn't been started!", () -> isStarted);
-        stateManager.setState(GameState.STOPPED, null);
+        stateManager.setState(GameState.STOPPED, true);
         isStarted = false;
         scheduler.shutdownNow();
     }
@@ -90,14 +95,20 @@ public final class BasicGame implements Game {
         if(!isGameObjectClassSet()) {
             throw new RuntimeException("GameObject class has not been set in game! Use setGameObjectClass method in your game");
         }
-        GameObject gameObject = ComponentCreator.create(gameObjClass, ++idGenerator);
+        GameObject gameObject = BasicDIContainer.create(gameObjClass, ++idGenerator);
         gameObjects.putIfAbsent(idGenerator, gameObject);
         return gameObject;
     }
 
     @Override
     public boolean removeGameObject(GameObject o) {
-        return gameObjects.remove(o.getId()) != null;
+        if(!gameObjects.containsKey(o.getId())) {
+            return false;
+        }
+        GameObject gameObject = gameObjects.get(o.getId());
+        gameObject.dispose();
+        gameObject = null;
+        return true;
     }
 
     @Override

@@ -1,8 +1,13 @@
 package ru.danilarassokhin.progressive.basic.util;
 
+import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.util.GameObjectCaster;
 
+/**
+ * Basic implementation of object caster
+ */
+@GameBean(name = "objCaster")
 public final class BasicObjectCaster implements GameObjectCaster {
 
     @Override
