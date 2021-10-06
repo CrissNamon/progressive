@@ -2,14 +2,13 @@ package ru.danilarassokhin.progressive.basic;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
-import ru.danilarassokhin.progressive.util.ComponentCreator;
 
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,7 +61,7 @@ public final class BasicGameObject implements GameObject {
                 }
             }
             MethodHandles.Lookup lookup = MethodHandles.lookup();
-            gameScript = ComponentCreator.create(gameScriptClass);
+            gameScript = BasicDIContainer.create(gameScriptClass);
             Method setGameObject = gameScript.getClass().getDeclaredMethod("setGameObject", GameObject.class);
             setGameObject.setAccessible(true);
             lookup.unreflect(setGameObject).invoke(gameScript, this);

@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.basic.configuration;
 
 import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.basic.component.GameItem;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
@@ -17,6 +18,13 @@ public class BasicConfiguration extends AbstractConfiguration {
     @GameBean(name = "globalIdGenerator", policy = GameBeanCreationPolicy.OBJECT)
     public Long generateId() {
         return ++globalIdGenerator;
+    }
+
+    @GameBean
+    public GameItem createItem(Long id) {
+        GameItem item = new GameItem();
+        item.setId(id);
+        return item;
     }
 
 }

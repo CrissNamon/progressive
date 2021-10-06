@@ -9,7 +9,6 @@ import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
-import ru.danilarassokhin.progressive.util.ComponentCreator;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 import java.util.HashMap;
@@ -93,7 +92,7 @@ public final class BasicGame implements Game {
         if(!isGameObjectClassSet()) {
             throw new RuntimeException("GameObject class has not been set in game! Use setGameObjectClass method in your game");
         }
-        GameObject gameObject = ComponentCreator.create(gameObjClass, ++idGenerator);
+        GameObject gameObject = BasicDIContainer.create(gameObjClass, ++idGenerator);
         gameObjects.putIfAbsent(idGenerator, gameObject);
         return gameObject;
     }

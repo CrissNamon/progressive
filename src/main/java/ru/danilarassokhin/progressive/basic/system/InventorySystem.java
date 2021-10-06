@@ -3,7 +3,7 @@ package ru.danilarassokhin.progressive.basic.system;
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameItem;
-import ru.danilarassokhin.progressive.util.ComponentCreator;
+import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public class InventorySystem{
 
     public <I extends GameItem> I createItem(Class<I> item) {
         Long lastId = items.keySet().stream().max(Long::compareTo).orElse(0L);
-        I instance = ComponentCreator.create(item, ++lastId);
+        I instance = BasicDIContainer.create(item, ++lastId);
         return instance;
     }
 
