@@ -87,7 +87,7 @@ public final class BasicDIContainer implements DIContainer {
             }else {
                 throw new RuntimeException(beanClass.getName() + " is not a game bean or configuration");
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(beanClass.getName()
                     + " annotated as GameBean has no public empty constructor " +
@@ -120,7 +120,7 @@ public final class BasicDIContainer implements DIContainer {
     }
 
     private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
-            IllegalAccessException, NoSuchMethodException {
+            IllegalAccessException {
         m.setAccessible(true);
         if (!m.getReturnType().equals(Void.TYPE)) {
             GameBean annotation = m.getAnnotation(GameBean.class);
@@ -361,6 +361,7 @@ public final class BasicDIContainer implements DIContainer {
             C instance = null;
             BasicDIContainer diContainer = BasicDIContainer.getInstance();
             Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
+            Arrays.sort(constructors, Comparator.comparingInt(Constructor::getParameterCount));
             for(Constructor<?> constructor : constructors) {
                 if(constructor.isAnnotationPresent(Autofill.class)) {
                     args = new Object[constructor.getParameterCount()];

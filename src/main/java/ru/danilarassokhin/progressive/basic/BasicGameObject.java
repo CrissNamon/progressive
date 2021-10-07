@@ -8,8 +8,6 @@ import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,9 +68,6 @@ public final class BasicGameObject implements GameObject {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("IsGameScript creation failure! Exception: " + e.getMessage());
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            throw new RuntimeException("GameScript setGameObject invokation failed: " + throwable.getMessage());
         }
     }
 
