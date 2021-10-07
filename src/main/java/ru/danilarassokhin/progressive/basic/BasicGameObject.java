@@ -60,11 +60,8 @@ public final class BasicGameObject implements GameObject {
                     }
                 }
             }
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
             gameScript = BasicDIContainer.create(gameScriptClass);
-            Method setGameObject = gameScript.getClass().getDeclaredMethod("setGameObject", GameObject.class);
-            setGameObject.setAccessible(true);
-            lookup.unreflect(setGameObject).invoke(gameScript, this);
+            gameScript.setGameObject(this);
             gameScript.wireFields();
             if(scripts.putIfAbsent(gameScriptClass, gameScript) != null) {
                 throw new RuntimeException("Could not register IsGameScript " + gameScriptClass.getName() + "! IsGameScript already exists");
@@ -73,10 +70,6 @@ public final class BasicGameObject implements GameObject {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("IsGameScript creation failure! Exception: " + e.getMessage());
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            throw new RuntimeException("GameScript must have empty constructor " + gameScript.getClass() + "("
-                    + getClass() + ") and setGameObject(GameObject) method! Exception: " + e.getMessage());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             throw new RuntimeException("GameScript setGameObject invokation failed: " + throwable.getMessage());

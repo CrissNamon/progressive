@@ -143,7 +143,7 @@ public final class BasicDIContainer implements DIContainer {
         }
     }
 
-    private Bean invoke(Method m, Object obj) throws InvocationTargetException, IllegalAccessException, ArrayIndexOutOfBoundsException, NoSuchMethodException {
+    private Bean invoke(Method m, Object obj) throws InvocationTargetException, IllegalAccessException, ArrayIndexOutOfBoundsException {
         Class<?>[] paramTypes = m.getParameterTypes();
         Object[] args = new Object[paramTypes.length];
         GameBean annotation = m.getAnnotation(GameBean.class);
