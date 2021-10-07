@@ -15,11 +15,16 @@ import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +45,7 @@ public final class BasicDIContainer implements DIContainer {
                 "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n");
         BasicGameLogger.info("Progressive DI initialization...\n");
         beans = new HashMap<>();
+        viewedMethods = new HashSet<>();
     }
 
     public static BasicDIContainer getInstance() {
@@ -57,7 +63,6 @@ public final class BasicDIContainer implements DIContainer {
     }
 
     private void loadBeanFrom(Class<?> beanClass) {
-        viewedMethods = new HashSet<>();
         try {
             GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
             if (annotation != null) {
@@ -184,7 +189,7 @@ public final class BasicDIContainer implements DIContainer {
                 }
             }
         }
-        Object o = m.invoke(obj, args);
+        Object o = invoke(m, obj, args);
         Bean b = new Bean(o);
         b.setMethod(m);
         b.setMethodArgs(args);
@@ -224,9 +229,9 @@ public final class BasicDIContainer implements DIContainer {
         if (bean.getValue().getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
             if(bean.getValue().getMethod() != null) {
                 try {
-                    exists = (V)(bean.getValue().getMethod().invoke(
-                            bean.getValue().getMethodCaller(), bean.getValue().getMethodArgs()
-                    ));
+                    exists = (V)(invoke(bean.getValue().getMethod(),
+                            bean.getValue().getMethodCaller(),
+                            bean.getValue().getMethodArgs()));
 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -271,9 +276,7 @@ public final class BasicDIContainer implements DIContainer {
         if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
             if(b.getMethod() != null) {
                 try {
-                    exists = (V)(b.getMethod().invoke(
-                            b.getMethodCaller(), b.getMethodArgs()
-                    ));
+                    exists = (V)(invoke(b.getMethod(), b.getMethodCaller(), b.getMethodArgs()));
 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -433,13 +436,44 @@ public final class BasicDIContainer implements DIContainer {
      * @param from Object to invoke method from
      * @param args Parameters to invoke method with
      */
-    public static void invoke(Method method, Object from, Object... args) {
+    public static Object invoke(Method method, Object from, Object... args) {
         try {
-            method.invoke(from, args);
+            method.setAccessible(true);
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            List<Object> castedArgs = new ArrayList<>();
+            castedArgs.add(from);
+            for(Object o : args) {
+                castedArgs.add(o);
+            }
+            if(args.length == 0) {
+                return invokeObjectMethod(from, method);
+            }else{
+                return lookup.unreflect(method).invokeWithArguments(castedArgs);
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Error while method " + method.getName() + " invocation! Exception: " + e.getMessage());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException("Exception has occurred while method invokation! Exception: " + throwable.getMessage());
         }
+    }
+
+    private static Object invokeObjectMethod(Object bean, Method method) throws Throwable {
+        MethodHandles.Lookup caller = MethodHandles.lookup();
+        MethodType invokedType = MethodType.methodType(Function.class);
+        method.setAccessible(true);
+        MethodType func = caller.unreflect(method).type();
+        CallSite site = LambdaMetafactory.metafactory(
+                caller,
+                "apply",
+                invokedType,
+                func.generic(),
+                caller.unreflect(method),
+                MethodType.methodType(Object.class, bean.getClass())
+        );
+        Function<Object, Object> fullFunction = (Function<Object, Object>) site.getTarget().invokeExact();
+        return fullFunction.apply(bean);
     }
 
     /**
