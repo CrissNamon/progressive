@@ -17,15 +17,22 @@ import java.util.HashSet;
 public class Main {
 
     public static void main(String[] args) {
+        //Get DI container instance
         BasicDIContainer diContainer = BasicDIContainer.getInstance();
-        BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
-        stateManager.<BasicGame>addListener(GameState.INIT, (g) -> BasicGameLogger.info("GAME INITIATED\n"));
-
-        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class, (name) -> {
-
+        //Load configuration class with DI
+        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
+        //Load configuration class with DI and use custom PackageLoader for @ComponentScan
+        //You get package name and must return set of classes to load beans from
+        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class, (packageName) -> {
             return new HashSet<>();
         });
 
+        //State manager instance
+        BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
+        //Subscribe to some instance. This will be executed when game will be initialized first time
+        stateManager.<BasicGame>addListener(GameState.INIT, (g) -> BasicGameLogger.info("GAME INITIATED\n"));
+
+        //Get game instance
         BasicGame game = BasicGame.getInstance();
         game.setGameObjectClass(BasicGameObject.class);
         game.setFrameTime(16);
@@ -38,10 +45,14 @@ public class Main {
             game.addGameObject().getGameScript(EchoSystem.class);
         }
 
+        //Get bean by it's name and class
         BasicObjectCaster basicObjectCaster = BasicDIContainer.getInstance().getBean("objCaster", BasicObjectCaster.class);
+        //Get the first bean of GameItem
         GameItem gameItem = BasicDIContainer.getInstance().getBean(GameItem.class);
 
+        //Start game
         game.start();
+        //Stop game
         game.stop();
     }
 }

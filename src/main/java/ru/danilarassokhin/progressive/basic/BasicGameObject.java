@@ -38,7 +38,8 @@ public final class BasicGameObject implements GameObject {
     @Override
     public <V extends GameScript> V getGameScript(Class<V> gameScriptClass) {
         if(!ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, gameScriptClass)) {
-            throw new RuntimeException(gameScriptClass.getName() + " has no @IsGameScript annotation. All GameScripts must be annotated with @IsGameScript!");
+            throw new RuntimeException(gameScriptClass.getName() + " has no @IsGameScript annotation. " +
+                    "All GameScripts must be annotated with @IsGameScript!");
         }
         BasicObjectCaster objectCaster = new BasicObjectCaster();
         GameScript gameScript = scripts.getOrDefault(gameScriptClass, null);
@@ -47,13 +48,15 @@ public final class BasicGameObject implements GameObject {
         }
         try {
             if(gameScriptClass.isAnnotationPresent(RequiredGameScript.class)) {
-                RequiredGameScript requiredGameScripts = gameScriptClass.getAnnotation(RequiredGameScript.class);
+                RequiredGameScript requiredGameScripts =
+                        gameScriptClass.getAnnotation(RequiredGameScript.class);
                 for (Class<? extends GameScript> req : requiredGameScripts.value()) {
                     if(!requiredGameScripts.lazy()) {
                         getGameScript(req);
                     }else {
                         if(!hasGameScript(req)) {
-                            throw new RuntimeException(gameScriptClass.getName() + " requires " + req.getName() + " which is not attached to " + this);
+                            throw new RuntimeException(gameScriptClass.getName() + " requires "
+                                    + req.getName() + " which is not attached to " + this);
                         }
                     }
                 }
@@ -62,12 +65,14 @@ public final class BasicGameObject implements GameObject {
             gameScript.setGameObject(this);
             gameScript.wireFields();
             if(scripts.putIfAbsent(gameScriptClass, gameScript) != null) {
-                throw new RuntimeException("Could not register IsGameScript " + gameScriptClass.getName() + "! IsGameScript already exists");
+                throw new RuntimeException("Could not register IsGameScript "
+                        + gameScriptClass.getName() + "! IsGameScript already exists");
             }
             return objectCaster.cast(gameScript, gameScriptClass, (o) -> {});
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("IsGameScript creation failure! Exception: " + e.getMessage());
+            throw new RuntimeException("IsGameScript creation failure! Exception: "
+                    + e.getMessage());
         }
     }
 
