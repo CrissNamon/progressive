@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -463,7 +464,9 @@ public final class BasicDIContainer implements DIContainer {
             }
             if(args.length == 0) {
                 return invokeObjectMethod(from, method);
-            }else{
+            }else if(args.length == 1) {
+                return invokeObjectMethodWithOneParam(from, method, args[0]);
+            }else {
                 return lookup.unreflect(method).invokeWithArguments(castedArgs);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -492,6 +495,24 @@ public final class BasicDIContainer implements DIContainer {
         );
         Function<Object, Object> fullFunction = (Function<Object, Object>) site.getTarget().invokeExact();
         return fullFunction.apply(bean);
+    }
+
+    private static Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
+        MethodHandles.Lookup caller = MethodHandles.lookup();
+        MethodType invokedType = MethodType.methodType(BiFunction.class);
+        method.setAccessible(true);
+        MethodType func = caller.unreflect(method).type();
+        Class[] methodParamTypes = method.getParameterTypes();
+        CallSite site = LambdaMetafactory.metafactory(
+                caller,
+                "apply",
+                invokedType,
+                func.generic(),
+                caller.unreflect(method),
+                MethodType.methodType(Object.class, bean.getClass(), methodParamTypes[0])
+        );
+        BiFunction<Object, Object, Object> fullFunction = (BiFunction<Object, Object, Object>) site.getTarget().invoke();
+        return fullFunction.apply(bean, methodParamTypes[0].cast(arg));
     }
 
     /**
