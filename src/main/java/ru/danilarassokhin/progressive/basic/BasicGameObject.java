@@ -29,11 +29,8 @@ public final class BasicGameObject implements GameObject {
         scripts = new HashMap<>();
     }
 
-    /**
-     * Returns all attached scripts
-     * @return All scripts attached to this object
-     */
-    public Collection<GameScript> scripts() {
+    @Override
+    public Collection<GameScript> getGameScripts() {
         return scripts.values();
     }
 

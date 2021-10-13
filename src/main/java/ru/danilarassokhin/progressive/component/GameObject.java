@@ -1,5 +1,7 @@
 package ru.danilarassokhin.progressive.component;
 
+import java.util.Collection;
+
 /**
  * Represents abstract GameObject
  */
@@ -28,6 +30,12 @@ public interface GameObject extends GameComponent{
      * @return true if script has been removed
      */
     <V extends GameScript> boolean removeGameScript(Class<V> gameScriptClass);
+
+    /**
+     * Gets all scripts attached to this object
+     * @return Collection of GameScripts
+     */
+    Collection<GameScript> getGameScripts();
 
     void dispose();
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
+import ru.danilarassokhin.progressive.basic.script.EchoSystem;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
@@ -38,6 +39,19 @@ public class BasicGameObjectTest {
 
         Assertions.assertNotNull(testObject);
         Assertions.assertFalse(() -> testObject.removeGameScript(ValidGameScript.class));
+    }
+
+    @Test
+    public void disposeGameScripts() {
+        BasicGame.getInstance().setGameObjectClass(BasicGameObject.class);
+        GameObject testObject = BasicGame.getInstance().addGameObject();
+        testObject.getGameScript(EchoSystem.class);
+
+        Assertions.assertFalse(testObject.getGameScripts().isEmpty());
+
+        testObject.dispose();
+
+        Assertions.assertTrue(testObject.getGameScripts().isEmpty());
     }
 
     private class GameScriptNoAnnotationTest implements GameScript {
