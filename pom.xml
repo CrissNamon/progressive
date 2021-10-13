@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.danilarassokhin</groupId>
     <artifactId>progressive</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
     <name>Progressive</name>
     <description>Game creation framework</description>
     <properties>
@@ -13,6 +13,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -74,5 +80,4 @@
         </plugins>
         <defaultGoal>package</defaultGoal>
     </build>
-
 </project>
