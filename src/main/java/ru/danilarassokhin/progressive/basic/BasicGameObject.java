@@ -27,11 +27,8 @@ public final class BasicGameObject implements GameObject {
         scripts = new HashMap<>();
     }
 
-    /**
-     * Returns all attached scripts
-     * @return All scripts attached to this object
-     */
-    public Collection<GameScript> scripts() {
+    @Override
+    public Collection<GameScript> getGameScripts() {
         return scripts.values();
     }
 
@@ -86,7 +83,8 @@ public final class BasicGameObject implements GameObject {
         return id;
     }
 
-    public <V extends GameScript> boolean removeScript(Class<V> scriptClass) {
+    @Override
+    public <V extends GameScript> boolean removeGameScript(Class<V> scriptClass) {
         if(!scripts.containsKey(scriptClass)) {
             return false;
         }
@@ -99,7 +97,7 @@ public final class BasicGameObject implements GameObject {
     @Override
     public void dispose() {
         for(Class script : scripts.keySet()) {
-            removeScript(script);
+            removeGameScript(script);
         }
     }
 }

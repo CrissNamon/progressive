@@ -6,6 +6,9 @@ import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
+/**
+ * Basic DI configuration
+ */
 //Configuration class must extends AbstractConfiguration
 public class BasicConfiguration extends AbstractConfiguration {
 

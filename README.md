@@ -1,4 +1,5 @@
 # Progressive 
+[![Build Status](https://app.travis-ci.com/CrissNamon/progressive.svg?branch=main)](https://app.travis-ci.com/CrissNamon/progressive)
 ![stars](https://img.shields.io/github/stars/crissnamon/progressive) ![release](https://img.shields.io/github/v/release/crissnamon/progressive?include_prereleases) ![activity](https://img.shields.io/github/commit-activity/m/crissnamon/progressive)
 <p>Progressive is a simple game framework, which provides you anything to create games easily.</p>
 
