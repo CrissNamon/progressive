@@ -11,8 +11,9 @@ public interface DIContainer {
      * Loads configuration from class
      * @param config Configuration class
      * @param <C> Configuration class type
+     * @param loader See {@link ru.danilarassokhin.progressive.injection.PackageLoader}
      */
-    <C extends AbstractConfiguration> void loadConfiguration(Class<C> config);
+    <C extends AbstractConfiguration> void loadConfiguration(Class<C> config, PackageLoader loader);
 
     /**
      * Gets bean by it's name and class

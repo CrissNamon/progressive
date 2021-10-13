@@ -240,6 +240,14 @@ public final class BasicDIContainer implements DIContainer {
         return exists;
     }
 
+    /**
+     * Gets random bean bean with given class
+     * @param beanClass Bean class to find
+     * @param <V> Bean object to return
+     * @param name Bean name to search
+     * @return Bean object or throws RuntimeException if bean not found
+     * @throws BeanNotFoundException if no beans found for given class
+     */
     public <V> V tryGetBean(String name, Class<V> beanClass) throws BeanNotFoundException {
         try{
            return getBean(name, beanClass);
@@ -248,6 +256,13 @@ public final class BasicDIContainer implements DIContainer {
         }
     }
 
+    /**
+     * Gets random bean bean with given class
+     * @param beanClass Bean class to find
+     * @param <V> Bean object to return
+     * @return Bean object or throws RuntimeException if bean not found
+     * @throws BeanNotFoundException if no beans found for given class
+     */
     public <V> V tryGetBean(Class<V> beanClass) throws BeanNotFoundException {
         try{
             return getBean(beanClass);
@@ -294,6 +309,7 @@ public final class BasicDIContainer implements DIContainer {
         }
     }
 
+    @Override
     public <C extends AbstractConfiguration> void loadConfiguration(Class<C> config, PackageLoader loader) {
         if(config.isAnnotationPresent(Components.class)) {
             scanFrom = config;
@@ -314,6 +330,11 @@ public final class BasicDIContainer implements DIContainer {
         }
     }
 
+    /**
+     * Loads configuration from class with simple {@link ru.danilarassokhin.progressive.injection.PackageLoader}
+     * @param config Configuration class
+     * @param <C> Configuration class type
+     */
     public <C extends AbstractConfiguration> void loadConfiguration(Class<C> config) {
         loadConfiguration(config, this::findAllClassesUsingClassLoader);
     }
