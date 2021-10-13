@@ -21,6 +21,14 @@ public interface GameObject extends GameComponent{
      */
     <V extends GameScript> boolean hasGameScript(Class<V> gameScriptClass);
 
+    /**
+     * Removes game script from this object
+     * @param gameScriptClass GameScript class to remove
+     * @param <V> GameScript type
+     * @return true if script has been removed
+     */
+    <V extends GameScript> boolean removeGameScript(Class<V> gameScriptClass);
+
     void dispose();
 
 }
