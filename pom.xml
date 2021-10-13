@@ -77,6 +77,16 @@
                     <mainClass>ru.danilarassokhin.main.Main</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <includes>
+                        <include>*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
         </plugins>
         <defaultGoal>package</defaultGoal>
     </build>
