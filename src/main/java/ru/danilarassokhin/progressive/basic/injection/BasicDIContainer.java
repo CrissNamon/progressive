@@ -15,11 +15,17 @@ import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +46,7 @@ public final class BasicDIContainer implements DIContainer {
                 "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n");
         BasicGameLogger.info("Progressive DI initialization...\n");
         beans = new HashMap<>();
+        viewedMethods = new HashSet<>();
     }
 
     public static BasicDIContainer getInstance() {
@@ -57,9 +64,9 @@ public final class BasicDIContainer implements DIContainer {
     }
 
     private void loadBeanFrom(Class<?> beanClass) {
-        viewedMethods = new HashSet<>();
         try {
-            GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
+            GameBean annotation = ComponentAnnotationProcessor
+                    .findAnnotation(beanClass, GameBean.class);
             if (annotation != null) {
                 createBeanFromClass(beanClass);
             } else if (beanClass.getSuperclass().equals(AbstractConfiguration.class)){
@@ -80,9 +87,10 @@ public final class BasicDIContainer implements DIContainer {
                     }
                 }
             }else {
-                throw new RuntimeException(beanClass.getName() + " is not a game bean or configuration");
+                throw new RuntimeException(beanClass.getName()
+                        + " is not a game bean or configuration");
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(beanClass.getName()
                     + " annotated as GameBean has no public empty constructor " +
@@ -115,7 +123,7 @@ public final class BasicDIContainer implements DIContainer {
     }
 
     private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
-            IllegalAccessException, NoSuchMethodException {
+            IllegalAccessException {
         m.setAccessible(true);
         if (!m.getReturnType().equals(Void.TYPE)) {
             GameBean annotation = m.getAnnotation(GameBean.class);
@@ -143,7 +151,8 @@ public final class BasicDIContainer implements DIContainer {
         }
     }
 
-    private Bean invoke(Method m, Object obj) throws InvocationTargetException, IllegalAccessException, ArrayIndexOutOfBoundsException, NoSuchMethodException {
+    private Bean invoke(Method m, Object obj) throws InvocationTargetException,
+            IllegalAccessException, ArrayIndexOutOfBoundsException {
         Class<?>[] paramTypes = m.getParameterTypes();
         Object[] args = new Object[paramTypes.length];
         GameBean annotation = m.getAnnotation(GameBean.class);
@@ -184,7 +193,7 @@ public final class BasicDIContainer implements DIContainer {
                 }
             }
         }
-        Object o = m.invoke(obj, args);
+        Object o = invoke(m, obj, args);
         Bean b = new Bean(o);
         b.setMethod(m);
         b.setMethodArgs(args);
@@ -202,7 +211,9 @@ public final class BasicDIContainer implements DIContainer {
                     .map(line -> getClass(line, packageName))
                     .collect(Collectors.toSet());
         }catch (NullPointerException e) {
-            throw new RuntimeException("ClassLoader is not available! Load configuration through you own PackageLoader with loadConfiguration(config, loader)");
+            throw new RuntimeException("ClassLoader is not available! " +
+                    "Load configuration through you own PackageLoader " +
+                    "with loadConfiguration(config, loader)");
         }
     }
 
@@ -216,17 +227,19 @@ public final class BasicDIContainer implements DIContainer {
     }
 
     public <V> V getBean(Class<V> beanClass) {
-        Map.Entry<String, Bean> bean = beans.get(beanClass).entrySet().stream().findFirst().orElse(null);
+        Map.Entry<String, Bean> bean = beans.get(beanClass).entrySet().stream()
+                .findFirst().orElse(null);
         if(bean == null) {
-            throw new RuntimeException("There is no beans for " + beanClass.getName() + " were found!");
+            throw new RuntimeException("There is no beans for "
+                    + beanClass.getName() + " were found!");
         }
         V exists = (V) bean.getValue().getBean();
         if (bean.getValue().getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
             if(bean.getValue().getMethod() != null) {
                 try {
-                    exists = (V)(bean.getValue().getMethod().invoke(
-                            bean.getValue().getMethodCaller(), bean.getValue().getMethodArgs()
-                    ));
+                    exists = (V)(invoke(bean.getValue().getMethod(),
+                            bean.getValue().getMethodCaller(),
+                            bean.getValue().getMethodArgs()));
 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -252,7 +265,8 @@ public final class BasicDIContainer implements DIContainer {
         try{
            return getBean(name, beanClass);
         }catch (Exception e) {
-            throw new BeanNotFoundException("Bean with name " + name + " and type " + beanClass.getName() + " not found");
+            throw new BeanNotFoundException("Bean with name " + name
+                    + " and type " + beanClass.getName() + " not found");
         }
     }
 
@@ -267,28 +281,30 @@ public final class BasicDIContainer implements DIContainer {
         try{
             return getBean(beanClass);
         }catch (Exception e) {
-            throw new BeanNotFoundException("Bean with type " + beanClass.getName() + " not found");
+            throw new BeanNotFoundException("Bean with type "
+                    + beanClass.getName() + " not found");
         }
     }
 
     public <V> V getBean(String name, Class<V> beanClass) {
         if (!beans.containsKey(beanClass)) {
-            throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
+            throw new RuntimeException("GameBean called " + name
+                    + " for class " + beanClass.getName() + " not found!");
         }
         Bean b = beans.getOrDefault(beanClass, new HashMap<>()).getOrDefault(name, null);
         if (b == null) {
-            throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
+            throw new RuntimeException("GameBean called " + name
+                    + " for class " + beanClass.getName() + " not found!");
         }
         V exists = (V) b.getBean();
         if (exists == null && b.getCreationPolicy().equals(GameBeanCreationPolicy.SINGLETON)) {
-            throw new RuntimeException("GameBean called " + name + " for class " + beanClass.getName() + " not found!");
+            throw new RuntimeException("GameBean called " + name
+                    + " for class " + beanClass.getName() + " not found!");
         }
         if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
             if(b.getMethod() != null) {
                 try {
-                    exists = (V)(b.getMethod().invoke(
-                            b.getMethodCaller(), b.getMethodArgs()
-                    ));
+                    exists = (V)(invoke(b.getMethod(), b.getMethodCaller(), b.getMethodArgs()));
 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -379,6 +395,7 @@ public final class BasicDIContainer implements DIContainer {
             C instance = null;
             BasicDIContainer diContainer = BasicDIContainer.getInstance();
             Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
+            Arrays.sort(constructors, Comparator.comparingInt(Constructor::getParameterCount));
             for(Constructor<?> constructor : constructors) {
                 if(constructor.isAnnotationPresent(Autofill.class)) {
                     args = new Object[constructor.getParameterCount()];
@@ -431,7 +448,8 @@ public final class BasicDIContainer implements DIContainer {
                                 args[i] = diContainer.tryGetBean(names[i], argsTypes[i]);
                             }
                         }catch (BeanNotFoundException e) {
-                            throw new RuntimeException("Could not Autofill method " + m.getName() + " in " + instance.getClass().getName()
+                            throw new RuntimeException("Could not Autofill method "
+                                    + m.getName() + " in " + instance.getClass().getName()
                                     + "! Beans for " + argsTypes[i].getName() + " not found...");
                         }
                     }
@@ -441,10 +459,12 @@ public final class BasicDIContainer implements DIContainer {
             return instance;
         }catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("Could not instantiate component " + componentClass.getName() + "! Exception: " + e.getMessage());
+            throw new RuntimeException("Could not instantiate component "
+                    + componentClass.getName() + "! Exception: " + e.getMessage());
         }catch (NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
-            throw new RuntimeException("Could not instantiate component " + componentClass.getName() + "! Component must have such a constructor: " + e.getMessage());
+            throw new RuntimeException("Could not instantiate component "
+                    + componentClass.getName() + "! Component must have such a constructor: " + e.getMessage());
         }
     }
 
@@ -454,13 +474,66 @@ public final class BasicDIContainer implements DIContainer {
      * @param from Object to invoke method from
      * @param args Parameters to invoke method with
      */
-    public static void invoke(Method method, Object from, Object... args) {
+    public static Object invoke(Method method, Object from, Object... args) {
         try {
-            method.invoke(from, args);
+            method.setAccessible(true);
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            List<Object> castedArgs = new ArrayList<>();
+            castedArgs.add(from);
+            for(Object o : args) {
+                castedArgs.add(o);
+            }
+            if(args.length == 0) {
+                return invokeObjectMethod(from, method);
+            }else if(args.length == 1) {
+                return invokeObjectMethodWithOneParam(from, method, args[0]);
+            }else {
+                return lookup.unreflect(method).invokeWithArguments(castedArgs);
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error while method " + method.getName() + " invocation! Exception: " + e.getMessage());
+            throw new RuntimeException("Error while method "
+                    + method.getName() + " invocation! Exception: " + e.getMessage());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            throw new RuntimeException("Exception has occurred while method invokation!" +
+                    " Exception: " + throwable.getMessage());
         }
+    }
+
+    private static Object invokeObjectMethod(Object bean, Method method) throws Throwable {
+        MethodHandles.Lookup caller = MethodHandles.lookup();
+        MethodType invokedType = MethodType.methodType(Function.class);
+        method.setAccessible(true);
+        MethodType func = caller.unreflect(method).type();
+        CallSite site = LambdaMetafactory.metafactory(
+                caller,
+                "apply",
+                invokedType,
+                func.generic(),
+                caller.unreflect(method),
+                MethodType.methodType(Object.class, bean.getClass())
+        );
+        Function<Object, Object> fullFunction = (Function<Object, Object>) site.getTarget().invokeExact();
+        return fullFunction.apply(bean);
+    }
+
+    private static Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
+        MethodHandles.Lookup caller = MethodHandles.lookup();
+        MethodType invokedType = MethodType.methodType(BiFunction.class);
+        method.setAccessible(true);
+        MethodType func = caller.unreflect(method).type();
+        Class[] methodParamTypes = method.getParameterTypes();
+        CallSite site = LambdaMetafactory.metafactory(
+                caller,
+                "apply",
+                invokedType,
+                func.generic(),
+                caller.unreflect(method),
+                MethodType.methodType(Object.class, bean.getClass(), methodParamTypes[0])
+        );
+        BiFunction<Object, Object, Object> fullFunction = (BiFunction<Object, Object, Object>) site.getTarget().invoke();
+        return fullFunction.apply(bean, methodParamTypes[0].cast(arg));
     }
 
     /**
