@@ -9,26 +9,26 @@ import ru.danilarassokhin.progressive.component.GameScript;
 @IsGameScript //This annotation is required for game scripts
 public class EchoSystem implements GameScript {
 
-    //Parent GameObject this script will be attached to
-    private GameObject parent;
+  //Parent GameObject this script will be attached to
+  private GameObject parent;
 
-    //Subscribe to game global update with GamePublisher and pass update delta time to say method
-    public EchoSystem() {
-        BasicGamePublisher.getInstance().subscribeOn("update", this::say);
-    }
+  //Subscribe to game global update with GamePublisher and pass update delta time to say method
+  public EchoSystem() {
+    BasicGamePublisher.getInstance().subscribeOn("update", this::say);
+  }
 
-    @Override
-    public GameObject gameObject() {
-        return parent;
-    }
+  @Override
+  public GameObject gameObject() {
+    return parent;
+  }
 
-    @Override
-    public void setGameObject(GameObject parent) {
-        this.parent = parent;
-    }
+  @Override
+  public void setGameObject(GameObject parent) {
+    this.parent = parent;
+  }
 
-    //This will be called on global game update
-    private void say(Object message) {
-        System.out.println(message);
-    }
+  //This will be called on global game update
+  private void say(Object message) {
+    System.out.println(message);
+  }
 }

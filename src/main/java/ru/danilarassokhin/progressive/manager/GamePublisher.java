@@ -8,8 +8,8 @@ import ru.danilarassokhin.progressive.lambda.GameActionObject;
  */
 public interface GamePublisher {
 
-    void sendTo(String topic, Object message);
+  void sendTo(String topic, Object message);
 
-    <V> void subscribeOn(String topic, GameActionObject<V> action);
+  <V> void subscribeOn(String topic, GameActionObject<V> action);
 
 }

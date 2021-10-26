@@ -4,19 +4,19 @@ import ru.danilarassokhin.progressive.component.GameComponent;
 
 public class GameNode<B extends NodeBundle> implements GameComponent {
 
-    private B bundle;
-    private Long id;
+  private B bundle;
+  private Long id;
 
-    public B getBundle() {
-        return bundle;
-    }
+  public B getBundle() {
+    return bundle;
+  }
 
-    public void setBundle(B bundle) {
-        this.bundle = bundle;
-    }
+  public void setBundle(B bundle) {
+    this.bundle = bundle;
+  }
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+  @Override
+  public Long getId() {
+    return id;
+  }
 }

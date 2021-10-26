@@ -10,19 +10,21 @@ import ru.danilarassokhin.progressive.Game;
  */
 public interface GameSaveManager {
 
-    /**
-     * Saves story
-     * @param <T> return save type
-     * @return Save
-     */
-    <T> T save();
+  /**
+   * Saves story
+   *
+   * @param <T> return save type
+   * @return Save
+   */
+  <T> T save();
 
-    /**
-     * Loads story from save
-     * @param save Save to load
-     * @param <G> Game class
-     * @return Loaded story
-     */
-    <G extends Game> G load(Object save);
+  /**
+   * Loads story from save
+   *
+   * @param save Save to load
+   * @param <G>  Game class
+   * @return Loaded story
+   */
+  <G extends Game> G load(Object save);
 
 }

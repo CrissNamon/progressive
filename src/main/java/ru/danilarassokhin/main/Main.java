@@ -23,9 +23,7 @@ public class Main {
         BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
         //Load configuration class with DI and use custom PackageLoader for @ComponentScan
         //You get package name and must return set of classes to load beans from
-        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class, (packageName) -> {
-            return new HashSet<>();
-        });
+        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class, (packageName) -> new HashSet<>());
 
         //State manager instance
         BasicGameStateManager stateManager = BasicGameStateManager.getInstance();

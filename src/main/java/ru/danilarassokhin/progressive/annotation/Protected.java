@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.CLASS)
 @Documented
 public @interface Protected {
-    String value() default "";
+  String value() default "";
 }

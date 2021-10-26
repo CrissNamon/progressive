@@ -1,8 +1,7 @@
 package ru.danilarassokhin.progressive.annotation;
 
-import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
-
 import java.lang.annotation.*;
+import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
 /**
  * Marks class or method as bean provider for Dependency Injection container
@@ -22,9 +21,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface GameBean {
-    GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
-    String name() default "";
-    String[] qualifiers() default {};
-    boolean strict() default false;
-    int order() default 0;
+  GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
+
+  String name() default "";
+
+  String[] qualifiers() default {};
+
+  boolean strict() default false;
+
+  int order() default 0;
 }
