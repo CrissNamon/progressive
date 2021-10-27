@@ -1,10 +1,10 @@
 package ru.danilarassokhin.main;
 
+import java.util.HashSet;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.component.GameItem;
-import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.script.EchoSystem;
@@ -12,13 +12,12 @@ import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.manager.GameState;
 
-import java.util.HashSet;
-
 public class Main {
 
     public static void main(String[] args) {
         //Get DI container instance
         BasicDIContainer diContainer = BasicDIContainer.getInstance();
+
         //Load configuration class with DI
         BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
         //Load configuration class with DI and use custom PackageLoader for @ComponentScan
@@ -44,9 +43,19 @@ public class Main {
         }
 
         //Get bean by it's name and class
-        BasicObjectCaster basicObjectCaster = BasicDIContainer.getInstance().getBean("objCaster", BasicObjectCaster.class);
+        BasicObjectCaster basicObjectCaster = diContainer.getBean("objCaster", BasicObjectCaster.class);
         //Get the first bean of GameItem
-        GameItem gameItem = BasicDIContainer.getInstance().getBean(GameItem.class);
+        GameItem gameItem = diContainer.getBean(GameItem.class);
+
+        //Create proxy bean
+        diContainer.loadBeanFrom(TestProxyBean.class);
+        TestProxyBean proxyBean = diContainer.getBean("TestProxyBean", TestProxyBean.class);
+        //These methods will be intercepted, cause they are @Intercepted
+        proxyBean.print("Hello");
+        int a = proxyBean.getInt(1);
+        assert a == 1;
+        //This method won't be intercepted, cause they are not @Intercepted
+        proxyBean.notIntercepted("Not intercepted");
 
         //Start game
         game.start();

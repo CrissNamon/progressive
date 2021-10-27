@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
-import ru.danilarassokhin.progressive.basic.configuration.BasicConfiguration;
+import ru.danilarassokhin.main.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
@@ -37,7 +37,7 @@ public final class BasicGame implements Game {
   private long deltaTime;
 
   private BasicGame() {
-    BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
+    BasicDIContainer.getInstance();
     BasicGameLogger.info("Progressive IoC initialization...\n");
     gameFrameTimeType = GameFrameTimeType.PARALLEL;
     gameObjects = new HashMap<>();

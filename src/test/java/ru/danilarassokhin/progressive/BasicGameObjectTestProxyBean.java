@@ -9,7 +9,7 @@ import ru.danilarassokhin.progressive.basic.script.EchoSystem;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
-public class BasicGameObjectTest {
+public class BasicGameObjectTestProxyBean {
 
     @Test
     public void getGameScriptNoAnnotation() {

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 
-public class BasicGameTest {
+public class BasicGameTestProxyBean {
 
     @Test
     public void setFrameTimeLessThanOne() {

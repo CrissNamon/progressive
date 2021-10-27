@@ -15,10 +15,8 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import ru.danilarassokhin.progressive.annotation.Autofill;
-import ru.danilarassokhin.progressive.annotation.ComponentScan;
-import ru.danilarassokhin.progressive.annotation.Components;
-import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.annotation.*;
+import ru.danilarassokhin.progressive.basic.proxy.BasicProxyGenerator;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.exception.BeanNotFoundException;
@@ -62,7 +60,12 @@ public final class BasicDIContainer implements DIContainer {
     }
   }
 
-  private void loadBeanFrom(Class<?> beanClass) {
+  /**
+   * Creates bean from {@code beanClass}.
+   *
+   * @param beanClass Class to create bean from
+   */
+  public void loadBeanFrom(Class<?> beanClass) {
     try {
       GameBean annotation = ComponentAnnotationProcessor
           .findAnnotation(beanClass, GameBean.class);
@@ -391,6 +394,10 @@ public final class BasicDIContainer implements DIContainer {
    * @return Instantiated object of null
    */
   public static <C> C create(Class<C> componentClass, Object... args) {
+    Proxy proxy = componentClass.getAnnotation(Proxy.class);
+    if(proxy != null) {
+      componentClass = BasicProxyGenerator.getInstance().createProxyClass(componentClass);
+    }
     try {
       Class<?>[] argsTypes = new Class[args.length];
       for (int i = 0; i < args.length; ++i) {
