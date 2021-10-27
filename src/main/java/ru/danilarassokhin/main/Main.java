@@ -54,7 +54,7 @@ public class Main {
         proxyBean.print("Hello");
         int a = proxyBean.getInt(1);
         assert a == 1;
-        //This method won't be intercepted, cause they are not @Intercepted
+        //This method won't be intercepted, cause it's not @Intercepted
         proxyBean.notIntercepted("Not intercepted");
 
         //Start game
