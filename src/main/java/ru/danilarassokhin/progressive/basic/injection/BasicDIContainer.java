@@ -32,8 +32,10 @@ import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 public final class BasicDIContainer implements DIContainer {
 
   private static BasicDIContainer INSTANCE;
+
   private final Map<Class<?>, Map<String, Bean>> beans;
   private final Set<Method> viewedMethods;
+
   private Class<?> scanFrom;
 
   private BasicDIContainer() {
@@ -54,8 +56,8 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   private void scanPackage(String name, PackageLoader loader) {
-    Set<Class> classesInPackage = loader.findAllClassesIn(name);
-    for (Class c : classesInPackage) {
+    Set<Class<?>> classesInPackage = loader.findAllClassesIn(name);
+    for (Class<?> c : classesInPackage) {
       loadBeanFrom(c);
     }
   }
@@ -76,16 +78,16 @@ public final class BasicDIContainer implements DIContainer {
         Arrays.asList(methods).removeIf(m -> !m.isAnnotationPresent(GameBean.class));
         Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
         Arrays.sort(methods, Comparator.comparingInt(m -> m.getAnnotation(GameBean.class).order()));
-        for (Method m : methods) {
-          if (viewedMethods.contains(m)) {
+        for (Method method : methods) {
+          if (viewedMethods.contains(method)) {
             continue;
           }
-          if (m.isAnnotationPresent(GameBean.class)) {
+          if (method.isAnnotationPresent(GameBean.class)) {
             System.out.println("Found GameBean annotation in " + beanClass.getName()
-                + " in method " + m.getName()
+                + " in method " + method.getName()
                 + ". Trying to make bean...");
-            Object o = create(beanClass);
-            createBeanFromMethod(m, o);
+            Object bean = create(beanClass);
+            createBeanFromMethod(method, bean);
           }
         }
       } else {
@@ -94,13 +96,15 @@ public final class BasicDIContainer implements DIContainer {
       }
     } catch (IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
-      throw new RuntimeException(beanClass.getName()
-          + " annotated as GameBean has no public empty constructor " +
-          "which is required for beans! Exception: " + e.getMessage());
+      throw new RuntimeException("Something gone wrong while bean creation from "
+          + beanClass.getName()
+          + "! Exception: " + e.getMessage());
+    } finally {
+      viewedMethods.clear();
     }
   }
 
-  private void createBeanFromClass(Class beanClass) {
+  private void createBeanFromClass(Class<?> beanClass) {
     GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
     String name = annotation.name();
     if (name.isEmpty()) {
@@ -108,17 +112,17 @@ public final class BasicDIContainer implements DIContainer {
     }
     System.out.println("Found GameBean annotation in "
         + beanClass.getName() + ". Trying to make bean...");
-    Object o = null;
+    Object beanObj = null;
     if (annotation.policy().equals(GameBeanCreationPolicy.SINGLETON)) {
-      o = create(beanClass);
+      beanObj = create(beanClass);
     }
     Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
-    Bean b = new Bean(o, annotation.policy());
+    Bean beanData = new Bean(beanObj, annotation.policy());
     if (beansOfClass.containsKey(name)) {
       throw new RuntimeException("GameBean name duplication "
           + name + " in " + beanClass.getName());
     }
-    beansOfClass.putIfAbsent(name, b);
+    beansOfClass.putIfAbsent(name, beanData);
     beans.putIfAbsent(beanClass, beansOfClass);
     System.out.println("GameBean with name " + name + " created for " + beanClass.getName());
     System.out.println();
@@ -167,17 +171,18 @@ public final class BasicDIContainer implements DIContainer {
           + m.getDeclaringClass().getName() + " "
           + m.getName() + " or doesn't set them at all!");
     }
+    boolean hasQualifiers = names.length != 0;
     for (int i = 0; i < paramTypes.length; ++i) {
-      if (names.length == 0) {
+      if (!hasQualifiers) {
         try {
           args[i] = tryGetBean(paramTypes[i]);
         } catch (BeanNotFoundException e) {
           if (annotation.strict()) {
             throw new RuntimeException(m.getName() + " in " + m.getDeclaringClass().getName()
-                + " annotated as strict but not beans found for " + paramTypes[i].getName());
+                + " annotated as strict but no beans found for " + paramTypes[i].getName());
           }
           loadBeanFrom(paramTypes[i]);
-          --i;
+          args[i] = getBean(paramTypes[i]);
         }
       } else {
         try {
@@ -193,8 +198,9 @@ public final class BasicDIContainer implements DIContainer {
             createBeanFromMethod(obj.getClass().getMethod(names[i]), obj);
           } catch (NoSuchMethodException | ArrayIndexOutOfBoundsException e) {
             loadBeanFrom(paramTypes[i]);
+          } finally {
+            args[i] = getBean(names[i], paramTypes[i]);
           }
-          --i;
         }
       }
     }
@@ -206,7 +212,7 @@ public final class BasicDIContainer implements DIContainer {
     return b;
   }
 
-  private Set<Class> findAllClassesUsingClassLoader(String packageName) {
+  private Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
     try {
       InputStream stream = getDefaultClassLoader()
           .getResourceAsStream(packageName.replaceAll("[.]", "/"));
@@ -222,7 +228,7 @@ public final class BasicDIContainer implements DIContainer {
     }
   }
 
-  private Class getClass(String className, String packageName) {
+  private Class<?> getClass(String className, String packageName) {
     try {
       return Class.forName(packageName + "."
           + className.substring(0, className.lastIndexOf('.')));
