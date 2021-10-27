@@ -2,10 +2,10 @@ package ru.danilarassokhin.progressive.proxy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import ru.danilarassokhin.progressive.basic.proxy.BasicProxyGenerator;
+import ru.danilarassokhin.progressive.basic.proxy.BasicProxyCreator;
 
 /**
- * Represents method interceptor for {@link BasicProxyGenerator},
+ * Represents method interceptor for {@link BasicProxyCreator},
  * {@link ru.danilarassokhin.progressive.annotation.Proxy}
  */
 public interface MethodInterceptor {

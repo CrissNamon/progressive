@@ -16,13 +16,14 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import ru.danilarassokhin.progressive.annotation.*;
-import ru.danilarassokhin.progressive.basic.proxy.BasicProxyGenerator;
+import ru.danilarassokhin.progressive.basic.proxy.BasicProxyCreator;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.exception.BeanNotFoundException;
 import ru.danilarassokhin.progressive.injection.DIContainer;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 import ru.danilarassokhin.progressive.injection.PackageLoader;
+import ru.danilarassokhin.progressive.proxy.ProxyCreator;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 /**
@@ -38,6 +39,8 @@ public final class BasicDIContainer implements DIContainer {
 
   private Class<?> scanFrom;
 
+  private ProxyCreator proxyCreator;
+
   private BasicDIContainer() {
     System.out.println("\n" +
         "╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╦╦  ╦╔═╗\n" +
@@ -46,6 +49,7 @@ public final class BasicDIContainer implements DIContainer {
     BasicGameLogger.info("Progressive DI initialization...\n");
     beans = new HashMap<>();
     viewedMethods = new HashSet<>();
+    proxyCreator = BasicProxyCreator.getInstance();
   }
 
   public static BasicDIContainer getInstance() {
@@ -53,6 +57,25 @@ public final class BasicDIContainer implements DIContainer {
       INSTANCE = new BasicDIContainer();
     }
     return INSTANCE;
+  }
+
+  /**
+   * Returns proxy creator used in proxy creation.
+   *
+   * @return Current {@link ru.danilarassokhin.progressive.proxy.ProxyCreator}
+   */
+  public ProxyCreator getProxyCreator() {
+    return proxyCreator;
+  }
+
+  /**
+   * Sets {@link ru.danilarassokhin.progressive.proxy.ProxyCreator}
+   *  which will be used for proxy creation.
+   *
+   * @param proxyCreator {@link ru.danilarassokhin.progressive.proxy.ProxyCreator} to use
+   */
+  public void setProxyCreator(ProxyCreator proxyCreator) {
+    this.proxyCreator = proxyCreator;
   }
 
   private void scanPackage(String name, PackageLoader loader) {
@@ -402,7 +425,8 @@ public final class BasicDIContainer implements DIContainer {
   public static <C> C create(Class<C> componentClass, Object... args) {
     Proxy proxy = componentClass.getAnnotation(Proxy.class);
     if(proxy != null) {
-      componentClass = BasicProxyGenerator.getInstance().createProxyClass(componentClass);
+      componentClass = BasicDIContainer.getInstance()
+          .getProxyCreator().createProxyClass(componentClass);
     }
     try {
       Class<?>[] argsTypes = new Class[args.length];

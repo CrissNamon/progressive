@@ -1,10 +1,11 @@
 package ru.danilarassokhin.progressive.annotation;
 
 import java.lang.annotation.*;
+import ru.danilarassokhin.progressive.basic.proxy.BasicProxyCreator;
 import ru.danilarassokhin.progressive.proxy.MethodInterceptor;
 
 /**
- * Used in {@link ru.danilarassokhin.progressive.basic.proxy.BasicProxyGenerator}
+ * Used in {@link BasicProxyCreator}
  * to create proxy class from original class annotated with
  * {@link ru.danilarassokhin.progressive.annotation.Proxy}.
  * <p>You must specify {@link ru.danilarassokhin.progressive.proxy.MethodInterceptor}

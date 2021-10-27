@@ -8,32 +8,33 @@ import ru.danilarassokhin.progressive.annotation.Intercept;
 import ru.danilarassokhin.progressive.annotation.Proxy;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.proxy.MethodInterceptor;
+import ru.danilarassokhin.progressive.proxy.ProxyCreator;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 /**
  * Creates proxy classes
  */
-public final class BasicProxyGenerator {
+public final class BasicProxyCreator implements ProxyCreator {
 
   private final static ClassLoadingStrategy DEFAULT_CLASS_LOADING_STRATEGY = ClassLoadingStrategy.Default.WRAPPER;
 
-  private static BasicProxyGenerator INSTANCE;
+  private static BasicProxyCreator INSTANCE;
 
   private ClassLoadingStrategy classLoadingStrategy;
 
   /**
-   * Returns instance of {@link ru.danilarassokhin.progressive.basic.proxy.BasicProxyGenerator}
+   * Returns instance of {@link BasicProxyCreator}
    *
-   * @return instance of {@link ru.danilarassokhin.progressive.basic.proxy.BasicProxyGenerator}
+   * @return instance of {@link BasicProxyCreator}
    */
-  public static BasicProxyGenerator getInstance() {
+  public static BasicProxyCreator getInstance() {
     if(INSTANCE == null) {
-      INSTANCE = new BasicProxyGenerator();
+      INSTANCE = new BasicProxyCreator();
     }
     return INSTANCE;
   }
 
-  private BasicProxyGenerator() {
+  private BasicProxyCreator() {
     setClassLoadingStrategy(DEFAULT_CLASS_LOADING_STRATEGY);
   }
 
@@ -46,16 +47,7 @@ public final class BasicProxyGenerator {
     this.classLoadingStrategy = classLoadingStrategy;
   }
 
-  /**
-   * Creates proxy class from {@code original} class.
-   * <p>{@code original} class must be annotated as {@link ru.danilarassokhin.progressive.annotation.Proxy}
-   * with specified {@link ru.danilarassokhin.progressive.proxy.MethodInterceptor}</p>
-   * <p>Methods which need to be intercepted must be annotated as {@link ru.danilarassokhin.progressive.annotation.Intercept}</p>
-   *
-   * @param original Original class to create proxy from
-   * @param <V> Object type to create proxy from
-   * @return New proxy class of {@code original}
-   */
+  @Override
   public <V> Class<V> createProxyClass(Class<V> original) {
     Proxy proxy = ComponentAnnotationProcessor.findAnnotation(original, Proxy.class);
     if(proxy == null) {
@@ -72,17 +64,7 @@ public final class BasicProxyGenerator {
     return (Class<V>) type;
   }
 
-  /**
-   * Creates proxy class from {@code original} class and instantiates it.
-   * <p>{@code original} class must be annotated as {@link ru.danilarassokhin.progressive.annotation.Proxy}
-   * with specified {@link ru.danilarassokhin.progressive.proxy.MethodInterceptor}</p>
-   * <p>Methods which need to be intercepted must be annotated as {@link ru.danilarassokhin.progressive.annotation.Intercept}</p>
-   *
-   * @param original Original class to create proxy from
-   * @param <V> Object type to create proxy from
-   * @param args Parameters to be used in constructor of {@code original}
-   * @return New proxy class instance of {@code original}
-   */
+  @Override
   public <V> V createProxy(Class<V> original, Object... args) {
     return BasicDIContainer.create(
         createProxyClass(original),
