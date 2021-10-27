@@ -1,6 +1,5 @@
 package ru.danilarassokhin.main;
 
-import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.basic.component.GameItem;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;

@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.basic.proxy;
 
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -48,18 +49,38 @@ public final class BasicProxyCreator implements ProxyCreator {
   }
 
   @Override
+  public <V> Class<V> createProxyClass(Class<V> original, MethodInterceptor interceptor) {
+    DynamicType.Unloaded<V> unloadedClass = makeProxy(
+        createDynamicType(original)
+            .method(ElementMatchers.isDeclaredBy(original))
+            .intercept(MethodDelegation.to(new BasicProxyInterceptionHandler(interceptor)))
+    );
+    Class<?> type = loadProxyClass(unloadedClass, original.getClassLoader(), getInstance().classLoadingStrategy)
+        .getLoaded();
+    return (Class<V>) type;
+  }
+
+  @Override
+  public <V> V createProxy(Class<V> original, MethodInterceptor interceptor, Object... args) {
+    return BasicDIContainer.create(
+        createProxyClass(original, interceptor),
+        args
+    );
+  }
+
+  @Override
   public <V> Class<V> createProxyClass(Class<V> original) {
     Proxy proxy = ComponentAnnotationProcessor.findAnnotation(original, Proxy.class);
     if(proxy == null) {
       throw new RuntimeException(original.getName() + " must be annotated as @Proxy!");
     }
     MethodInterceptor interceptor = BasicDIContainer.create(proxy.value());
-    Class<?> type = new ByteBuddy()
-        .subclass(original)
+    DynamicType.Unloaded<V> unloadedClass = makeProxy(
+        createDynamicType(original)
         .method(ElementMatchers.isAnnotatedWith(Intercept.class))
         .intercept(MethodDelegation.to(new BasicProxyInterceptionHandler(interceptor)))
-        .make()
-        .load(original.getClassLoader(), classLoadingStrategy)
+    );
+    Class<?> type = loadProxyClass(unloadedClass, original.getClassLoader(), getInstance().classLoadingStrategy)
         .getLoaded();
     return (Class<V>) type;
   }
@@ -70,6 +91,21 @@ public final class BasicProxyCreator implements ProxyCreator {
         createProxyClass(original),
         args
     );
+  }
+
+  private <V> DynamicType.Builder<V> createDynamicType(Class<V> original) {
+    return new ByteBuddy()
+        .subclass(original);
+  }
+
+  private <V> DynamicType.Unloaded<V> makeProxy(DynamicType.Builder<V> builder) {
+    return builder.make();
+  }
+
+  private <V> DynamicType.Loaded<V> loadProxyClass(DynamicType.Unloaded<V> unloadedClass,
+                                                   ClassLoader classLoader,
+                                                   ClassLoadingStrategy classLoadingStrategy) {
+    return unloadedClass.load(classLoader, classLoadingStrategy);
   }
 
 }

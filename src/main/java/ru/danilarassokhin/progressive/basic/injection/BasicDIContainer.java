@@ -165,19 +165,19 @@ public final class BasicDIContainer implements DIContainer {
       Map<String, Bean> beansOfClass = beans.getOrDefault(
           m.getReturnType(), new HashMap<>()
       );
-      Bean b = invoke(m, o);
+      Bean beanData = invoke(m, o);
       viewedMethods.add(m);
-      b.setCreationPolicy(annotation.policy());
-      b.setMethod(m);
-      b.setMethodCaller(o);
+      beanData.setCreationPolicy(annotation.policy());
+      beanData.setMethod(m);
+      beanData.setMethodCaller(o);
       if (beansOfClass.containsKey(name)) {
         throw new RuntimeException("GameBean name duplication "
             + name + " in " + o.getClass().getName());
       }
-      beansOfClass.putIfAbsent(name, b);
-      beans.putIfAbsent(b.getBean().getClass(), beansOfClass);
+      beansOfClass.putIfAbsent(name, beanData);
+      beans.putIfAbsent(beanData.getBean().getClass(), beansOfClass);
       BasicGameLogger.getLogger().info("GameBean with name " + name + " created for "
-          + b.getBean().getClass().getName() + " from method " + m.getName());
+          + beanData.getBean().getClass().getName() + " from method " + m.getName());
       BasicGameLogger.getLogger().info("");
     }
   }
@@ -226,12 +226,12 @@ public final class BasicDIContainer implements DIContainer {
         }
       }
     }
-    Object o = invoke(m, obj, args);
-    Bean b = new Bean(o);
-    b.setMethod(m);
-    b.setMethodArgs(args);
+    Object methodResult = invoke(m, obj, args);
+    Bean beanData = new Bean(methodResult);
+    beanData.setMethod(m);
+    beanData.setMethodArgs(args);
     viewedMethods.add(m);
-    return b;
+    return beanData;
   }
 
   private Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
@@ -564,7 +564,7 @@ public final class BasicDIContainer implements DIContainer {
     MethodType invokedType = MethodType.methodType(BiFunction.class);
     method.setAccessible(true);
     MethodType func = caller.unreflect(method).type();
-    Class[] methodParamTypes = method.getParameterTypes();
+    Class<?>[] methodParamTypes = method.getParameterTypes();
     CallSite site = LambdaMetafactory.metafactory(
         caller,
         "apply",
