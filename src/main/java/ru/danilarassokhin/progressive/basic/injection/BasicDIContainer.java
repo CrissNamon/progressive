@@ -46,7 +46,7 @@ public final class BasicDIContainer implements DIContainer {
         "╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╦╦  ╦╔═╗\n" +
         "╠═╝╠╦╝║ ║║ ╦╠╦╝║╣ ╚═╗╚═╗║╚╗╔╝║╣ \n" +
         "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n");
-    BasicGameLogger.info("Progressive DI initialization...\n");
+    BasicGameLogger.getLogger().info("Progressive DI initialization...\n");
     beans = new HashMap<>();
     viewedMethods = new HashSet<>();
     proxyCreator = BasicProxyCreator.getInstance();
@@ -91,6 +91,7 @@ public final class BasicDIContainer implements DIContainer {
    * @param beanClass Class to create bean from
    */
   public void loadBeanFrom(Class<?> beanClass) {
+    viewedMethods.clear();
     try {
       GameBean annotation = ComponentAnnotationProcessor
           .findAnnotation(beanClass, GameBean.class);
@@ -106,7 +107,7 @@ public final class BasicDIContainer implements DIContainer {
             continue;
           }
           if (method.isAnnotationPresent(GameBean.class)) {
-            System.out.println("Found GameBean annotation in " + beanClass.getName()
+            BasicGameLogger.getLogger().info("Found GameBean annotation in " + beanClass.getName()
                 + " in method " + method.getName()
                 + ". Trying to make bean...");
             Object bean = create(beanClass);
@@ -122,8 +123,6 @@ public final class BasicDIContainer implements DIContainer {
       throw new RuntimeException("Something gone wrong while bean creation from "
           + beanClass.getName()
           + "! Exception: " + e.getMessage());
-    } finally {
-      viewedMethods.clear();
     }
   }
 
@@ -133,7 +132,7 @@ public final class BasicDIContainer implements DIContainer {
     if (name.isEmpty()) {
       name = beanClass.getName().toLowerCase();
     }
-    System.out.println("Found GameBean annotation in "
+    BasicGameLogger.getLogger().info("Found GameBean annotation in "
         + beanClass.getName() + ". Trying to make bean...");
     Object beanObj = null;
     if (annotation.policy().equals(GameBeanCreationPolicy.SINGLETON)) {
@@ -147,8 +146,8 @@ public final class BasicDIContainer implements DIContainer {
     }
     beansOfClass.putIfAbsent(name, beanData);
     beans.putIfAbsent(beanClass, beansOfClass);
-    System.out.println("GameBean with name " + name + " created for " + beanClass.getName());
-    System.out.println();
+    BasicGameLogger.getLogger().info("GameBean with name " + name + " created for " + beanClass.getName());
+    BasicGameLogger.getLogger().info("");
   }
 
   private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
@@ -177,9 +176,9 @@ public final class BasicDIContainer implements DIContainer {
       }
       beansOfClass.putIfAbsent(name, b);
       beans.putIfAbsent(b.getBean().getClass(), beansOfClass);
-      System.out.println("GameBean with name " + name + " created for "
+      BasicGameLogger.getLogger().info("GameBean with name " + name + " created for "
           + b.getBean().getClass().getName() + " from method " + m.getName());
-      System.out.println();
+      BasicGameLogger.getLogger().info("");
     }
   }
 
@@ -216,7 +215,7 @@ public final class BasicDIContainer implements DIContainer {
                 + " annotated as strict but not beans found for " + paramTypes[i].getName());
           }
           try {
-            System.out.println("GameBean of class " + paramTypes[i].getName()
+            BasicGameLogger.getLogger().warning("GameBean of class " + paramTypes[i].getName()
                 + " not found! Trying to create it from existing method...");
             createBeanFromMethod(obj.getClass().getMethod(names[i]), obj);
           } catch (NoSuchMethodException | ArrayIndexOutOfBoundsException e) {

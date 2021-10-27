@@ -22,12 +22,12 @@ public class Main {
         BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class);
         //Load configuration class with DI and use custom PackageLoader for @ComponentScan
         //You get package name and must return set of classes to load beans from
-        BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class, (packageName) -> new HashSet<>());
+        //BasicDIContainer.getInstance().loadConfiguration(BasicConfiguration.class, (packageName) -> new HashSet<>());
 
         //State manager instance
         BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
         //Subscribe to some instance. This will be executed when game will be initialized first time
-        stateManager.<BasicGame>addListener(GameState.INIT, (g) -> BasicGameLogger.info("GAME INITIATED\n"));
+        stateManager.<BasicGame>addListener(GameState.INIT, (g) -> g.getGameLogger().info("GAME INITIATED\n"));
 
         //Get game instance
         BasicGame game = BasicGame.getInstance();

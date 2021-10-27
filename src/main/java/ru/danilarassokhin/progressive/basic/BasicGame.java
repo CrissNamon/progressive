@@ -14,6 +14,7 @@ import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
+import ru.danilarassokhin.progressive.util.GameLogger;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 /**
@@ -36,9 +37,12 @@ public final class BasicGame implements Game {
   private boolean isStarted;
   private long deltaTime;
 
+  private GameLogger gameLogger;
+
   private BasicGame() {
     BasicDIContainer.getInstance();
-    BasicGameLogger.info("Progressive IoC initialization...\n");
+    setGameLogger(BasicGameLogger.getLogger());
+    getGameLogger().info("Progressive IoC initialization...\n");
     gameFrameTimeType = GameFrameTimeType.PARALLEL;
     gameObjects = new HashMap<>();
     idGenerator = 0;
@@ -53,6 +57,24 @@ public final class BasicGame implements Game {
       INSTANCE = new BasicGame();
     }
     return INSTANCE;
+  }
+
+  /**
+   * Returns current {@link ru.danilarassokhin.progressive.util.GameLogger}
+   *
+   * @return Current {@link ru.danilarassokhin.progressive.util.GameLogger}
+   */
+  public GameLogger getGameLogger() {
+    return gameLogger;
+  }
+
+  /**
+   * Sets {@link ru.danilarassokhin.progressive.util.GameLogger}
+   *
+   * @param gameLogger {@link ru.danilarassokhin.progressive.util.GameLogger} to use
+   */
+  public void setGameLogger(GameLogger gameLogger) {
+    this.gameLogger = gameLogger;
   }
 
   @Override
