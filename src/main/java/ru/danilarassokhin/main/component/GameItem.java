@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.basic.component;
+package ru.danilarassokhin.main.component;
 
 import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.component.GameComponent;

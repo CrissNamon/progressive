@@ -4,10 +4,10 @@ import ru.danilarassokhin.progressive.GameFrameTimeType;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.GameInitializer;
-import ru.danilarassokhin.progressive.basic.component.GameItem;
+import ru.danilarassokhin.main.component.GameItem;
 import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
-import ru.danilarassokhin.progressive.basic.script.EchoSystem;
+import ru.danilarassokhin.main.script.EchoSystem;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.manager.GameState;
@@ -15,6 +15,7 @@ import ru.danilarassokhin.progressive.manager.GameState;
 public class Main {
 
     public static void main(String[] args) {
+        //Initiate game components such as DI container and Game
         GameInitializer.init(args);
         //Get DI container instance
         BasicDIContainer diContainer = BasicDIContainer.getInstance();

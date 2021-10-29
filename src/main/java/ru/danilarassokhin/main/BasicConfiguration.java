@@ -1,7 +1,7 @@
 package ru.danilarassokhin.main;
 
 import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.basic.component.GameItem;
+import ru.danilarassokhin.main.component.GameItem;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;

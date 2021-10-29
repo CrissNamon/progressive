@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
-import ru.danilarassokhin.progressive.basic.script.EchoSystem;
+import ru.danilarassokhin.main.script.EchoSystem;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 

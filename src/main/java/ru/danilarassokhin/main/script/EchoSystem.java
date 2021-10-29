@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.basic.script;
+package ru.danilarassokhin.main.script;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
