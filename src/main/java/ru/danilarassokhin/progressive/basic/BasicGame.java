@@ -7,7 +7,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
-import ru.danilarassokhin.main.BasicConfiguration;
 import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
@@ -37,12 +36,9 @@ public final class BasicGame implements Game {
   private boolean isStarted;
   private long deltaTime;
 
-  private GameLogger gameLogger;
-
   private BasicGame() {
     BasicDIContainer.getInstance();
-    setGameLogger(BasicGameLogger.getLogger());
-    getGameLogger().info("Progressive IoC initialization...\n");
+    BasicGameLogger.getInstance().info("Progressive IoC initialization...\n");
     gameFrameTimeType = GameFrameTimeType.PARALLEL;
     gameObjects = new HashMap<>();
     idGenerator = 0;
@@ -57,24 +53,6 @@ public final class BasicGame implements Game {
       INSTANCE = new BasicGame();
     }
     return INSTANCE;
-  }
-
-  /**
-   * Returns current {@link ru.danilarassokhin.progressive.util.GameLogger}
-   *
-   * @return Current {@link ru.danilarassokhin.progressive.util.GameLogger}
-   */
-  public GameLogger getGameLogger() {
-    return gameLogger;
-  }
-
-  /**
-   * Sets {@link ru.danilarassokhin.progressive.util.GameLogger}
-   *
-   * @param gameLogger {@link ru.danilarassokhin.progressive.util.GameLogger} to use
-   */
-  public void setGameLogger(GameLogger gameLogger) {
-    this.gameLogger = gameLogger;
   }
 
   @Override

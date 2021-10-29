@@ -9,6 +9,7 @@ import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.proxy.BasicProxyCreator;
 import ru.danilarassokhin.progressive.basic.script.EchoSystem;
+import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.manager.GameState;
 
@@ -27,7 +28,7 @@ public class Main {
         //State manager instance
         BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
         //Subscribe to some instance. This will be executed when game will be initialized first time
-        stateManager.<BasicGame>addListener(GameState.INIT, (g) -> g.getGameLogger().info("GAME INITIATED\n"));
+        stateManager.<BasicGame>addListener(GameState.INIT, (g) -> BasicGameLogger.getInstance().info("GAME INITIATED\n"));
 
         //Get game instance
         BasicGame game = BasicGame.getInstance();

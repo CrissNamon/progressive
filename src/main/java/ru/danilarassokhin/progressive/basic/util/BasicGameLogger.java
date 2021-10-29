@@ -1,37 +1,50 @@
 package ru.danilarassokhin.progressive.basic.util;
 
+import ru.danilarassokhin.progressive.basic.log.SimpleGameLogger;
 import ru.danilarassokhin.progressive.util.GameLogger;
 
 /**
- * Simple logger
+ * Global game logger.
  */
-public final class BasicGameLogger implements GameLogger {
+public final class BasicGameLogger {
 
   private static BasicGameLogger INSTANCE;
 
-  private BasicGameLogger() {}
+  private GameLogger gameLogger;
 
-  public static BasicGameLogger getLogger() {
+  private BasicGameLogger() {
+    gameLogger = new SimpleGameLogger();
+  }
+
+  public static BasicGameLogger getInstance() {
     if(INSTANCE == null) {
       INSTANCE = new BasicGameLogger();
     }
     return INSTANCE;
   }
 
+  public GameLogger getLogger() {
+    return gameLogger;
+  }
+
+  public void setLogger(GameLogger gameLogger) {
+    this.gameLogger = gameLogger;
+  }
+
   public void log(String prefix, Object message) {
-    System.out.println(prefix + " " + message.toString());
+    gameLogger.log(prefix, message);
   }
 
   public void info(Object message) {
-    log("[PROGRESSIVE INFO]", message);
+    gameLogger.info(message);
   }
 
   public void error(Object message) {
-    log(RED + "[PROGRESSIVE ERROR]" + RESET, message);
+    gameLogger.error(message);
   }
 
   public void warning(Object message) {
-    log(YELLOW + "[PROGRESSIVE WARN]" + RESET, message);
+    gameLogger.warning(message);
   }
 
 }
