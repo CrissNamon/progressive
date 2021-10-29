@@ -1,5 +1,8 @@
 package ru.danilarassokhin.progressive.proxy;
 
+/**
+ * Creates proxy classes and objects.
+ */
 public interface ProxyCreator {
 
   /**

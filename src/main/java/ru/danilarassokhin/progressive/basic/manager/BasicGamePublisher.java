@@ -5,6 +5,10 @@ import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.manager.GamePublisher;
 
+/**
+ * Basic implementation of {@link ru.danilarassokhin.progressive.manager.GamePublisher}.
+ * <p>Allow you to subscribe on and make global events</p>
+ */
 public final class BasicGamePublisher implements GamePublisher {
 
   private static BasicGamePublisher INSTANCE;

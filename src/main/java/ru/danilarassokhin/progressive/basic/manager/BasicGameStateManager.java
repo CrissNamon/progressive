@@ -11,6 +11,9 @@ import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.manager.GameStateManager;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
+/**
+ * Basic implementation of {@link ru.danilarassokhin.progressive.manager.GameStateManager}.
+ */
 public class BasicGameStateManager implements GameStateManager<GameState> {
   private static BasicGameStateManager INSTANCE;
   private GameState state;

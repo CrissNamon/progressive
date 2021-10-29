@@ -1,7 +1,7 @@
 package ru.danilarassokhin.progressive.basic.util;
 
 import ru.danilarassokhin.progressive.basic.log.SimpleGameLogger;
-import ru.danilarassokhin.progressive.util.GameLogger;
+import ru.danilarassokhin.progressive.log.GameLogger;
 
 /**
  * Global game logger.
@@ -26,7 +26,7 @@ public final class BasicGameLogger {
   /**
    * Returns current logger
    *
-   * @return {@link ru.danilarassokhin.progressive.util.GameLogger}
+   * @return {@link GameLogger}
    */
   public GameLogger getLogger() {
     return gameLogger;
@@ -35,7 +35,7 @@ public final class BasicGameLogger {
   /**
    * Sets logger.
    *
-   * @param gameLogger {@link ru.danilarassokhin.progressive.util.GameLogger} to use
+   * @param gameLogger {@link GameLogger} to use
    */
   public void setLogger(GameLogger gameLogger) {
     this.gameLogger = gameLogger;

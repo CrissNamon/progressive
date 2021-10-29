@@ -1,6 +1,6 @@
 package ru.danilarassokhin.progressive.basic.log;
 
-import ru.danilarassokhin.progressive.util.GameLogger;
+import ru.danilarassokhin.progressive.log.GameLogger;
 
 /**
  * Simple game logger implementation using {@link java.lang.System}

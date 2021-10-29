@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.util;
+package ru.danilarassokhin.progressive.log;
 
 /**
  * Represents abstract game logger
