@@ -30,7 +30,7 @@ public class BasicConfiguration extends AbstractConfiguration {
 
   //Will create bean with type GameItem and name "createitem"
   //Before method call will inject random bean of type Long as parameter if such bean exists
-  @GameBean
+  @GameBean(policy = GameBeanCreationPolicy.OBJECT)
   public GameItem createItem(Long id) {
     GameItem item = new GameItem();
     item.setId(id);
@@ -39,7 +39,7 @@ public class BasicConfiguration extends AbstractConfiguration {
 
   //Will create bean with type GameItem and name "gameItem"
   //Will inject bean with name "globalIdGenerator" as Long arg
-  @GameBean(name = "gameItem", qualifiers = "globalIdGenerator")
+  @GameBean(name = "gameItem", qualifiers = "globalIdGenerator", policy = GameBeanCreationPolicy.OBJECT, deep = true)
   public GameItem createItemWithIdGenerator(Long id) {
     return createItem(id);
   }

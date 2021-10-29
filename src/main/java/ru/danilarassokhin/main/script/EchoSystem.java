@@ -1,7 +1,10 @@
 package ru.danilarassokhin.main.script;
 
+import ru.danilarassokhin.main.component.GameItem;
+import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
+import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
@@ -13,8 +16,10 @@ public class EchoSystem implements GameScript {
   private GameObject parent;
 
   //Subscribe to game global update with GamePublisher and pass update delta time to say method
-  public EchoSystem() {
+  @Autofill
+  public EchoSystem(GameItem gameItem) {
     BasicGamePublisher.getInstance().subscribeOn("update", this::say);
+    BasicGameLogger.getInstance().info("GAME ITEM ID: " + gameItem.getId());
   }
 
   @Override

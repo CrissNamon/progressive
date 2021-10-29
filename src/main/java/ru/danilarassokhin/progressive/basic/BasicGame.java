@@ -1,10 +1,11 @@
 package ru.danilarassokhin.progressive.basic;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
@@ -20,7 +21,7 @@ import ru.danilarassokhin.progressive.util.GameSecurityManager;
 public final class BasicGame implements Game {
 
   private static BasicGame INSTANCE;
-  private long idGenerator;
+  private final AtomicLong idGenerator;
 
   private GameFrameTimeType gameFrameTimeType;
   private boolean isStatic;
@@ -37,19 +38,20 @@ public final class BasicGame implements Game {
   private BasicGame() {
     BasicGameLogger.getInstance().info("Progressive IoC initialization...\n");
     gameFrameTimeType = GameFrameTimeType.PARALLEL;
-    gameObjects = new HashMap<>();
-    idGenerator = 0;
+    gameObjects = new ConcurrentHashMap<>();
+    idGenerator = new AtomicLong(0);
     stateManager = BasicGameStateManager.getInstance();
     scheduler = Executors.newScheduledThreadPool(2);
     isStarted = false;
     stateManager.setState(GameState.INIT, this);
   }
 
-  protected static BasicGame createInstance() {
+  protected static boolean createInstance() {
     if(INSTANCE == null) {
       INSTANCE = new BasicGame();
+      return true;
     }
-    return INSTANCE;
+    return false;
   }
 
   public static BasicGame getInstance() {
@@ -98,8 +100,8 @@ public final class BasicGame implements Game {
     if (!isGameObjectClassSet()) {
       throw new RuntimeException("GameObject class has not been set in game! Use setGameObjectClass method in your game");
     }
-    GameObject gameObject = BasicDIContainer.create(gameObjClass, ++idGenerator);
-    gameObjects.putIfAbsent(idGenerator, gameObject);
+    GameObject gameObject = BasicDIContainer.create(gameObjClass, idGenerator.incrementAndGet());
+    gameObjects.putIfAbsent(idGenerator.get(), gameObject);
     return gameObject;
   }
 
@@ -110,7 +112,7 @@ public final class BasicGame implements Game {
     }
     GameObject gameObject = gameObjects.get(o.getId());
     gameObject.dispose();
-    gameObject = null;
+    gameObjects.remove(o.getId());
     return true;
   }
 

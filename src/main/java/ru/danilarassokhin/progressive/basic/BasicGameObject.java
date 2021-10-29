@@ -3,6 +3,7 @@ package ru.danilarassokhin.progressive.basic;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
@@ -22,7 +23,7 @@ public final class BasicGameObject implements GameObject {
 
   protected BasicGameObject(Long id) {
     this.id = id;
-    scripts = new HashMap<>();
+    scripts = new ConcurrentHashMap<>();
   }
 
   @Override
@@ -88,9 +89,7 @@ public final class BasicGameObject implements GameObject {
     if (!scripts.containsKey(scriptClass)) {
       return false;
     }
-    GameScript script = scripts.get(scriptClass);
     scripts.remove(scriptClass);
-    script = null;
     return true;
   }
 

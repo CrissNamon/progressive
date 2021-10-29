@@ -14,6 +14,8 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
  * <p>strict - specifies if DI container should try to search for bean with any name or create
  * it from args type or throw a RuntimeException otherwise</p>
  * <p>order - specifies order in which annotated methods will be executed</p>
+ * <p>deep - if true, than all arguments of method which creates bean will be updated
+ * with {@link ru.danilarassokhin.progressive.injection.DIContainer#getBean(Class)}</p>
  * <p><b>Bean creating strategy from methods:</b></p>
  * <p>Sort methods, then tries to search existed beans for args injection or try to create them if strict = false</p>
  */
@@ -22,6 +24,8 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 @Documented
 public @interface GameBean {
   GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
+
+  boolean deep() default false;
 
   String name() default "";
 

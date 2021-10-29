@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,16 +45,17 @@ public final class BasicDIContainer implements DIContainer {
 
   private BasicDIContainer() {
     BasicGameLogger.getInstance().info("Progressive DI initialization...\n");
-    beans = new HashMap<>();
-    viewedMethods = new HashSet<>();
+    beans = new ConcurrentHashMap<>();
+    viewedMethods = Collections.synchronizedSet(new HashSet<>());
     proxyCreator = BasicProxyCreator.getInstance();
   }
 
-  protected static BasicDIContainer createInstance() {
+  protected static boolean createInstance() {
     if(INSTANCE == null) {
       INSTANCE = new BasicDIContainer();
+      return true;
     }
-    return INSTANCE;
+    return false;
   }
 
   public static BasicDIContainer getInstance() {
@@ -154,7 +156,7 @@ public final class BasicDIContainer implements DIContainer {
     BasicGameLogger.getInstance().info("");
   }
 
-  private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
+  private synchronized void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
       IllegalAccessException {
     if(viewedMethods.contains(m)) {
       return;
@@ -186,7 +188,7 @@ public final class BasicDIContainer implements DIContainer {
     }
   }
 
-  private Bean invoke(Method m, Object obj) throws InvocationTargetException,
+  private synchronized Bean invoke(Method m, Object obj) throws InvocationTargetException,
       IllegalAccessException, ArrayIndexOutOfBoundsException {
     Class<?>[] paramTypes = m.getParameterTypes();
     Object[] args = new Object[paramTypes.length];
@@ -231,9 +233,10 @@ public final class BasicDIContainer implements DIContainer {
       }
     }
     Object methodResult = invoke(m, obj, args);
-    Bean beanData = new Bean(methodResult);
+    Bean beanData = new Bean(methodResult, annotation.policy(), annotation.deep());
     beanData.setMethod(m);
     beanData.setMethodArgs(args);
+    beanData.setMethodArgsQualifiers(names);
     viewedMethods.add(m);
     return beanData;
   }
@@ -274,9 +277,15 @@ public final class BasicDIContainer implements DIContainer {
     if (bean.getValue().getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
       if (bean.getValue().getMethod() != null) {
         try {
+          Bean b = bean.getValue();
+          if(b.isDeep()) {
+            b.setMethodArgs(
+                updateBeanMethodArgs(b.getMethodArgs(), b.getMethodArgsQualifiers())
+            );
+          }
           exists = (V) (invoke(bean.getValue().getMethod(),
               bean.getValue().getMethodCaller(),
-              bean.getValue().getMethodArgs()));
+              b.getMethodArgs()));
 
         } catch (Throwable throwable) {
           throwable.printStackTrace();
@@ -343,8 +352,12 @@ public final class BasicDIContainer implements DIContainer {
     if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
       if (b.getMethod() != null) {
         try {
+          if(b.isDeep()) {
+            b.setMethodArgs(
+                updateBeanMethodArgs(b.getMethodArgs(), b.getMethodArgsQualifiers())
+            );
+          }
           exists = (V) (invoke(b.getMethod(), b.getMethodCaller(), b.getMethodArgs()));
-
         } catch (Throwable throwable) {
           throwable.printStackTrace();
         }
@@ -355,6 +368,18 @@ public final class BasicDIContainer implements DIContainer {
       beans.get(beanClass).put(name, b);
     }
     return exists;
+  }
+
+  private synchronized Object[] updateBeanMethodArgs(Object[] oldArgs, String[] qualifiers) {
+    boolean hasQualifiers = qualifiers.length != 0;
+    for(int i = 0; i < oldArgs.length; ++i) {
+      if(hasQualifiers) {
+        oldArgs[i] = getBean(qualifiers[i], oldArgs[i].getClass());
+      }else{
+        oldArgs[i] = getBean(oldArgs[i].getClass());
+      }
+    }
+    return oldArgs;
   }
 
   private void scanPackages(String[] packages, PackageLoader loader) {
@@ -450,7 +475,7 @@ public final class BasicDIContainer implements DIContainer {
             if (qualifiers.length == constructor.getParameterCount()) {
               args[i] = diContainer.getBean(qualifiers[i], argsTypes[i]);
             } else {
-              args[i] = diContainer.getBean(argsTypes[i].getName().toLowerCase(), argsTypes[i]);
+              args[i] = diContainer.getBean(argsTypes[i]);
             }
           }
           constructor.setAccessible(true);
@@ -519,7 +544,7 @@ public final class BasicDIContainer implements DIContainer {
    * @param from   Object to invoke method from
    * @param args   Parameters to invoke method with
    */
-  public static Object invoke(Method method, Object from, Object... args) {
+  public static synchronized Object invoke(Method method, Object from, Object... args) {
     try {
       method.setAccessible(true);
       MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -546,7 +571,7 @@ public final class BasicDIContainer implements DIContainer {
     }
   }
 
-  private static Object invokeObjectMethod(Object bean, Method method) throws Throwable {
+  private static synchronized Object invokeObjectMethod(Object bean, Method method) throws Throwable {
     MethodHandles.Lookup caller = MethodHandles.lookup();
     MethodType invokedType = MethodType.methodType(Function.class);
     method.setAccessible(true);
@@ -563,7 +588,7 @@ public final class BasicDIContainer implements DIContainer {
     return fullFunction.apply(bean);
   }
 
-  private static Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
+  private static synchronized Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
     MethodHandles.Lookup caller = MethodHandles.lookup();
     MethodType invokedType = MethodType.methodType(BiFunction.class);
     method.setAccessible(true);
