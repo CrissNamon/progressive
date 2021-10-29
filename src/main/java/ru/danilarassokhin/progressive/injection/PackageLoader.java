@@ -10,5 +10,5 @@ import java.util.Set;
  * </p>
  */
 public interface PackageLoader {
-    Set<Class> findAllClassesIn(String packageName);
+  Set<Class<?>> findAllClassesIn(String packageName);
 }

@@ -20,6 +20,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Autofill {
-    String value() default "";
-    String[] qualifiers() default {};
+  String value() default "";
+
+  String[] qualifiers() default {};
 }

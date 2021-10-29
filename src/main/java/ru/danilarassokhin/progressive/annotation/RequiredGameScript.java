@@ -1,8 +1,7 @@
 package ru.danilarassokhin.progressive.annotation;
 
-import ru.danilarassokhin.progressive.component.GameScript;
-
 import java.lang.annotation.*;
+import ru.danilarassokhin.progressive.component.GameScript;
 
 /**
  * Defines required GameScripts for this GameScript
@@ -18,6 +17,7 @@ import java.lang.annotation.*;
 @Documented
 @IsGameScript
 public @interface RequiredGameScript {
-    Class<? extends GameScript>[] value() default {};
-    boolean lazy() default false;
+  Class<? extends GameScript>[] value() default {};
+
+  boolean lazy() default false;
 }

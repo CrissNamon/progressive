@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 public interface GameComponent extends Serializable {
 
-    /**
-     * @return Component id
-     */
-    Long getId();
+  /**
+   * @return Component id
+   */
+  Long getId();
 
 }

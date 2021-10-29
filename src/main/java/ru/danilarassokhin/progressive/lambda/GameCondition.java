@@ -5,10 +5,11 @@ package ru.danilarassokhin.progressive.lambda;
  */
 public interface GameCondition {
 
-    /**
-     * Checks condition
-     * @return true if condition is completed
-     */
-    boolean isTrue();
+  /**
+   * Checks condition
+   *
+   * @return true if condition is completed
+   */
+  boolean isTrue();
 
 }
