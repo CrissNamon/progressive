@@ -3,7 +3,7 @@ package ru.danilarassokhin.progressive;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.danilarassokhin.progressive.basic.BasicGame;
-import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
+import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 
 public class BasicDIContainerTestProxyBean {
 

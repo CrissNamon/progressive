@@ -7,13 +7,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
-import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.manager.GameState;
-import ru.danilarassokhin.progressive.util.GameLogger;
 import ru.danilarassokhin.progressive.util.GameSecurityManager;
 
 /**
@@ -37,7 +35,6 @@ public final class BasicGame implements Game {
   private long deltaTime;
 
   private BasicGame() {
-    BasicDIContainer.getInstance();
     BasicGameLogger.getInstance().info("Progressive IoC initialization...\n");
     gameFrameTimeType = GameFrameTimeType.PARALLEL;
     gameObjects = new HashMap<>();
@@ -48,9 +45,16 @@ public final class BasicGame implements Game {
     stateManager.setState(GameState.INIT, this);
   }
 
+  protected static BasicGame createInstance() {
+    if(INSTANCE == null) {
+      INSTANCE = new BasicGame();
+    }
+    return INSTANCE;
+  }
+
   public static BasicGame getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new BasicGame();
+      throw new RuntimeException("DI Container has not been initialized! Call GameStarter.init(String[] args) first!");
     }
     return INSTANCE;
   }

@@ -14,11 +14,11 @@ public final class Bean {
   private Object methodCaller;
   private GameBeanCreationPolicy creationPolicy;
 
-  protected Bean(Object bean) {
+  public Bean(Object bean) {
     this.bean = bean;
   }
 
-  protected Bean(Object bean, GameBeanCreationPolicy creationPolicy) {
+  public Bean(Object bean, GameBeanCreationPolicy creationPolicy) {
     this.bean = bean;
     this.creationPolicy = creationPolicy;
   }

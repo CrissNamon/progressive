@@ -7,7 +7,7 @@ import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
 import ru.danilarassokhin.progressive.annotation.Intercept;
 import ru.danilarassokhin.progressive.annotation.Proxy;
-import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
+import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 import ru.danilarassokhin.progressive.proxy.MethodInterceptor;
 import ru.danilarassokhin.progressive.proxy.ProxyCreator;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;

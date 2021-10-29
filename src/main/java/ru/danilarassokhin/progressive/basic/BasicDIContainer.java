@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.basic.injection;
+package ru.danilarassokhin.progressive.basic;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,6 +16,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import ru.danilarassokhin.progressive.annotation.*;
+import ru.danilarassokhin.progressive.basic.injection.Bean;
 import ru.danilarassokhin.progressive.basic.proxy.BasicProxyCreator;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
@@ -42,19 +43,22 @@ public final class BasicDIContainer implements DIContainer {
   private ProxyCreator proxyCreator;
 
   private BasicDIContainer() {
-    System.out.println("\n" +
-        "╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╦╦  ╦╔═╗\n" +
-        "╠═╝╠╦╝║ ║║ ╦╠╦╝║╣ ╚═╗╚═╗║╚╗╔╝║╣ \n" +
-        "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n");
     BasicGameLogger.getInstance().info("Progressive DI initialization...\n");
     beans = new HashMap<>();
     viewedMethods = new HashSet<>();
     proxyCreator = BasicProxyCreator.getInstance();
   }
 
+  protected static BasicDIContainer createInstance() {
+    if(INSTANCE == null) {
+      INSTANCE = new BasicDIContainer();
+    }
+    return INSTANCE;
+  }
+
   public static BasicDIContainer getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new BasicDIContainer();
+      throw new RuntimeException("DI Container has not been initialized! Call GameStarter.init(String[] args) first!");
     }
     return INSTANCE;
   }

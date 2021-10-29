@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
-import ru.danilarassokhin.progressive.basic.injection.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
