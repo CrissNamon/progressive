@@ -3,6 +3,7 @@ package ru.danilarassokhin.main.script;
 import ru.danilarassokhin.main.component.GameItem;
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
+import ru.danilarassokhin.progressive.component.GameComponent;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
@@ -13,9 +14,10 @@ public class GameItemSystem implements GameScript {
 
   private GameItem item;
 
-  @Autofill
-  public GameItemSystem(GameItem gameItem) {
-    this.item = gameItem;
+  //Beans can be autofilled as interfaces they implement
+  @Autofill(qualifiers = "simpleGameItem")
+  public GameItemSystem(GameComponent gameItem) {
+    this.item = (GameItem) gameItem;
   }
 
   @Override

@@ -138,12 +138,10 @@ public final class BasicDIContainer implements DIContainer {
     if (name.isEmpty()) {
       name = beanClass.getName().toLowerCase();
     }
-    BasicGameLogger.getInstance().info("Found GameBean annotation in "
+    BasicGameLogger.getInstance().info("Found @GameBean annotation in "
         + beanClass.getName() + ". Trying to make bean...");
     Object beanObj = null;
-    if (annotation.policy().equals(GameBeanCreationPolicy.SINGLETON)) {
-      beanObj = create(beanClass);
-    }
+    beanObj = create(beanClass);
     Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
     Bean beanData = new Bean(beanObj, annotation.policy());
     if (beansOfClass.containsKey(name)) {
@@ -152,8 +150,14 @@ public final class BasicDIContainer implements DIContainer {
     }
     beansOfClass.putIfAbsent(name, beanData);
     beans.putIfAbsent(beanClass, beansOfClass);
+    Class<?>[] interfaces = beanClass.getInterfaces();
+    for(Class<?> inter : interfaces) {
+      beansOfClass = beans.getOrDefault(inter, new HashMap<>());
+      beansOfClass.putIfAbsent(name, beanData);
+      beans.putIfAbsent(inter, beansOfClass);
+    }
     BasicGameLogger.getInstance().info("GameBean with name " + name + " created for " + beanClass.getName());
-    BasicGameLogger.getInstance().info("");
+    BasicGameLogger.getInstance().log("", "");
   }
 
   private synchronized void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
@@ -184,7 +188,7 @@ public final class BasicDIContainer implements DIContainer {
       beans.putIfAbsent(beanData.getBean().getClass(), beansOfClass);
       BasicGameLogger.getInstance().info("GameBean with name " + name + " created for "
           + beanData.getBean().getClass().getName() + " from method " + m.getName());
-      BasicGameLogger.getInstance().info("");
+      BasicGameLogger.getInstance().log("", "");
     }
   }
 
@@ -291,7 +295,11 @@ public final class BasicDIContainer implements DIContainer {
           throwable.printStackTrace();
         }
       } else {
-        exists = create(beanClass);
+        if(beanClass.isInterface()) {
+          exists = (V) create(bean.getClass());
+        }else {
+          exists = create(beanClass);
+        }
       }
       bean.getValue().setBean(exists);
       beans.get(beanClass).put(bean.getKey(), bean.getValue());
@@ -362,7 +370,11 @@ public final class BasicDIContainer implements DIContainer {
           throwable.printStackTrace();
         }
       } else {
-        exists = create(beanClass);
+        if(beanClass.isInterface()) {
+          exists = (V) create(b.getBean().getClass());
+        }else {
+          exists = create(beanClass);
+        }
       }
       b.setBean(exists);
       beans.get(beanClass).put(name, b);

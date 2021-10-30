@@ -1,18 +1,21 @@
 package ru.danilarassokhin.main.script;
 
 import ru.danilarassokhin.progressive.annotation.FromParent;
+import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
 //Simple Echo script
-@RequiredGameScript(GameItemSystem.class)
+//@RequiredGameScript(GameItemSystem.class)
+@IsGameScript
 public class EchoSystem implements GameScript {
 
   //Parent GameObject this script will be attached to
   private GameObject parent;
 
+  //GameItemSystem will be injected from parent game object
   @FromParent
   private GameItemSystem gameItemSystem;
 

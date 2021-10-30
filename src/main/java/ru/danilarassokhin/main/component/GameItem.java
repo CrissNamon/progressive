@@ -4,7 +4,7 @@ import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.component.GameComponent;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
-@GameBean(name = "gameItem", policy = GameBeanCreationPolicy.OBJECT)
+@GameBean(name = "simpleGameItem", policy = GameBeanCreationPolicy.OBJECT)
 public class GameItem implements GameComponent {
 
   private String name;

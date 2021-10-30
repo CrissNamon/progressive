@@ -1,6 +1,7 @@
 package ru.danilarassokhin.main;
 
 import ru.danilarassokhin.main.component.GameItem;
+import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
@@ -9,6 +10,7 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 /**
  * Basic DI configuration
  */
+@Components(GameItem.class)
 //Configuration class must extends AbstractConfiguration
 public class BasicConfiguration extends AbstractConfiguration {
 

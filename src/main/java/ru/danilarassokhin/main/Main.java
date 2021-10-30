@@ -10,6 +10,7 @@ import ru.danilarassokhin.progressive.basic.GameInitializer;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
+import ru.danilarassokhin.progressive.component.GameComponent;
 import ru.danilarassokhin.progressive.manager.GameState;
 
 public class Main {
@@ -39,10 +40,7 @@ public class Main {
     game.setFrameTimeType(GameFrameTimeType.SEQUENCE);
 
     for (int i = 0; i < 100; ++i) {
-      GameItem gameItem = game.addGameObject().getGameScript(EchoSystem.class)
-          .getGameItemSystem()
-          .getItem();
-      BasicGameLogger.getInstance().info(gameItem.getId());
+      BasicGameLogger.getInstance().info(game.addGameObject().getGameScript(EchoSystem.class).getGameItemSystem() == null);
       game.addGameObject().getGameScript(EchoSystem.class);
       game.addGameObject().getGameScript(EchoSystem.class);
     }
@@ -52,6 +50,8 @@ public class Main {
     BasicObjectCaster basicObjectCaster = diContainer.getBean("objCaster", BasicObjectCaster.class);
     //Get the first bean of GameItem
     GameItem gameItem = diContainer.getBean(GameItem.class);
+
+    GameComponent simpleGameItem = diContainer.getBean("simpleGameItem", GameComponent.class);
 
     //Create proxy bean
     diContainer.loadBeanFrom(TestProxyBean.class);
