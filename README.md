@@ -8,7 +8,7 @@ ___
 Progressive gives you an IoC/DI container with auto injections feature through annotations, game objects, game scripts and much more! It's is like a constructor. You can add game objects and attach game scripts to them.
 
 Main features:
-- IoC/DI container with auto injections through annotations
+- IoC/DI container with auto injections through annotations, frame updates
 - GameObjects and GameScripts
 - State manager
 - The global observer for components connection
@@ -24,7 +24,7 @@ ___
 #### Dependencies and source 
 ___
 
-[BasicProxyCreator](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/danilarassokhin/progressive/basic/BasicProxyCreator.java) uses [ByteBuddy](https://bytebuddy.net/) for proxy creation. You must add byte-buddy lib to be able to use proxy classes in your project. For android development you also need to add [byte-buddy-android](https://github.com/raphw/byte-buddy/tree/master/byte-buddy-android) lib.
+[BasicProxyCreator](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/danilarassokhin/progressive/basic/BasicProxyCreator.java) uses [ByteBuddy](https://bytebuddy.net/) for proxy creation. You need to add byte-buddy lib to be able to use proxy classes in your project. For android development you also need to add [byte-buddy-android](https://github.com/raphw/byte-buddy/tree/master/byte-buddy-android) lib.
 <p>All other parts of Progressive have no dependencies and use only Java 8.</p> 
 
 #### Repository info

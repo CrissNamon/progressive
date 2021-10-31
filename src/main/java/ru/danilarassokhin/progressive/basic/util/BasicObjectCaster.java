@@ -14,10 +14,16 @@ public final class BasicObjectCaster implements GameObjectCaster {
   public <T, O> T cast(O from, Class<T> to, GameActionObject<T> onSuccessCast) {
     try {
       T casted = to.cast(from);
-      onSuccessCast.make(casted);
+      if(onSuccessCast != null) {
+        onSuccessCast.make(casted);
+      }
       return casted;
     } catch (ClassCastException e) {
       return null;
     }
+  }
+
+  public <T, O> T cast(O from, Class<T> to) {
+    return cast(from, to, null);
   }
 }

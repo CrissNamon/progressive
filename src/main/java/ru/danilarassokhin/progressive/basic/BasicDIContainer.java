@@ -237,7 +237,7 @@ public final class BasicDIContainer implements DIContainer {
       }
     }
     Object methodResult = invoke(m, obj, args);
-    Bean beanData = new Bean(methodResult, annotation.policy(), annotation.deep());
+    Bean beanData = new Bean(methodResult, annotation.policy());
     beanData.setMethod(m);
     beanData.setMethodArgs(args);
     beanData.setMethodArgsQualifiers(names);
@@ -282,24 +282,19 @@ public final class BasicDIContainer implements DIContainer {
       if (bean.getValue().getMethod() != null) {
         try {
           Bean b = bean.getValue();
-          if(b.isDeep()) {
-            b.setMethodArgs(
-                updateBeanMethodArgs(b.getMethodArgs(), b.getMethodArgsQualifiers())
-            );
-          }
+          b.setMethodArgs(
+              updateBeanMethodArgs(b.getMethodArgs(), b.getMethodArgsQualifiers())
+          );
           exists = (V) (invoke(bean.getValue().getMethod(),
               bean.getValue().getMethodCaller(),
               b.getMethodArgs()));
-
         } catch (Throwable throwable) {
           throwable.printStackTrace();
         }
-      } else {
-        if(beanClass.isInterface()) {
-          exists = (V) create(bean.getClass());
-        }else {
-          exists = create(beanClass);
-        }
+      } else if (beanClass.isInterface()) {
+        exists = (V) create(bean.getClass());
+      }else {
+        exists = create(beanClass);
       }
       bean.getValue().setBean(exists);
       beans.get(beanClass).put(bean.getKey(), bean.getValue());
@@ -360,21 +355,17 @@ public final class BasicDIContainer implements DIContainer {
     if (b.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
       if (b.getMethod() != null) {
         try {
-          if(b.isDeep()) {
-            b.setMethodArgs(
-                updateBeanMethodArgs(b.getMethodArgs(), b.getMethodArgsQualifiers())
-            );
-          }
+          b.setMethodArgs(
+              updateBeanMethodArgs(b.getMethodArgs(), b.getMethodArgsQualifiers())
+          );
           exists = (V) (invoke(b.getMethod(), b.getMethodCaller(), b.getMethodArgs()));
         } catch (Throwable throwable) {
           throwable.printStackTrace();
         }
-      } else {
-        if(beanClass.isInterface()) {
-          exists = (V) create(b.getBean().getClass());
-        }else {
-          exists = create(beanClass);
-        }
+      } else if(beanClass.isInterface()) {
+        exists = (V) create(b.getBean().getClass());
+      }else {
+        exists = create(beanClass);
       }
       b.setBean(exists);
       beans.get(beanClass).put(name, b);
@@ -455,7 +446,7 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   /**
-   * Creates object from given class and makes autoinjection for fields and methods if they annotated as @Autofill
+   * Creates object from given class and makes auto injection for fields and methods if they annotated as @Autofill
    *
    * @param componentClass Object class to instantiate
    * @param args           Parameters to pass in class constructor

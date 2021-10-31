@@ -4,11 +4,11 @@ import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
+import ru.danilarassokhin.progressive.basic.util.BasicGameLogger;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
 //Simple Echo script
-//@RequiredGameScript(GameItemSystem.class)
 @IsGameScript
 public class EchoSystem implements GameScript {
 

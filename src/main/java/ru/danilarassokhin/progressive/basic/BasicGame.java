@@ -68,10 +68,10 @@ public final class BasicGame implements Game {
     BasicGamePublisher.getInstance().sendTo("start", true);
     isStarted = true;
     if (!isStatic) {
-      scheduler.scheduleAtFixedRate(this::update, 0, frameTime, TimeUnit.MILLISECONDS);
+      scheduler.scheduleAtFixedRate(this::update, frameTime, frameTime, TimeUnit.MILLISECONDS);
     }
-    stateManager.setState(GameState.PLAYING, true);
     deltaTime = System.currentTimeMillis();
+    stateManager.setState(GameState.PLAYING, true);
   }
 
   private void update() {

@@ -40,11 +40,10 @@ public class Main {
     game.setFrameTimeType(GameFrameTimeType.SEQUENCE);
 
     for (int i = 0; i < 100; ++i) {
-      BasicGameLogger.getInstance().info(game.addGameObject().getGameScript(EchoSystem.class).getGameItemSystem() == null);
+      game.addGameObject().getGameScript(EchoSystem.class);
       game.addGameObject().getGameScript(EchoSystem.class);
       game.addGameObject().getGameScript(EchoSystem.class);
     }
-
 
     //Get bean by it's name and class
     BasicObjectCaster basicObjectCaster = diContainer.getBean("objCaster", BasicObjectCaster.class);
