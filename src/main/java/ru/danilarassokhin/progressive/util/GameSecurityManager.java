@@ -15,7 +15,7 @@ public final class GameSecurityManager {
    * @param classes       Classes which are allowed to call this method
    * @throws RuntimeException if caller class is not allowed to call protected method
    */
-  public static void allowAccessTo(String deniedMessage, Class... classes) {
+  public static void allowAccessTo(String deniedMessage, Class<?>... classes) {
     if (!Arrays.asList(classes).contains(getCallerClass())) {
       throw new RuntimeException(deniedMessage);
     }
@@ -28,7 +28,7 @@ public final class GameSecurityManager {
    * @param classes       Classes which are denied from calling this method
    * @throws RuntimeException if caller class is not allowed to call protected method
    */
-  public static void denyAccessTo(String deniedMessage, Class... classes) {
+  public static void denyAccessTo(String deniedMessage, Class<?>... classes) {
     if (Arrays.asList(classes).contains(getCallerClass())) {
       throw new RuntimeException(deniedMessage);
     }
@@ -65,7 +65,7 @@ public final class GameSecurityManager {
    *
    * @return Class or null on error
    */
-  public static Class getCallerClass() {
+  public static Class<?> getCallerClass() {
     try {
       String caller = new Exception().getStackTrace()[3].getClassName();
       return Class.forName(caller);

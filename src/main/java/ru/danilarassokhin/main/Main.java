@@ -37,7 +37,7 @@ public class Main {
     game.setGameObjectClass(BasicGameObject.class);
     game.setFrameTime(16);
     game.setStatic(false);
-    game.setFrameTimeType(GameFrameTimeType.SEQUENCE);
+    game.setFrameTimeType(GameFrameTimeType.PARALLEL);
 
     for (int i = 0; i < 100; ++i) {
       game.addGameObject().getGameScript(EchoSystem.class);
@@ -65,6 +65,6 @@ public class Main {
     //Start game
     game.start();
     //Stop game
-    game.stop();
+    //game.stop();
   }
 }

@@ -34,6 +34,8 @@ import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
  */
 public final class BasicDIContainer implements DIContainer {
 
+  private final static ProxyCreator DEFAULT_PROXY_CREATOR = BasicProxyCreator.getInstance();
+
   private static BasicDIContainer INSTANCE;
 
   private final Map<Class<?>, Map<String, Bean>> beans;
@@ -47,10 +49,10 @@ public final class BasicDIContainer implements DIContainer {
     BasicGameLogger.getInstance().info("Progressive DI initialization...\n");
     beans = new ConcurrentHashMap<>();
     viewedMethods = Collections.synchronizedSet(new HashSet<>());
-    proxyCreator = BasicProxyCreator.getInstance();
+    proxyCreator = DEFAULT_PROXY_CREATOR;
   }
 
-  protected static boolean createInstance() {
+  protected synchronized static boolean createInstance() {
     if(INSTANCE == null) {
       INSTANCE = new BasicDIContainer();
       return true;
@@ -80,7 +82,7 @@ public final class BasicDIContainer implements DIContainer {
    *
    * @param proxyCreator {@link ru.danilarassokhin.progressive.proxy.ProxyCreator} to use
    */
-  public void setProxyCreator(ProxyCreator proxyCreator) {
+  public synchronized void setProxyCreator(ProxyCreator proxyCreator) {
     this.proxyCreator = proxyCreator;
   }
 
@@ -96,7 +98,7 @@ public final class BasicDIContainer implements DIContainer {
    *
    * @param beanClass Class to create bean from
    */
-  public void loadBeanFrom(Class<?> beanClass) {
+  public synchronized void loadBeanFrom(Class<?> beanClass) {
     viewedMethods.clear();
     try {
       GameBean annotation = ComponentAnnotationProcessor
@@ -160,7 +162,7 @@ public final class BasicDIContainer implements DIContainer {
     BasicGameLogger.getInstance().log("", "");
   }
 
-  private synchronized void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
+  private void createBeanFromMethod(Method m, Object o) throws InvocationTargetException,
       IllegalAccessException {
     if(viewedMethods.contains(m)) {
       return;
@@ -192,7 +194,7 @@ public final class BasicDIContainer implements DIContainer {
     }
   }
 
-  private synchronized Bean invoke(Method m, Object obj) throws InvocationTargetException,
+  private Bean invoke(Method m, Object obj) throws InvocationTargetException,
       IllegalAccessException, ArrayIndexOutOfBoundsException {
     Class<?>[] paramTypes = m.getParameterTypes();
     Object[] args = new Object[paramTypes.length];
@@ -272,6 +274,8 @@ public final class BasicDIContainer implements DIContainer {
 
   public <V> V getBean(Class<V> beanClass) {
     Map.Entry<String, Bean> bean = beans.get(beanClass).entrySet().stream()
+        .parallel()
+        .unordered()
         .findFirst().orElse(null);
     if (bean == null) {
       throw new RuntimeException("There is no beans for "
@@ -342,7 +346,7 @@ public final class BasicDIContainer implements DIContainer {
       throw new RuntimeException("GameBean called " + name
           + " for class " + beanClass.getName() + " not found!");
     }
-    Bean b = beans.getOrDefault(beanClass, new HashMap<>()).getOrDefault(name, null);
+    Bean b = beans.getOrDefault(beanClass, new ConcurrentHashMap<>()).getOrDefault(name, null);
     if (b == null) {
       throw new RuntimeException("GameBean called " + name
           + " for class " + beanClass.getName() + " not found!");
@@ -393,7 +397,7 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   @Override
-  public <C extends AbstractConfiguration> void loadConfiguration(Class<C> config, PackageLoader loader) {
+  public synchronized  <C extends AbstractConfiguration> void loadConfiguration(Class<C> config, PackageLoader loader) {
     if (config.isAnnotationPresent(Components.class)) {
       scanFrom = config;
       Components components = config.getAnnotation(Components.class);
@@ -419,7 +423,7 @@ public final class BasicDIContainer implements DIContainer {
    * @param config Configuration class
    * @param <C>    Configuration class type
    */
-  public <C extends AbstractConfiguration> void loadConfiguration(Class<C> config) {
+  public synchronized <C extends AbstractConfiguration> void loadConfiguration(Class<C> config) {
     loadConfiguration(config, this::findAllClassesUsingClassLoader);
   }
 
@@ -547,7 +551,7 @@ public final class BasicDIContainer implements DIContainer {
    * @param from   Object to invoke method from
    * @param args   Parameters to invoke method with
    */
-  public static synchronized Object invoke(Method method, Object from, Object... args) {
+  public static Object invoke(Method method, Object from, Object... args) {
     try {
       method.setAccessible(true);
       MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -574,7 +578,7 @@ public final class BasicDIContainer implements DIContainer {
     }
   }
 
-  private static synchronized Object invokeObjectMethod(Object bean, Method method) throws Throwable {
+  private static Object invokeObjectMethod(Object bean, Method method) throws Throwable {
     MethodHandles.Lookup caller = MethodHandles.lookup();
     MethodType invokedType = MethodType.methodType(Function.class);
     method.setAccessible(true);
@@ -591,7 +595,7 @@ public final class BasicDIContainer implements DIContainer {
     return fullFunction.apply(bean);
   }
 
-  private static synchronized Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
+  private static Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
     MethodHandles.Lookup caller = MethodHandles.lookup();
     MethodType invokedType = MethodType.methodType(BiFunction.class);
     method.setAccessible(true);

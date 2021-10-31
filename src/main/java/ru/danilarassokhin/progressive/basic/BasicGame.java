@@ -1,10 +1,7 @@
 package ru.danilarassokhin.progressive.basic;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
@@ -38,15 +35,15 @@ public final class BasicGame implements Game {
   private BasicGame() {
     BasicGameLogger.getInstance().info("Progressive IoC initialization...\n");
     gameFrameTimeType = GameFrameTimeType.PARALLEL;
-    gameObjects = new ConcurrentHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     idGenerator = new AtomicLong(0);
     stateManager = BasicGameStateManager.getInstance();
-    scheduler = Executors.newScheduledThreadPool(2);
+    scheduler = Executors.newScheduledThreadPool(4);
     isStarted = false;
     stateManager.setState(GameState.INIT, this);
   }
 
-  protected static boolean createInstance() {
+  protected synchronized static boolean createInstance() {
     if(INSTANCE == null) {
       INSTANCE = new BasicGame();
       return true;
@@ -62,7 +59,7 @@ public final class BasicGame implements Game {
   }
 
   @Override
-  public void start() {
+  public synchronized void start() {
     GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
     stateManager.setState(GameState.STARTED, true);
     BasicGamePublisher.getInstance().sendTo("start", true);
@@ -82,13 +79,13 @@ public final class BasicGame implements Game {
   }
 
   @Override
-  public void update(long delta) {
+  public synchronized void update(long delta) {
     GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
         () -> !isStatic && !GameSecurityManager.getCallerClass().equals(BasicGame.class));
     BasicGamePublisher.getInstance().sendTo("update", delta);
   }
 
-  public void stop() {
+  public synchronized void stop() {
     GameSecurityManager.allowAccessIf("Game hasn't been started!", () -> isStarted);
     stateManager.setState(GameState.STOPPED, true);
     isStarted = false;
@@ -106,7 +103,7 @@ public final class BasicGame implements Game {
   }
 
   @Override
-  public boolean removeGameObject(GameObject o) {
+  public synchronized boolean removeGameObject(GameObject o) {
     if (!gameObjects.containsKey(o.getId())) {
       return false;
     }
@@ -117,7 +114,7 @@ public final class BasicGame implements Game {
   }
 
   @Override
-  public boolean setGameObjectClass(Class<? extends GameObject> c) {
+  public synchronized boolean setGameObjectClass(Class<? extends GameObject> c) {
     if (gameObjClass != null) {
       return false;
     }
@@ -125,7 +122,7 @@ public final class BasicGame implements Game {
     return true;
   }
 
-  public void setFrameTime(int milliseconds) {
+  public synchronized void setFrameTime(int milliseconds) {
     if (milliseconds < 1) {
       throw new RuntimeException("Frame rate can't be less than 1 millisecond!");
     }
@@ -137,15 +134,19 @@ public final class BasicGame implements Game {
     return gameObjClass != null;
   }
 
-  public void setStatic(boolean isStatic) {
-    this.isStatic = isStatic;
+  public synchronized void setStatic(boolean isStatic) {
+    if(!isStarted) {
+      this.isStatic = isStatic;
+    }
   }
 
   public GameFrameTimeType getFrameTimeType() {
     return gameFrameTimeType;
   }
 
-  public void setFrameTimeType(GameFrameTimeType gameFrameTimeType) {
-    this.gameFrameTimeType = gameFrameTimeType;
+  public synchronized void setFrameTimeType(GameFrameTimeType gameFrameTimeType) {
+    if(isStarted) {
+      this.gameFrameTimeType = gameFrameTimeType;
+    }
   }
 }

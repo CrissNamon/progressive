@@ -44,7 +44,7 @@ public final class BasicProxyCreator implements ProxyCreator {
    *
    * @param classLoadingStrategy strategy to use for proxy creation
    */
-  public void setClassLoadingStrategy(ClassLoadingStrategy classLoadingStrategy) {
+  public synchronized void setClassLoadingStrategy(ClassLoadingStrategy classLoadingStrategy) {
     this.classLoadingStrategy = classLoadingStrategy;
   }
 

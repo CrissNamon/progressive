@@ -83,15 +83,11 @@ public final class BasicGameObject implements GameObject {
 
   @Override
   public <V extends GameScript> boolean removeGameScript(Class<V> scriptClass) {
-    if (!scripts.containsKey(scriptClass)) {
-      return false;
-    }
-    scripts.remove(scriptClass);
-    return true;
+    return scripts.remove(scriptClass) != null;
   }
 
   @Override
-  public void dispose() {
+  public synchronized void dispose() {
     for (Class script : scripts.keySet()) {
       removeGameScript(script);
     }

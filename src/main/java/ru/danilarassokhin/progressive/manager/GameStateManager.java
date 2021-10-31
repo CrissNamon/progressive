@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.manager;
 
 import java.util.List;
+import java.util.Queue;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 
 /**
@@ -30,9 +31,9 @@ public interface GameStateManager<S extends GameState> {
    * Returns all listeners attached to {@code state}
    *
    * @param state State to search
-   * @return List with actions for {@code state}
+   * @return Queue with actions for {@code state}
    */
-  List<GameActionObject> getListeners(S state);
+  Queue<GameActionObject> getListeners(S state);
 
 
   /**
