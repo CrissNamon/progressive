@@ -34,7 +34,7 @@
                 <configuration>
                     <doclint>none</doclint>
                     <source>1.8</source>
-                    <excludePackageNames>ru.danilarassokhin.main:ru.danilarassokhin.example.*</excludePackageNames>
+                    <excludePackageNames>ru.danilarassokhin.example:ru.danilarassokhin.example.*</excludePackageNames>
                 </configuration>
                 <executions>
                     <execution>

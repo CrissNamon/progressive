@@ -1,5 +1,8 @@
 package ru.danilarassokhin.progressive.exception;
 
+/**
+ * Thrown if exception is undefined. Something just gone wrong, sadly...
+ */
 public class BeanUndefinedException extends RuntimeException {
 
   public final static String DEFAULT_MESSAGE = "Undefined error occurred";

@@ -1,5 +1,9 @@
 package ru.danilarassokhin.progressive.exception;
 
+/**
+ * Thrown if bean has some circular dependency.
+ * <p>BeanA(BeanB) -> BeanB(BeanA)</p>
+ */
 public class BeanCircularDependencyException extends RuntimeException {
 
   private Class<?> dependency;

@@ -4,6 +4,9 @@ import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.injection.GameBeanFactory;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
+/**
+ * Basic implementation of {@link ru.danilarassokhin.progressive.injection.GameBeanFactory}.
+ */
 public class BasicGameBeanFactory implements GameBeanFactory {
 
   @Override

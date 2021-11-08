@@ -1,5 +1,8 @@
 package ru.danilarassokhin.progressive.injection;
 
+/**
+ * Helps to find and process packages.
+ */
 public interface PackageLoader {
 
   /**

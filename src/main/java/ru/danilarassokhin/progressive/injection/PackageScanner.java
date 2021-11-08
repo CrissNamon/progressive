@@ -3,7 +3,7 @@ package ru.danilarassokhin.progressive.injection;
 import java.util.Set;
 
 /**
- * Package scanner created to help DI container with class loading
+ * Package scanner created to help DI container with class loading.
  * <p>If you have problems with loading classes from packages, create new package loader implementation (or use lambdas)
  * to use your own classloading algorithm in DI container while loading configurations with @ComponentScan annotation.
  * Or use @Components to directly point on your @GameBean classes to DI container
@@ -11,6 +11,12 @@ import java.util.Set;
  */
 public interface PackageScanner {
 
+  /**
+   * Returns all available classes from package.
+   *
+   * @param packageName Package name to scan
+   * @return Set of classes from given package
+   */
   Set<Class<?>> findAllClassesIn(String packageName);
 
   default ClassLoader getDefaultClassLoader(Class<?> of) {
