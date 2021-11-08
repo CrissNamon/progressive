@@ -11,17 +11,12 @@ public final class Bean {
   private Object bean;
   private Method method;
   private Object[] methodArgs;
+  private String[] methodArgsQualifiers;
   private Object methodCaller;
   private GameBeanCreationPolicy creationPolicy;
-
-  public Bean(Object bean) {
-    this.bean = bean;
-  }
-
-  public Bean(Object bean, GameBeanCreationPolicy creationPolicy) {
-    this.bean = bean;
-    this.creationPolicy = creationPolicy;
-  }
+  private boolean isReady = true;
+  private Class<?> realType;
+  private boolean isCreated = false;
 
   public Object getBean() {
     return bean;
@@ -61,5 +56,49 @@ public final class Bean {
 
   public void setMethodCaller(Object methodCaller) {
     this.methodCaller = methodCaller;
+  }
+
+  public String[] getMethodArgsQualifiers() {
+    return methodArgsQualifiers;
+  }
+
+  public void setMethodArgsQualifiers(String[] methodArgsQualifiers) {
+    this.methodArgsQualifiers = methodArgsQualifiers;
+  }
+
+  public boolean isReady() {
+    return isReady;
+  }
+
+  public void setReady(boolean ready) {
+    isReady = ready;
+  }
+
+  public Class<?> getRealType() {
+    return realType;
+  }
+
+  public void setRealType(Class<?> realType) {
+    this.realType = realType;
+  }
+
+  public boolean isCreated() {
+    return isCreated;
+  }
+
+  public void setCreated(boolean created) {
+    isCreated = created;
+  }
+
+  public boolean isClass() {
+    return getMethod() == null;
+  }
+
+  public boolean isMethod() {
+    return getMethod() != null;
+  }
+
+  public boolean haveObject() {
+    return getBean() != null;
   }
 }

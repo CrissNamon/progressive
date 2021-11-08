@@ -7,7 +7,7 @@ import ru.danilarassokhin.progressive.proxy.MethodInterceptor;
 
 public final class BasicProxyInterceptionHandler {
 
-  private MethodInterceptor methodInterceptor;
+  private final MethodInterceptor methodInterceptor;
 
   protected BasicProxyInterceptionHandler(MethodInterceptor methodInterceptor) {
     this.methodInterceptor = methodInterceptor;

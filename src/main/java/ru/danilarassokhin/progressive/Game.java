@@ -3,19 +3,19 @@ package ru.danilarassokhin.progressive;
 import ru.danilarassokhin.progressive.component.GameObject;
 
 /**
- * Represents game
+ * Represents game.
  */
 public interface Game {
 
   /**
-   * Creates an empty game object and returns it
+   * Creates an empty game object and returns it.
    *
    * @return Created game object
    */
-  GameObject addGameObject();
+  <V extends GameObject> V addGameObject();
 
   /**
-   * Removes GameObject from game
+   * Removes GameObject from game.
    *
    * @param o GameObject to remove from game
    * @return true if object has been removed successfully
@@ -23,7 +23,7 @@ public interface Game {
   boolean removeGameObject(GameObject o);
 
   /**
-   * Defines GameObject class for game
+   * Defines GameObject class for game.
    *
    * @param c GameObject class
    * @return true if class has not been already set
@@ -31,7 +31,7 @@ public interface Game {
   boolean setGameObjectClass(Class<? extends GameObject> c);
 
   /**
-   * Checks if GameObject class has been defined in game
+   * Checks if GameObject class has been defined in game.
    *
    * @return true if class has been defined
    */
@@ -39,20 +39,54 @@ public interface Game {
 
 
   /**
-   * Starts the game
+   * Starts the game.
    */
   void start();
 
   /**
-   * Calls global update
+   * Calls global update.
    *
    * @param deltaTime Time passed since last update call
    */
   void update(long deltaTime);
 
   /**
-   * Stops the game
+   * Stops the game.
    */
   void stop();
+
+
+  /**
+   * Dispose game.
+   */
+  void dispose();
+
+  /**
+   * Sets time between {@link #update(long)} method calls.
+   *
+   * @param milliseconds milliseconds to set
+   */
+  void setFrameTime(int milliseconds);
+
+  /**
+   * Sets {@link ru.danilarassokhin.progressive.GameFrameTimeType}.
+   *
+   * @param gameFrameTimeType {@link ru.danilarassokhin.progressive.GameFrameTimeType} to set
+   */
+  void setFrameTimeType(GameFrameTimeType gameFrameTimeType);
+
+  /**
+   * Returns current {@link ru.danilarassokhin.progressive.GameFrameTimeType}.
+   *
+   * @return {@link ru.danilarassokhin.progressive.GameFrameTimeType}
+   */
+  GameFrameTimeType getFrameTimeType();
+
+  /**
+   * Defines if game is static.
+   *
+   * @param isStatic if true {@link #update(long)} will be called automatically.
+   */
+  void setStatic(boolean isStatic);
 
 }

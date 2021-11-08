@@ -1,4 +1,4 @@
 /**
  * Contains basic implementation of game scripts
  */
-package ru.danilarassokhin.main.script;
+package ru.danilarassokhin.example.script;

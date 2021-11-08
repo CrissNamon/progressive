@@ -1,10 +1,11 @@
 package ru.danilarassokhin.progressive.basic;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
+import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
@@ -22,7 +23,7 @@ public final class BasicGameObject implements GameObject {
 
   protected BasicGameObject(Long id) {
     this.id = id;
-    scripts = new HashMap<>();
+    scripts = new ConcurrentHashMap<>();
   }
 
   @Override
@@ -31,16 +32,17 @@ public final class BasicGameObject implements GameObject {
   }
 
   @Override
-  public <V extends GameScript> V getGameScript(Class<V> gameScriptClass) {
+  public <V extends GameScript> V getGameScript(Class<V> gameScriptClass, Object... args) {
     if (!ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, gameScriptClass)) {
-      throw new RuntimeException(gameScriptClass.getName() + " has no @IsGameScript annotation. " +
-          "All GameScripts must be annotated with @IsGameScript!");
+      throw new RuntimeException(
+          gameScriptClass.getName()
+          + " has no @IsGameScript annotation. "
+          + "All GameScripts must be annotated with @IsGameScript!");
     }
     BasicObjectCaster objectCaster = new BasicObjectCaster();
     GameScript gameScript = scripts.getOrDefault(gameScriptClass, null);
     if (gameScript != null) {
-      return objectCaster.cast(gameScript, gameScriptClass, (o) -> {
-      });
+      return objectCaster.cast(gameScript, gameScriptClass);
     }
     try {
       if (gameScriptClass.isAnnotationPresent(RequiredGameScript.class)) {
@@ -49,26 +51,25 @@ public final class BasicGameObject implements GameObject {
         for (Class<? extends GameScript> req : requiredGameScripts.value()) {
           if (!requiredGameScripts.lazy()) {
             getGameScript(req);
-          } else {
-            if (!hasGameScript(req)) {
-              throw new RuntimeException(gameScriptClass.getName() + " requires "
-                  + req.getName() + " which is not attached to " + this);
-            }
+          } else if (!hasGameScript(req)){
+            throw new RuntimeException(gameScriptClass.getName() + " requires "
+                + req.getName() + " which is not attached to " + this);
           }
         }
       }
-      gameScript = BasicDIContainer.create(gameScriptClass);
+      gameScript = BasicComponentCreator.create(gameScriptClass, args);
       gameScript.setGameObject(this);
       gameScript.wireFields();
       if (scripts.putIfAbsent(gameScriptClass, gameScript) != null) {
         throw new RuntimeException("Could not register IsGameScript "
             + gameScriptClass.getName() + "! IsGameScript already exists");
       }
-      return objectCaster.cast(gameScript, gameScriptClass, (o) -> {
-      });
+      return objectCaster.cast(gameScript, gameScriptClass);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
-      throw new RuntimeException("IsGameScript creation failure! Exception: "
+      throw new RuntimeException("@IsGameScript "
+          + gameScriptClass.getName()
+          + " creation failure! Exception: "
           + e.getMessage());
     }
   }
@@ -85,17 +86,11 @@ public final class BasicGameObject implements GameObject {
 
   @Override
   public <V extends GameScript> boolean removeGameScript(Class<V> scriptClass) {
-    if (!scripts.containsKey(scriptClass)) {
-      return false;
-    }
-    GameScript script = scripts.get(scriptClass);
-    scripts.remove(scriptClass);
-    script = null;
-    return true;
+    return scripts.remove(scriptClass) != null;
   }
 
   @Override
-  public void dispose() {
+  public synchronized void dispose() {
     for (Class script : scripts.keySet()) {
       removeGameScript(script);
     }

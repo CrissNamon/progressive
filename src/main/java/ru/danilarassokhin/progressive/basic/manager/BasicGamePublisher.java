@@ -1,22 +1,29 @@
 package ru.danilarassokhin.progressive.basic.manager;
 
-import java.util.*;
-import ru.danilarassokhin.progressive.basic.BasicGame;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
+import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.manager.GamePublisher;
 
 /**
  * Basic implementation of {@link ru.danilarassokhin.progressive.manager.GamePublisher}.
  * <p>Allow you to subscribe on and make global events</p>
+ * <p>Thread safe. Uses {@link java.util.concurrent.ConcurrentLinkedQueue} and
+ * {@link java.util.concurrent.ConcurrentSkipListMap} as event storage</p>
  */
 public final class BasicGamePublisher implements GamePublisher {
 
   private static BasicGamePublisher INSTANCE;
 
-  private final Map<String, List<GameActionObject<Object>>> feed;
+  private final Map<String, Queue<GameActionObject<Object>>> feed;
 
   private BasicGamePublisher() {
-    feed = new LinkedHashMap<>();
+    feed = new ConcurrentSkipListMap<>();
   }
 
   public static BasicGamePublisher getInstance() {
@@ -28,27 +35,32 @@ public final class BasicGamePublisher implements GamePublisher {
 
   @Override
   public void sendTo(String topic, Object message) {
-    List<GameActionObject<Object>> subscribers = feed.getOrDefault(topic, new ArrayList<>());
-    send(message, subscribers);
+    Queue<GameActionObject<Object>> subscribers = feed.getOrDefault(topic, new ConcurrentLinkedQueue<>());
+    switch (BasicComponentManager.getGame().getFrameTimeType()) {
+      case SEQUENCE:
+        sendSequence(message, subscribers);
+        break;
+      case PARALLEL:
+        sendParallel(message, subscribers);
+        break;
+    }
   }
 
   @Override
   public <V> void subscribeOn(String topic, GameActionObject<V> action) {
-    feed.putIfAbsent(topic, new ArrayList<>());
+    feed.putIfAbsent(topic, new ConcurrentLinkedQueue<>());
     feed.get(topic).add((GameActionObject) action);
   }
 
-  private void send(Object message, Collection<GameActionObject<Object>> subscribers) {
-    switch (BasicGame.getInstance().getFrameTimeType()) {
-      case SEQUENCE:
-        Iterator<GameActionObject<Object>> iterator = subscribers.iterator();
-        while (iterator.hasNext()) {
-          iterator.next().make(message);
-        }
-        break;
-      case PARALLEL:
-        subscribers.parallelStream().forEach(s -> s.make(message));
-        break;
+  private void sendSequence(Object message, Collection<GameActionObject<Object>> subscribers) {
+    Iterator<GameActionObject<Object>> iterator = subscribers.iterator();
+    while (iterator.hasNext()) {
+      iterator.next().make(message);
     }
+  }
+
+  private void sendParallel(Object message, Collection<GameActionObject<Object>> subscribers) {
+    subscribers.parallelStream().unordered()
+        .forEach(s -> s.make(message));
   }
 }

@@ -1,6 +1,8 @@
 package ru.danilarassokhin.progressive.injection;
 
-import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
+import java.util.Optional;
+import ru.danilarassokhin.progressive.basic.GameInitializer;
+import ru.danilarassokhin.progressive.exception.BeanUndefinedException;
 
 /**
  * Represents Dependency Injection container
@@ -8,13 +10,19 @@ import ru.danilarassokhin.progressive.configuration.AbstractConfiguration;
 public interface DIContainer {
 
   /**
-   * Loads configuration from class
-   *
-   * @param config Configuration class
-   * @param <C>    Configuration class type
-   * @param loader See {@link ru.danilarassokhin.progressive.injection.PackageLoader}
+   * Initiates DI container with {@link ru.danilarassokhin.progressive.basic.injection.SimplePackageLoader}
+   * and {@link ru.danilarassokhin.progressive.basic.injection.SimplePackageScanner}.
+   * Will be called after {@link GameInitializer#init(boolean)}.
    */
-  <C extends AbstractConfiguration> void loadConfiguration(Class<C> config, PackageLoader loader);
+  void init();
+
+  /**
+   * Initiates DI container with {@code packageLoader} and {@code packageScanner}.
+   *
+   * @param packageLoader {@link ru.danilarassokhin.progressive.basic.injection.SimplePackageLoader} to use
+   * @param packageScanner {@link ru.danilarassokhin.progressive.basic.injection.SimplePackageScanner} to use
+   */
+  void init(PackageLoader packageLoader, PackageScanner packageScanner);
 
   /**
    * Gets bean by it's name and class
@@ -34,5 +42,41 @@ public interface DIContainer {
    * @return Bean object or throws RuntimeException if bean not found
    */
   <V> V getBean(Class<V> beanClass);
+
+  /**
+   * Searches for bean with given {@code beanClass}.
+   *
+   * @param beanClass Bean class to search
+   * @param <V>       Bean object to search
+   * @return Optional bean
+   */
+  <V> Optional<V> searchBean(Class<V> beanClass);
+
+  /**
+   * Searches for bean with given {@code beanClass}.
+   *
+   * @param name      Bean name to search
+   * @param beanClass Bean class to search
+   * @param <V>       Bean object to search
+   * @return Optional bean
+   */
+  <V> Optional<V> searchBean(String name, Class<V> beanClass);
+
+  /**
+   * Scans package {@code name} for {@link ru.danilarassokhin.progressive.annotation.Configuration}
+   * and {@link ru.danilarassokhin.progressive.annotation.GameBean} using {@code loader}.
+   *
+   * @param name Package name to scan
+   * @param loader {@link PackageScanner} to use
+   */
+  void scanPackage(String name, PackageScanner loader);
+
+  void loadBean(Class<?> beanClass);
+
+  void loadConfiguration(Class<?> configClass, PackageScanner scanner) throws BeanUndefinedException;
+
+  void loadConfiguration(Class<?> configClass) throws BeanUndefinedException;
+
+
 
 }

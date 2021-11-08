@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 import ru.danilarassokhin.progressive.component.GameScript;
 
 /**
- * Defines required GameScripts for this GameScript
+ * Defines required GameScripts for this GameScript.
  * <p><font color="orange">Includes {@link ru.danilarassokhin.progressive.annotation.IsGameScript}</p>
  * <br>
  * If lazy is true then only checks GameObject, which tries to add this GameScript, on having required scripts
