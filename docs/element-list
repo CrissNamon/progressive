@@ -1,14 +1,13 @@
+ru.danilarassokhin.example
 ru.danilarassokhin.progressive
 ru.danilarassokhin.progressive.annotation
 ru.danilarassokhin.progressive.basic
-ru.danilarassokhin.progressive.basic.configuration
 ru.danilarassokhin.progressive.basic.injection
 ru.danilarassokhin.progressive.basic.log
 ru.danilarassokhin.progressive.basic.manager
 ru.danilarassokhin.progressive.basic.proxy
 ru.danilarassokhin.progressive.basic.util
 ru.danilarassokhin.progressive.component
-ru.danilarassokhin.progressive.configuration
 ru.danilarassokhin.progressive.exception
 ru.danilarassokhin.progressive.injection
 ru.danilarassokhin.progressive.lambda
