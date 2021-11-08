@@ -1,17 +1,22 @@
-package ru.danilarassokhin.main.component;
+package ru.danilarassokhin.example.component;
 
+import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.danilarassokhin.progressive.annotation.Qualifier;
 import ru.danilarassokhin.progressive.component.GameComponent;
-import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
-@GameBean(name = "gameItem", policy = GameBeanCreationPolicy.OBJECT)
+@GameBean(name = "simpleGameItem")
 public class GameItem implements GameComponent {
 
   private String name;
   private float amount;
   private Long id;
 
-  public GameItem() {
+  public GameItem() {}
+
+  @Autofill
+  public GameItem(@Qualifier("globalIdGenerator") Long id) {
+    this.id = id;
   }
 
   public String getName() {

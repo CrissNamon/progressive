@@ -14,24 +14,9 @@ public final class Bean {
   private String[] methodArgsQualifiers;
   private Object methodCaller;
   private GameBeanCreationPolicy creationPolicy;
-  private boolean isDeep;
-
-  public Bean(Object bean) {
-    this.bean = bean;
-    this.creationPolicy = GameBeanCreationPolicy.SINGLETON;
-    this.isDeep = false;
-  }
-
-  public Bean(Object bean, GameBeanCreationPolicy creationPolicy, boolean isDeep) {
-    this.bean = bean;
-    this.creationPolicy = creationPolicy;
-    this.isDeep = isDeep;
-  }
-
-  public Bean(Object bean, GameBeanCreationPolicy creationPolicy) {
-    this.bean = bean;
-    this.creationPolicy = creationPolicy;
-  }
+  private boolean isReady = true;
+  private Class<?> realType;
+  private boolean isCreated = false;
 
   public Object getBean() {
     return bean;
@@ -81,8 +66,39 @@ public final class Bean {
     this.methodArgsQualifiers = methodArgsQualifiers;
   }
 
-  public boolean isDeep() {
-    return isDeep;
+  public boolean isReady() {
+    return isReady;
   }
 
+  public void setReady(boolean ready) {
+    isReady = ready;
+  }
+
+  public Class<?> getRealType() {
+    return realType;
+  }
+
+  public void setRealType(Class<?> realType) {
+    this.realType = realType;
+  }
+
+  public boolean isCreated() {
+    return isCreated;
+  }
+
+  public void setCreated(boolean created) {
+    isCreated = created;
+  }
+
+  public boolean isClass() {
+    return getMethod() == null;
+  }
+
+  public boolean isMethod() {
+    return getMethod() != null;
+  }
+
+  public boolean haveObject() {
+    return getBean() != null;
+  }
 }

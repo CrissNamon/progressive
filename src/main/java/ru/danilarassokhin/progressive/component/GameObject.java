@@ -12,9 +12,10 @@ public interface GameObject extends GameComponent {
    *
    * @param gameScriptClass GameScript class to get
    * @param <V>             GameScript to return
+   * @param args Arguments to use in script's constructor
    * @return Game script
    */
-  <V extends GameScript> V getGameScript(Class<V> gameScriptClass);
+  <V extends GameScript> V getGameScript(Class<V> gameScriptClass, Object... args);
 
   /**
    * Checks if this object has given GameScript attached to this object

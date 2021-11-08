@@ -10,7 +10,7 @@ public enum GameFrameTimeType {
   SEQUENCE,
 
   /**
-   * Try to notify scripts using parallel streams
+   * Try to notify scripts using parallel unordered streams
    * <p>Possibly can be faster if you have many scripts with "heavy" logic</p>
    */
   PARALLEL

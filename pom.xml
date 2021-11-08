@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.danilarassokhin</groupId>
     <artifactId>progressive</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>Progressive</name>
     <description>Game creation framework</description>
     <properties>
@@ -34,7 +34,7 @@
                 <configuration>
                     <doclint>none</doclint>
                     <source>1.8</source>
-                    <excludePackageNames>ru.danilarassokhin.main:ru.danilarassokhin.main.*</excludePackageNames>
+                    <excludePackageNames>ru.danilarassokhin.main:ru.danilarassokhin.example.*</excludePackageNames>
                 </configuration>
                 <executions>
                     <execution>
@@ -79,7 +79,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>ru.danilarassokhin.main.Main</mainClass>
+                    <mainClass>ru.danilarassokhin.example.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>

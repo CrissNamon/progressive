@@ -1,9 +1,8 @@
 package ru.danilarassokhin.progressive.basic.manager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import ru.danilarassokhin.progressive.annotation.Protected;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
@@ -15,12 +14,12 @@ import ru.danilarassokhin.progressive.util.GameSecurityManager;
  * Basic implementation of {@link ru.danilarassokhin.progressive.manager.GameStateManager}.
  */
 public class BasicGameStateManager implements GameStateManager<GameState> {
-  private static BasicGameStateManager INSTANCE;
+  private static transient BasicGameStateManager INSTANCE;
   private GameState state;
-  private final transient Map<GameState, List<GameActionObject>> listeners;
+  private final transient Map<GameState, Queue<GameActionObject>> listeners;
 
   private BasicGameStateManager() {
-    listeners = new HashMap<>();
+    listeners = new ConcurrentHashMap<>();
     setState(GameState.UNDEFINED, null);
   }
 
@@ -38,25 +37,27 @@ public class BasicGameStateManager implements GameStateManager<GameState> {
 
   @Override
   @Protected("This method is secured. Only game class can call it")
-  public <O> void setState(GameState state, O o) {
-    GameSecurityManager.allowAccessTo("This method can be called only from Game class. " +
-        "Access denied", BasicGame.class, BasicGameStateManager.class);
+  public synchronized <O> void setState(GameState state, O o) {
+    GameSecurityManager.allowAccessTo(
+        "This method can be called only from Game class. "
+            + "Access denied",
+        BasicGame.class, BasicGameStateManager.class);
     if (listeners.containsKey(state)) {
-      listeners.getOrDefault(state, new ArrayList<>()).parallelStream().forEach(a -> a.make(o));
+      listeners.getOrDefault(state, new ConcurrentLinkedQueue<>()).parallelStream().unordered().forEach(a -> a.make(o));
     } else {
-      listeners.put(state, new ArrayList<>());
+      listeners.put(state, new ConcurrentLinkedQueue<>());
     }
     this.state = state;
   }
 
   @Override
-  public List<GameActionObject> getListeners(GameState state) {
-    return listeners.getOrDefault(state, new ArrayList<>());
+  public Queue<GameActionObject> getListeners(GameState state) {
+    return listeners.getOrDefault(state, new ConcurrentLinkedQueue<>());
   }
 
   @Override
   public <V> void addListener(GameState state, GameActionObject<V> action) {
-    listeners.putIfAbsent(state, new ArrayList<>());
+    listeners.putIfAbsent(state, new ConcurrentLinkedQueue<>());
     listeners.get(state).add(action);
   }
 
