@@ -1,14 +1,13 @@
 package ru.danilarassokhin.example;
 
-import java.util.HashMap;
 import ru.danilarassokhin.example.component.GameItem;
 import ru.danilarassokhin.example.script.EchoSystem;
 import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.GameFrameTimeType;
+import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.GameInitializer;
-import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;

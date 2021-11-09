@@ -1,10 +1,7 @@
 package ru.danilarassokhin.example;
 
 import ru.danilarassokhin.example.component.GameItem;
-import ru.danilarassokhin.progressive.annotation.ComponentScan;
-import ru.danilarassokhin.progressive.annotation.Configuration;
-import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.annotation.Qualifier;
+import ru.danilarassokhin.progressive.annotation.*;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 
@@ -42,6 +39,7 @@ public class BasicConfiguration {
     return item;
   }
 
+  //Use @Qualifier to specify bean name to inject
   @GameBean(name = "generate", order = 3)
   public Long generate(@Qualifier("globalIdGenerator") Long id) {
     return ++globalIdGenerator;
