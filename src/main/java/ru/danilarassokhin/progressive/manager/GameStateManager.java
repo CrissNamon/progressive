@@ -1,6 +1,5 @@
 package ru.danilarassokhin.progressive.manager;
 
-import java.util.List;
 import java.util.Queue;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 

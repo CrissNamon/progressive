@@ -66,7 +66,7 @@ public final class BasicGame implements Game {
   @Override
   public synchronized void update(long delta) {
     GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
-        () -> !isStatic && !GameSecurityManager.getCallerClass().equals(BasicGame.class));
+        () -> !isStatic && GameSecurityManager.getCallerClass() != BasicGame.class);
     BasicGamePublisher.getInstance().sendTo("update", delta);
   }
 

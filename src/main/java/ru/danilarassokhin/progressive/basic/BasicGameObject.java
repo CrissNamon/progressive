@@ -1,8 +1,11 @@
 package ru.danilarassokhin.progressive.basic;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
@@ -27,8 +30,8 @@ public final class BasicGameObject implements GameObject {
   }
 
   @Override
-  public Collection<GameScript> getGameScripts() {
-    return scripts.values();
+  public Set<GameScript> getGameScripts() {
+    return new HashSet<>(scripts.values());
   }
 
   @Override
