@@ -30,7 +30,7 @@ public interface DIContainer {
    * @param name      Bean name to find
    * @param beanClass Bean class to find
    * @param <V>       Bean object to return
-   * @return Bean object or throws RuntimeException if bean not found
+   * @return Bean object or throws BeanNotFoundException if bean not found
    */
   <V> V getBean(String name, Class<V> beanClass);
 
@@ -39,7 +39,7 @@ public interface DIContainer {
    *
    * @param beanClass Bean class to find
    * @param <V>       Bean object to return
-   * @return Bean object or throws RuntimeException if bean not found
+   * @return Bean object or throws BeanNotFoundException if bean not found
    */
   <V> V getBean(Class<V> beanClass);
 

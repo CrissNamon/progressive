@@ -1,11 +1,9 @@
-package ru.danilarassokhin.example.script;
+package ru.danilarassokhin.example.game.script;
 
-import ru.danilarassokhin.example.component.GameItem;
+import ru.danilarassokhin.example.game.component.GameItem;
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.Qualifier;
-import ru.danilarassokhin.progressive.basic.BasicComponentManager;
-import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameComponent;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;

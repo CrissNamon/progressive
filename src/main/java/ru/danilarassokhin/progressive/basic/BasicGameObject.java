@@ -12,6 +12,7 @@ import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
+import ru.danilarassokhin.progressive.exception.GameScriptException;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 /**
@@ -37,7 +38,7 @@ public final class BasicGameObject implements GameObject {
   @Override
   public <V extends GameScript> V getGameScript(Class<V> gameScriptClass, Object... args) {
     if (!ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, gameScriptClass)) {
-      throw new RuntimeException(
+      throw new GameScriptException(
           gameScriptClass.getName()
           + " has no @IsGameScript annotation. "
           + "All GameScripts must be annotated with @IsGameScript!");
@@ -55,7 +56,7 @@ public final class BasicGameObject implements GameObject {
           if (!requiredGameScripts.lazy()) {
             getGameScript(req);
           } else if (!hasGameScript(req)){
-            throw new RuntimeException(gameScriptClass.getName() + " requires "
+            throw new GameScriptException(gameScriptClass.getName() + " requires "
                 + req.getName() + " which is not attached to " + this);
           }
         }
@@ -64,13 +65,13 @@ public final class BasicGameObject implements GameObject {
       gameScript.setGameObject(this);
       gameScript.wireFields();
       if (scripts.putIfAbsent(gameScriptClass, gameScript) != null) {
-        throw new RuntimeException("Could not register IsGameScript "
+        throw new GameScriptException("Could not register IsGameScript "
             + gameScriptClass.getName() + "! IsGameScript already exists");
       }
       return objectCaster.cast(gameScript, gameScriptClass);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
-      throw new RuntimeException("@IsGameScript "
+      throw new GameScriptException("@IsGameScript "
           + gameScriptClass.getName()
           + " creation failure! Exception: "
           + e.getMessage());

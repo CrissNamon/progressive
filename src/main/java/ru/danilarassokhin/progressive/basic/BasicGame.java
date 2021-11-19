@@ -9,8 +9,9 @@ import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
 import ru.danilarassokhin.progressive.component.GameObject;
+import ru.danilarassokhin.progressive.exception.GameException;
 import ru.danilarassokhin.progressive.manager.GameState;
-import ru.danilarassokhin.progressive.util.GameSecurityManager;
+import ru.danilarassokhin.progressive.manager.GameSecurityManager;
 
 /**
  * Basic implementation of {@link ru.danilarassokhin.progressive.Game}
@@ -93,7 +94,7 @@ public final class BasicGame implements Game {
   @Override
   public <V extends GameObject> V addGameObject() {
     if (!isGameObjectClassSet()) {
-      throw new RuntimeException("GameObject class has not been set in game! Use setGameObjectClass method in your game");
+      throw new GameException("GameObject class has not been set in game! Use setGameObjectClass method in your game");
     }
     GameObject gameObject = BasicComponentCreator.create(gameObjClass, idGenerator.incrementAndGet());
     gameObjects.putIfAbsent(idGenerator.get(), gameObject);
@@ -123,7 +124,7 @@ public final class BasicGame implements Game {
   @Override
   public synchronized void setFrameTime(int milliseconds) {
     if (milliseconds < 1) {
-      throw new RuntimeException("Frame rate can't be less than 1 millisecond!");
+      throw new GameException("Frame rate can't be less than 1 millisecond!");
     }
     this.frameTime = milliseconds;
   }

@@ -8,10 +8,7 @@ import ru.danilarassokhin.progressive.annotation.ComponentScan;
 import ru.danilarassokhin.progressive.annotation.Components;
 import ru.danilarassokhin.progressive.annotation.Configuration;
 import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.basic.injection.BasicGameBeanFactory;
-import ru.danilarassokhin.progressive.basic.injection.Bean;
-import ru.danilarassokhin.progressive.basic.injection.SimplePackageLoader;
-import ru.danilarassokhin.progressive.basic.injection.SimplePackageScanner;
+import ru.danilarassokhin.progressive.basic.injection.*;
 import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
 import ru.danilarassokhin.progressive.exception.*;
 import ru.danilarassokhin.progressive.injection.*;
@@ -22,7 +19,8 @@ import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
  */
 public final class BasicDIContainer implements DIContainer {
 
-  private final Map<Class<?>, Map<String, Bean>> beans;
+  private final String variant;
+  private final Map<BeanKey, Bean> beans;
   private final Set<Method> viewedMethods;
 
   private final GameBeanFactory gameBeanFactory;
@@ -32,6 +30,24 @@ public final class BasicDIContainer implements DIContainer {
     beans = new ConcurrentHashMap<>();
     viewedMethods = Collections.synchronizedSet(new HashSet<>());
     gameBeanFactory = new BasicGameBeanFactory();
+    variant = GameBean.DEFAULT_VARIANT;
+  }
+
+  /**
+   * Basic constructor.
+   *
+   * @param variant Variant to be used in bean creation.
+   *                See {@link ru.danilarassokhin.progressive.annotation.GameBean} for more information.
+   */
+  public BasicDIContainer(String variant) {
+    BasicComponentManager.getGameLogger().info("Progressive DI initialization of "
+        + variant
+        + " variant"
+        + "...\n");
+    beans = new ConcurrentHashMap<>();
+    viewedMethods = Collections.synchronizedSet(new HashSet<>());
+    gameBeanFactory = new BasicGameBeanFactory();
+    this.variant = variant;
   }
 
   @Override
@@ -47,9 +63,9 @@ public final class BasicDIContainer implements DIContainer {
     for (Package p : packages) {
       scanPackage(p.getName(), packageScanner);
     }
-    for (Class<?> beanClass : beans.keySet()) {
-      if (!beanClass.isInterface()) {
-        createBeanFromClass(beanClass);
+    for (BeanKey key : beans.keySet()) {
+      if (!key.getType().isInterface()) {
+        createBeanFromClass(key.getType());
       }
     }
   }
@@ -80,57 +96,63 @@ public final class BasicDIContainer implements DIContainer {
 
   @Override
   public <V> V getBean(Class<V> beanClass) {
-    Map<String, Bean> beansOfClass  = beans.get(beanClass);
-    if (beansOfClass == null) {
+    Set<BeanKey> beansOfClass = beans.keySet().stream().parallel().unordered()
+        .filter(k -> k.getType() == beanClass)
+        .collect(Collectors.toSet());
+    if (beansOfClass.size() == 0) {
       throw new BeanNotFoundException("There is no beans for "
           + beanClass.getName() + " were found!", beanClass);
     }
-    if (beansOfClass.entrySet().size() > 1) {
+    if (beansOfClass.size() > 1) {
+      beansOfClass.forEach(k -> System.out.println(k.toString()));
       throw new BeanConflictException("There are more than one beans of " + beanClass.getName()
       + " found! What to inject?");
     }
-    Map.Entry<String, Bean> beanEntry = beansOfClass.entrySet().stream()
+    BeanKey beanKey = beansOfClass.stream()
         .parallel()
         .unordered()
-        .findFirst().orElse(null);
+        .findFirst().orElse(new BeanKey("", null));
+    Bean beanEntry = beans.get(beanKey);
     if (beanEntry == null) {
       throw new BeanNotFoundException("There is no beans for "
           + beanClass.getName() + " were found!", beanClass);
     }
-    return getBean(beanEntry.getKey(), beanClass);
+    return getBean(beanKey.getName(), beanClass);
   }
 
   @Override
   public <V> V getBean(String name, Class<V> beanClass) {
-    if (!beans.containsKey(beanClass)) {
-      throw new BeanNotFoundException("GameBean called " + name
-          + " for class " + beanClass.getName() + " not found!", beanClass, name);
-    }
-    Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new ConcurrentHashMap<>());
-    Bean bean = beansOfClass.getOrDefault(name, null);
+    BeanKey beanKey = new BeanKey(name, beanClass);
+    Bean bean = beans.getOrDefault(beanKey, null);
     if (bean == null) {
       throw new BeanNotFoundException("GameBean called " + name
           + " for class " + beanClass.getName() + " not found!", beanClass, name);
     }
     if (!bean.isReady()) {
-      throw new BeanCircularDependencyException("GameBean " + name + " of class "
-          + beanClass.getName() + " is not ready! Is there a circular dependency?", beanClass);
+      throw new BeanCircularDependencyException("GameBean "
+          + name + " of class "
+          + beanClass.getName()
+          + " is not ready! Is there a circular dependency?", beanClass);
     }
     if (!bean.haveObject() && !bean.isCreated() && bean.isClass()) {
       BasicComponentManager
           .getGameLogger()
-          .info("GameBean " + name + " of type " + beanClass.getName() + " has not been created yet. Creating..");
+          .info("GameBean "
+              + name
+              + " of type "
+              + beanClass.getName()
+              + " has not been created yet. Creating..");
       createBeanFromClass(bean.getRealType());
     }
     V exists = (V) bean.getBean();
-    if (exists == null && bean.getCreationPolicy().equals(GameBeanCreationPolicy.SINGLETON)) {
+    if (exists == null && bean.getCreationPolicy() == GameBeanCreationPolicy.SINGLETON) {
       throw new BeanNotFoundException("GameBean called " + name
           + " for class " + beanClass.getName() + " not found!", beanClass, name);
     }
-    if (bean.getCreationPolicy().equals(GameBeanCreationPolicy.OBJECT)) {
+    if (bean.getCreationPolicy() == GameBeanCreationPolicy.OBJECT) {
       exists = (V) updateObjectTypeBean(bean);
       bean.setBean(exists);
-      updateRealTypeInterfaces(name, bean.getRealType(), beansOfClass, bean);
+      updateRealTypeInterfaces(name, bean.getRealType(), bean);
     }
     return exists;
   }
@@ -174,10 +196,6 @@ public final class BasicDIContainer implements DIContainer {
         continue;
       }
       if (method.isAnnotationPresent(GameBean.class)) {
-        BasicComponentManager
-            .getGameLogger().info("Found GameBean annotation in " + config.getName()
-            + " in method " + method.getName()
-            + ". Trying to make bean...");
         try {
           createBeanFromMethod(method, configObj);
         } catch (Throwable t) {
@@ -206,6 +224,10 @@ public final class BasicDIContainer implements DIContainer {
           + beanClass
           + ", but it has no @GameBean annotation. Bean needs it, actually...");
     }
+    String beanVariant = gameBean.variant();
+    if (!beanVariant.equals(variant)) {
+      return;
+    }
     Bean information = gameBeanFactory.createBeanMetaInformationFromClass(beanClass);
     String beanName = gameBean.name();
     if (beanName.isEmpty()) {
@@ -215,23 +237,21 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   private void saveBeanMetaInformation(String name, Bean metaInformation) {
-    Map<String, Bean> componentBeans = beans.getOrDefault(metaInformation.getRealType(), new ConcurrentHashMap<>());
-    if (componentBeans.containsKey(name)) {
+    BeanKey beanKey = new BeanKey(name, metaInformation.getRealType());
+    if (beans.containsKey(beanKey)) {
       throw new BeanDuplicationException("GameBean name duplication ("
           + name + ") for "
           + metaInformation.getRealType().getName());
     }
-    componentBeans.putIfAbsent(name, metaInformation);
-    beans.putIfAbsent(metaInformation.getRealType(), componentBeans);
+    beans.put(beanKey, metaInformation);
     Class<?>[] interfaces = metaInformation.getRealType().getInterfaces();
     for (Class<?> interfaceClass : interfaces) {
-      componentBeans = beans.getOrDefault(interfaceClass, new ConcurrentHashMap<>());
-      if (componentBeans.containsKey(name)) {
+      beanKey = new BeanKey(name, interfaceClass);
+      if (beans.containsKey(beanKey)) {
         throw new BeanDuplicationException("GameBean name duplication ("
             + name + ") for " + interfaceClass.getName());
       }
-      componentBeans.putIfAbsent(name, metaInformation);
-      beans.putIfAbsent(interfaceClass, componentBeans);
+      beans.put(beanKey, metaInformation);
     }
   }
 
@@ -249,49 +269,52 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   private void markBeanAsCreated(String name, Class<?> beanClass) {
-    Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
-    Bean beanData = beansOfClass.get(name);
+    BeanKey beanKey = new BeanKey(name, beanClass);
+    Bean beanData = beans.get(beanKey);
     if (beanData == null) {
       return;
     }
     beanData.setCreated(true);
-    updateRealTypeInterfaces(name, beanClass, beansOfClass, beanData);
+    updateRealTypeInterfaces(name, beanClass, beanData);
   }
 
   private void setBeanReadyStatus(String name, Class<?> beanClass, boolean status) {
-    Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new ConcurrentHashMap<>());
-    Bean beanData = beansOfClass.get(name);
+    BeanKey beanKey = new BeanKey(name, beanClass);
+    Bean beanData = beans.get(beanKey);
     if (beanData == null) {
       return;
     }
     beanData.setReady(status);
-    updateRealTypeInterfaces(name, beanClass, beansOfClass, beanData);
+    updateRealTypeInterfaces(name, beanClass, beanData);
   }
 
-  private void updateRealTypeInterfaces(String name, Class<?> beanClass, Map<String, Bean> beansOfClass, Bean beanData) {
+  private void updateRealTypeInterfaces(String name, Class<?> beanClass, Bean beanData) {
     Class<?>[] interfaces = beanClass.getInterfaces();
-    beansOfClass.put(name, beanData);
-    beans.putIfAbsent(beanClass, beansOfClass);
+    BeanKey beanKey = new BeanKey(name, beanClass);
+    beans.putIfAbsent(beanKey, beanData);
     for (Class<?> inter : interfaces) {
-      beansOfClass = beans.getOrDefault(inter, new ConcurrentHashMap<>());
-      beansOfClass.putIfAbsent(name, beanData);
-      beans.putIfAbsent(inter, beansOfClass);
+      beanKey = new BeanKey(name, inter);
+      beans.putIfAbsent(beanKey, beanData);
     }
   }
 
   private void updateBeanObject(String name, Class<?> beanClass, Object bean) {
-    Map<String, Bean> beansOfClass = beans.getOrDefault(beanClass, new HashMap<>());
-    Bean beanData = beansOfClass.get(name);
+    BeanKey beanKey = new BeanKey(name, beanClass);
+    Bean beanData = beans.get(beanKey);
     if (beanData == null) {
       return;
     }
     beanData.setBean(bean);
-    updateRealTypeInterfaces(name, beanClass, beansOfClass, beanData);
+    updateRealTypeInterfaces(name, beanClass, beanData);
   }
 
   private void createBeanFromClass(Class<?> beanClass) {
     GameBean annotation = ComponentAnnotationProcessor.findAnnotation(beanClass, GameBean.class);
     if (annotation == null) {
+      return;
+    }
+    String beanVariant = annotation.variant();
+    if (!beanVariant.equals(variant)) {
       return;
     }
     BasicComponentManager
@@ -307,7 +330,8 @@ public final class BasicDIContainer implements DIContainer {
     setBeanReadyStatus(name, beanClass, true);
     markBeanAsCreated(name, beanClass);
     BasicComponentManager
-        .getGameLogger().info("GameBean with name " + name + " created for " + beanClass.getName());
+        .getGameLogger().info("GameBean with name "
+        + name + " created for " + beanClass.getName());
     BasicComponentManager
         .getGameLogger().log("", "");
   }
@@ -317,8 +341,16 @@ public final class BasicDIContainer implements DIContainer {
       return;
     }
     m.setAccessible(true);
-    if (!m.getReturnType().equals(Void.TYPE)) {
+    if (m.getReturnType() != Void.TYPE) {
       GameBean annotation = m.getAnnotation(GameBean.class);
+      String beanVariant = annotation.variant();
+      if (!beanVariant.equals(variant)) {
+        return;
+      }
+      BasicComponentManager
+          .getGameLogger().info("Found GameBean annotation in " + o.getClass().getName()
+          + " in method " + m.getName()
+          + ". Trying to make bean...");
       String name = annotation.name();
       if (name.isEmpty()) {
         name = m.getName().toLowerCase();
@@ -333,10 +365,7 @@ public final class BasicDIContainer implements DIContainer {
       beanData.setMethod(m);
       beanData.setMethodCaller(o);
       beanData.setRealType(beanData.getBean().getClass());
-      Map<String, Bean> beansOfClass = beans.getOrDefault(
-          m.getReturnType(), new HashMap<>()
-      );
-      updateRealTypeInterfaces(name, beanData.getRealType(), beansOfClass, beanData);
+      updateRealTypeInterfaces(name, beanData.getRealType(),  beanData);
       BasicComponentManager
           .getGameLogger().info("GameBean with name " + name + " created for "
           + beanData.getBean().getClass().getName() + " from method " + m.getName());
@@ -346,11 +375,8 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   private boolean checkIfBeanExists(String name, Class<?> beanClass) {
-    Map<String, Bean> beansOfClass = beans.get(beanClass);
-    if (beansOfClass == null) {
-      return false;
-    }
-    Bean bean = beansOfClass.get(name);
+    BeanKey beanKey = new BeanKey(name, beanClass);
+    Bean bean = beans.get(beanKey);
     if (bean == null) {
       return false;
     }
@@ -363,7 +389,8 @@ public final class BasicDIContainer implements DIContainer {
 
   private Bean invoke(Method m, Object obj) throws ArrayIndexOutOfBoundsException {
     GameBean annotation = m.getAnnotation(GameBean.class);
-    Object[] args = BasicComponentCreator.injectBeansToParameters(m.getReturnType(), m.getParameterTypes(), m.getParameterAnnotations());
+    Object[] args = BasicComponentCreator
+        .injectBeansToParameters(m.getReturnType(), m.getParameterTypes(), m.getParameterAnnotations());
     Object methodResult = BasicComponentCreator.invoke(m, obj, args);
     Bean beanData = new Bean();
     beanData.setBean(methodResult);
@@ -384,7 +411,8 @@ public final class BasicDIContainer implements DIContainer {
               bean.getMethod().getParameterAnnotations()
           )
       );
-      return BasicComponentCreator.invoke(bean.getMethod(), bean.getMethodCaller(), bean.getMethodArgs());
+      return BasicComponentCreator
+          .invoke(bean.getMethod(), bean.getMethodCaller(), bean.getMethodArgs());
     } else {
       return BasicComponentCreator.create(bean.getRealType());
     }

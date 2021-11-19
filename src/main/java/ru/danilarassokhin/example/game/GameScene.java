@@ -1,8 +1,8 @@
-package ru.danilarassokhin.example;
+package ru.danilarassokhin.example.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import ru.danilarassokhin.example.script.CharacterSystem;
+import ru.danilarassokhin.example.game.script.CharacterSystem;
 import ru.danilarassokhin.progressive.basic.BasicGameObject;
 import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 
