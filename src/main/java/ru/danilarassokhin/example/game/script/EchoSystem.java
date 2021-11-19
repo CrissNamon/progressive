@@ -1,5 +1,6 @@
 package ru.danilarassokhin.example.game.script;
 
+import ru.danilarassokhin.progressive.PublisherType;
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.basic.BasicComponentManager;
@@ -36,7 +37,8 @@ public class EchoSystem implements GameScript {
 
   @Override
   public void dispose() {
-
+    BasicComponentManager
+        .getGameLogger().info("EchoSystem dispose");
   }
 
   @Override
