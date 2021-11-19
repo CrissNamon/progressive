@@ -1,10 +1,11 @@
 package ru.danilarassokhin.progressive.annotation;
 
 import java.lang.annotation.*;
+import ru.danilarassokhin.progressive.manager.GameSecurityManager;
 
 /**
  * Just visual annotation for methods protected with
- * {@link ru.danilarassokhin.progressive.util.GameSecurityManager}
+ * {@link GameSecurityManager}
  * <p><font color="red">Not securing methods! Use GameSecurityManager methods for this</p>
  */
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})

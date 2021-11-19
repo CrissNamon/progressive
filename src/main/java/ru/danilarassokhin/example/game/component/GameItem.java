@@ -1,4 +1,4 @@
-package ru.danilarassokhin.example.component;
+package ru.danilarassokhin.example.game.component;
 
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.GameBean;

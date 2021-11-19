@@ -10,6 +10,10 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
  * <p>name - specifies bean name. If not specified, then bean will get method or class name in lower case</p>
  * <p>order - specifies order in which annotated methods will be executed in
  * {@link ru.danilarassokhin.progressive.annotation.Configuration}</p>
+ * <p>variant - specifies variant this bean will be used in.
+ * Only beans with variant,
+ * which equals to variant specified in BasicDIContainer will be loaded.
+ * You can create beans for different use cases, build platforms, etc.</p>
  * <p><b>Bean creation strategy from methods:</b></p>
  * <p>Sort methods by parameters count, then sorts them by order(), then invokes methods in sorted order</p>
  * <p><b>Bean creation strategy from classes:</b></p>
@@ -22,9 +26,13 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 @Documented
 public @interface GameBean {
 
+  String DEFAULT_VARIANT = "DEFAULT";
+
   GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
 
   String name() default "";
 
   int order() default 0;
+
+  String variant() default DEFAULT_VARIANT;
 }

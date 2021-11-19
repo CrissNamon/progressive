@@ -1,4 +1,4 @@
-package ru.danilarassokhin.example;
+package ru.danilarassokhin.example.proxy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

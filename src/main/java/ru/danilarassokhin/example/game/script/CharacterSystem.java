@@ -1,4 +1,4 @@
-package ru.danilarassokhin.example.script;
+package ru.danilarassokhin.example.game.script;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.component.GameObject;

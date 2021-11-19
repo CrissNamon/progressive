@@ -1,4 +1,4 @@
-package ru.danilarassokhin.progressive.util;
+package ru.danilarassokhin.progressive.manager;
 
 import java.util.Arrays;
 import ru.danilarassokhin.progressive.lambda.GameCondition;
@@ -13,11 +13,11 @@ public final class GameSecurityManager {
    *
    * @param deniedMessage Message to include in exception
    * @param classes       Classes which are allowed to call this method
-   * @throws RuntimeException if caller class is not allowed to call protected method
+   * @throws SecurityException if caller class is not allowed to call protected method
    */
   public static void allowAccessTo(String deniedMessage, Class<?>... classes) {
     if (!Arrays.asList(classes).contains(getCallerClass())) {
-      throw new RuntimeException(deniedMessage);
+      throw new SecurityException(deniedMessage);
     }
   }
 
@@ -26,11 +26,11 @@ public final class GameSecurityManager {
    *
    * @param deniedMessage Message to include in exception
    * @param classes       Classes which are denied from calling this method
-   * @throws RuntimeException if caller class is not allowed to call protected method
+   * @throws SecurityException if caller class is not allowed to call protected method
    */
   public static void denyAccessTo(String deniedMessage, Class<?>... classes) {
     if (Arrays.asList(classes).contains(getCallerClass())) {
-      throw new RuntimeException(deniedMessage);
+      throw new SecurityException(deniedMessage);
     }
   }
 
@@ -39,11 +39,11 @@ public final class GameSecurityManager {
    *
    * @param deniedMessage Message to include in exception
    * @param processor     Condition to protect method with
-   * @throws RuntimeException if condition returns false
+   * @throws SecurityException if condition returns false
    */
   public static void allowAccessIf(String deniedMessage, GameCondition processor) {
     if (!processor.isTrue()) {
-      throw new RuntimeException(deniedMessage);
+      throw new SecurityException(deniedMessage);
     }
   }
 
@@ -52,11 +52,11 @@ public final class GameSecurityManager {
    *
    * @param deniedMessage Message to include in exception
    * @param processor     Condition to protect method with
-   * @throws RuntimeException if condition returns true
+   * @throws SecurityException if condition returns true
    */
   public static void denyAccessIf(String deniedMessage, GameCondition processor) {
     if (processor.isTrue()) {
-      throw new RuntimeException(deniedMessage);
+      throw new SecurityException(deniedMessage);
     }
   }
 

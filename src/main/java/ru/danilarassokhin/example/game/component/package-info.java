@@ -1,4 +1,4 @@
 /**
  * Contains basic implementation of progressive components
  */
-package ru.danilarassokhin.example.component;
+package ru.danilarassokhin.example.game.component;

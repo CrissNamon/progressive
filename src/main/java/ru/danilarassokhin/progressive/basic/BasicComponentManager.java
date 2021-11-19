@@ -55,7 +55,7 @@ public final class BasicComponentManager {
 
   /**
    * Returns {@link ru.danilarassokhin.progressive.injection.DIContainer}. If di container hasn't been set,
-   * then sets it to {@link ru.danilarassokhin.progressive.basic.BasicDIContainer}.
+   * then sets it to {@link BasicDIContainer}.
    *
    * @return Current di container
    */

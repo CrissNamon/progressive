@@ -1,6 +1,6 @@
-package ru.danilarassokhin.example;
+package ru.danilarassokhin.example.proxy;
 
-import ru.danilarassokhin.example.component.GameItem;
+import ru.danilarassokhin.example.game.component.GameItem;
 import ru.danilarassokhin.progressive.annotation.Autofill;
 import ru.danilarassokhin.progressive.annotation.Intercept;
 import ru.danilarassokhin.progressive.annotation.Proxy;

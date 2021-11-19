@@ -1,6 +1,6 @@
-package ru.danilarassokhin.example;
+package ru.danilarassokhin.example.game;
 
-import ru.danilarassokhin.example.component.GameItem;
+import ru.danilarassokhin.example.game.component.GameItem;
 import ru.danilarassokhin.progressive.annotation.*;
 import ru.danilarassokhin.progressive.basic.util.BasicObjectCaster;
 import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
@@ -10,8 +10,8 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
  */
 //Configuration class must be annotated as @Configuration
 @Configuration
-//Will scan ru.danilarassokhin.example.component package for @GameBean classes and @Configuration classes
-@ComponentScan("ru.danilarassokhin.example.component")
+//Will scan ru.danilarassokhin.example.game.component package for @GameBean classes and @Configuration classes
+//@ComponentScan("ru.danilarassokhin.example.game.component")
 public class BasicConfiguration {
 
   private long globalIdGenerator = -1;

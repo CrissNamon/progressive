@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
+import ru.danilarassokhin.progressive.exception.GameScriptException;
 import ru.danilarassokhin.progressive.util.ComponentAnnotationProcessor;
 
 /**
@@ -34,7 +35,7 @@ public interface GameScript extends Serializable {
     Field[] scriptFields = getClass().getDeclaredFields();
     GameObject parent = gameObject();
     if (parent == null) {
-      throw new RuntimeException("Could not autowire fields from parent in " + getClass().getName() + ": parent object is not set");
+      throw new GameScriptException("Could not autowire fields from parent in " + getClass().getName() + ": parent object is not set");
     }
     for (Field f : scriptFields) {
       f.setAccessible(true);
@@ -42,7 +43,7 @@ public interface GameScript extends Serializable {
         if (ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, f.getType())) {
           f.set(this, gameObject().getGameScript(f.getType().asSubclass(GameScript.class)));
         } else {
-          throw new RuntimeException("Could not autowire field " + f.getName() + " in " + getClass().getName()
+          throw new GameScriptException("Could not autowire field " + f.getName() + " in " + getClass().getName()
               + "! Only fields of type IsGameScript and annotated with @IsGameScript supported for autowire");
         }
       }

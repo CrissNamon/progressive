@@ -8,7 +8,7 @@ import ru.danilarassokhin.progressive.basic.BasicGame;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.manager.GameState;
 import ru.danilarassokhin.progressive.manager.GameStateManager;
-import ru.danilarassokhin.progressive.util.GameSecurityManager;
+import ru.danilarassokhin.progressive.manager.GameSecurityManager;
 
 /**
  * Basic implementation of {@link ru.danilarassokhin.progressive.manager.GameStateManager}.
