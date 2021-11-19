@@ -2,6 +2,10 @@ package ru.danilarassokhin.progressive.basic.injection;
 
 import java.util.Objects;
 
+/**
+ * Represents key for
+ * beans map in {@link ru.danilarassokhin.progressive.basic.BasicDIContainer}.
+ */
 public final class BeanKey {
 
   private final String name;

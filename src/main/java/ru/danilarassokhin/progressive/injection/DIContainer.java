@@ -77,6 +77,6 @@ public interface DIContainer {
 
   void loadConfiguration(Class<?> configClass) throws BeanUndefinedException;
 
-
+  String getVariant();
 
 }
