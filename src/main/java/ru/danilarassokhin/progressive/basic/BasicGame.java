@@ -67,7 +67,7 @@ public final class BasicGame implements Game {
   @Override
   public synchronized void update(long delta) {
     GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
-        () -> !isStatic && GameSecurityManager.getCallerClass() != BasicGame.class);
+        () -> !isStatic);
     BasicGamePublisher.getInstance().sendTo("update", delta);
   }
 
@@ -88,13 +88,14 @@ public final class BasicGame implements Game {
       gameObjects.values()
           .parallelStream().unordered()
           .forEach(GameObject::dispose);
+      gameObjects.clear();
     }
   }
 
   @Override
   public <V extends GameObject> V addGameObject() {
     if (!isGameObjectClassSet()) {
-      throw new GameException("GameObject class has not been set in game! Use setGameObjectClass method in your game");
+      setGameObjectClass(BasicGameObject.class);
     }
     GameObject gameObject = BasicComponentCreator.create(gameObjClass, idGenerator.incrementAndGet());
     gameObjects.putIfAbsent(idGenerator.get(), gameObject);

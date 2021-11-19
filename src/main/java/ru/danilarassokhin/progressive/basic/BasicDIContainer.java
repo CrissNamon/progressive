@@ -51,6 +51,11 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   @Override
+  public String getVariant() {
+    return variant;
+  }
+
+  @Override
   public synchronized void init() {
     PackageLoader packageLoader = new SimplePackageLoader();
     PackageScanner packageScanner = new SimplePackageScanner();
@@ -423,5 +428,6 @@ public final class BasicDIContainer implements DIContainer {
       scanPackage(p, loader);
     }
   }
+
 
 }
