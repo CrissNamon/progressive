@@ -37,7 +37,6 @@ public interface Game {
    */
   boolean isGameObjectClassSet();
 
-
   /**
    * Starts the game.
    */
@@ -55,9 +54,8 @@ public interface Game {
    */
   void stop();
 
-
   /**
-   * Dispose game.
+   * Disposes game. Calls {@link GameObject#dispose()} on each GameObject.
    */
   void dispose();
 
@@ -67,20 +65,6 @@ public interface Game {
    * @param milliseconds milliseconds to set
    */
   void setFrameTime(int milliseconds);
-
-  /**
-   * Sets {@link ru.danilarassokhin.progressive.GameFrameTimeType}.
-   *
-   * @param gameFrameTimeType {@link ru.danilarassokhin.progressive.GameFrameTimeType} to set
-   */
-  void setFrameTimeType(GameFrameTimeType gameFrameTimeType);
-
-  /**
-   * Returns current {@link ru.danilarassokhin.progressive.GameFrameTimeType}.
-   *
-   * @return {@link ru.danilarassokhin.progressive.GameFrameTimeType}
-   */
-  GameFrameTimeType getFrameTimeType();
 
   /**
    * Defines if game is static.

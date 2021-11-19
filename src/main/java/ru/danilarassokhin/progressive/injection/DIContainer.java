@@ -71,12 +71,36 @@ public interface DIContainer {
    */
   void scanPackage(String name, PackageScanner loader);
 
+  /**
+   * Loads {@link ru.danilarassokhin.progressive.annotation.GameBean}
+   * class into container.
+   *
+   * @param beanClass Class to load
+   */
   void loadBean(Class<?> beanClass);
 
+  /**
+   * Loads configuration into container with custom {@link PackageScanner}.
+   *
+   * @param configClass Configuration class to load
+   * @param scanner {@link PackageScanner} to use
+   * @throws BeanUndefinedException Thrown on undefined exception
+   */
   void loadConfiguration(Class<?> configClass, PackageScanner scanner) throws BeanUndefinedException;
 
+  /**
+   * Loads configuration into container
+   *
+   * @param configClass Configuration class to load
+   * @throws BeanUndefinedException Thrown on undefined exception
+   */
   void loadConfiguration(Class<?> configClass) throws BeanUndefinedException;
 
+  /**
+   * Returns current variant defined in container.
+   *
+   * @return Current variant
+   */
   String getVariant();
 
 }

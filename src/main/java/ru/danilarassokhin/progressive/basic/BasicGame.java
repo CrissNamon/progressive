@@ -1,26 +1,25 @@
 package ru.danilarassokhin.progressive.basic;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import ru.danilarassokhin.progressive.Game;
-import ru.danilarassokhin.progressive.GameFrameTimeType;
-import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.exception.GameException;
 import ru.danilarassokhin.progressive.manager.GameState;
-import ru.danilarassokhin.progressive.manager.GameSecurityManager;
 
 /**
- * Basic implementation of {@link ru.danilarassokhin.progressive.Game}
+ * Basic implementation of {@link ru.danilarassokhin.progressive.Game}.
  */
 public final class BasicGame implements Game {
 
   private final AtomicLong idGenerator;
 
-  private GameFrameTimeType gameFrameTimeType;
   private boolean isStatic;
   private int frameTime;
 
@@ -35,7 +34,6 @@ public final class BasicGame implements Game {
   protected BasicGame() {
     BasicComponentManager
         .getGameLogger().info("Progressive IoC initialization...\n");
-    gameFrameTimeType = GameFrameTimeType.PARALLEL;
     gameObjects = new ConcurrentSkipListMap<>();
     idGenerator = new AtomicLong(0);
     stateManager = BasicGameStateManager.getInstance();
@@ -46,9 +44,8 @@ public final class BasicGame implements Game {
 
   @Override
   public synchronized void start() {
-    GameSecurityManager.denyAccessIf("Game has been already started!", () -> isStarted);
     stateManager.setState(GameState.STARTED, true);
-    BasicGamePublisher.getInstance().sendTo("start", true);
+    callStartInObject();
     isStarted = true;
     if (!isStatic) {
       scheduler.scheduleAtFixedRate(this::update, frameTime, frameTime, TimeUnit.MILLISECONDS);
@@ -57,31 +54,20 @@ public final class BasicGame implements Game {
     stateManager.setState(GameState.PLAYING, true);
   }
 
-  private void update() {
-    long now = System.currentTimeMillis();
-    long delta = now - deltaTime;
-    deltaTime = now;
-    update(delta);
-  }
-
   @Override
   public synchronized void update(long delta) {
-    GameSecurityManager.denyAccessIf("Game param isStatic is set to false. Can't update manually!",
-        () -> !isStatic);
-    BasicGamePublisher.getInstance().sendTo("update", delta);
+    gameObjects.values()
+        .stream().parallel().unordered()
+        .forEach(o -> o.update(delta));
   }
 
   @Override
   public synchronized void stop() {
-    GameSecurityManager.allowAccessIf("Game hasn't been started!", () -> isStarted);
     stateManager.setState(GameState.STOPPED, true);
     isStarted = false;
     scheduler.shutdownNow();
   }
 
-  /**
-   * Calls {@link GameObject#dispose()} on all objects in game.
-   */
   @Override
   public synchronized void dispose() {
     if (!isStarted) {
@@ -93,6 +79,7 @@ public final class BasicGame implements Game {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <V extends GameObject> V addGameObject() {
     if (!isGameObjectClassSet()) {
       setGameObjectClass(BasicGameObject.class);
@@ -142,15 +129,17 @@ public final class BasicGame implements Game {
     }
   }
 
-  @Override
-  public GameFrameTimeType getFrameTimeType() {
-    return gameFrameTimeType;
+  private void callStartInObject() {
+    gameObjects.values()
+        .stream().parallel().unordered()
+        .forEach(GameObject::start);
   }
 
-  @Override
-  public synchronized void setFrameTimeType(GameFrameTimeType gameFrameTimeType) {
-    if (isStarted) {
-      this.gameFrameTimeType = gameFrameTimeType;
-    }
+  private void update() {
+    long now = System.currentTimeMillis();
+    long delta = now - deltaTime;
+    deltaTime = now;
+    update(delta);
   }
+
 }

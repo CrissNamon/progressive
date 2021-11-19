@@ -1,6 +1,7 @@
 package ru.danilarassokhin.progressive.component;
 
 import java.util.Collection;
+import ru.danilarassokhin.progressive.Game;
 
 /**
  * Represents abstract GameObject
@@ -42,6 +43,24 @@ public interface GameObject extends GameComponent {
    */
   Collection<GameScript> getGameScripts();
 
+  /**
+   * Calls {@link GameScript#dispose()} on each {@link GameScript}
+   * and removes all {@link GameScript}'s from current object.
+   */
   void dispose();
+
+  /**
+   * Calls {@link GameScript#start()} on each {@link GameScript}.
+   * Called automatically on {@link Game#start()}.
+   */
+  void start();
+
+  /**
+   * Calls {@link GameScript#update(long)} on each {@link GameScript}.
+   * Called automatically on {@link Game#update(long)}.
+   *
+   * @param delta Time in ms passed since last call
+   */
+  void update(long delta);
 
 }

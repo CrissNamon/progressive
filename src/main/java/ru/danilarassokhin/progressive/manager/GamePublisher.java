@@ -1,5 +1,6 @@
 package ru.danilarassokhin.progressive.manager;
 
+import ru.danilarassokhin.progressive.PublisherType;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 
 /**
@@ -24,5 +25,20 @@ public interface GamePublisher {
    * @param <V> Type to receive in action
    */
   <V> void subscribeOn(String topic, GameActionObject<V> action);
+
+  /**
+   * Sets {@link ru.danilarassokhin.progressive.PublisherType}.
+   * See {@link ru.danilarassokhin.progressive.PublisherType} for more information.
+   *
+   * @param publisherType Type to set
+   */
+  void setPublisherType(PublisherType publisherType);
+
+  /**
+   * Returns current {@link ru.danilarassokhin.progressive.PublisherType}.
+   *
+   * @return Current type
+   */
+  PublisherType getPublisherType();
 
 }

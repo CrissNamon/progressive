@@ -2,6 +2,7 @@ package ru.danilarassokhin.example.game.script;
 
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
+import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 import ru.danilarassokhin.progressive.basic.manager.BasicGamePublisher;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
@@ -25,6 +26,22 @@ public class EchoSystem implements GameScript {
   @Override
   public GameObject gameObject() {
     return parent;
+  }
+
+  @Override
+  public void start() {
+    BasicComponentManager
+        .getGameLogger().info("EchoSystem start");
+  }
+
+  @Override
+  public void dispose() {
+
+  }
+
+  @Override
+  public void update(long delta) {
+    say(delta);
   }
 
   @Override

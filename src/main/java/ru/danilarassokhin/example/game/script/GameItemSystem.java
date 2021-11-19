@@ -27,6 +27,21 @@ public class GameItemSystem implements GameScript {
   }
 
   @Override
+  public void start() {
+
+  }
+
+  @Override
+  public void dispose() {
+
+  }
+
+  @Override
+  public void update(long delta) {
+
+  }
+
+  @Override
   public void setGameObject(GameObject parent) {
     this.parent = parent;
   }

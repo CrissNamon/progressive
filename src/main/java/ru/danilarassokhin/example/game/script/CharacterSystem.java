@@ -1,6 +1,7 @@
 package ru.danilarassokhin.example.game.script;
 
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
+import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 import ru.danilarassokhin.progressive.component.GameObject;
 import ru.danilarassokhin.progressive.component.GameScript;
 
@@ -26,6 +27,21 @@ public class CharacterSystem implements GameScript {
   @Override
   public GameObject gameObject() {
     return parent;
+  }
+
+  @Override
+  public void start() {
+
+  }
+
+  @Override
+  public void dispose() {
+
+  }
+
+  @Override
+  public void update(long delta) {
+
   }
 
   @Override

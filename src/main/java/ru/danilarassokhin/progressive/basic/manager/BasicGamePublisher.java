@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import ru.danilarassokhin.progressive.PublisherType;
 import ru.danilarassokhin.progressive.basic.BasicComponentManager;
 import ru.danilarassokhin.progressive.lambda.GameActionObject;
 import ru.danilarassokhin.progressive.manager.GamePublisher;
@@ -21,9 +22,11 @@ public final class BasicGamePublisher implements GamePublisher {
   private static BasicGamePublisher INSTANCE;
 
   private final Map<String, Queue<GameActionObject<Object>>> feed;
+  private PublisherType publisherType;
 
   private BasicGamePublisher() {
     feed = new ConcurrentSkipListMap<>();
+    publisherType = PublisherType.PARALLEL;
   }
 
   public static BasicGamePublisher getInstance() {
@@ -36,7 +39,7 @@ public final class BasicGamePublisher implements GamePublisher {
   @Override
   public void sendTo(String topic, Object message) {
     Queue<GameActionObject<Object>> subscribers = feed.getOrDefault(topic, new ConcurrentLinkedQueue<>());
-    switch (BasicComponentManager.getGame().getFrameTimeType()) {
+    switch (publisherType) {
       case SEQUENCE:
         sendSequence(message, subscribers);
         break;
@@ -50,6 +53,16 @@ public final class BasicGamePublisher implements GamePublisher {
   public <V> void subscribeOn(String topic, GameActionObject<V> action) {
     feed.putIfAbsent(topic, new ConcurrentLinkedQueue<>());
     feed.get(topic).add((GameActionObject) action);
+  }
+
+  @Override
+  public void setPublisherType(PublisherType publisherType) {
+    this.publisherType = publisherType;
+  }
+
+  @Override
+  public PublisherType getPublisherType() {
+    return publisherType;
   }
 
   private void sendSequence(Object message, Collection<GameActionObject<Object>> subscribers) {

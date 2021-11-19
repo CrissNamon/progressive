@@ -2,6 +2,7 @@ package ru.danilarassokhin.progressive.component;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.annotation.FromParent;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.exception.GameScriptException;
@@ -18,6 +19,23 @@ public interface GameScript extends Serializable {
    * @return Parent game object with this script is attached to
    */
   GameObject gameObject();
+
+  /**
+   * Called automatically on every {@link Game#start()}.
+   */
+  void start();
+
+  /**
+   * Called automatically on {@link Game#dispose()}.
+   */
+  void dispose();
+
+  /**
+   * Called automatically on {@link Game#update(long)}.
+   *
+   * @param delta Time in ms passed since last call
+   */
+  void update(long delta);
 
   /**
    * Sets parent game object

@@ -1,11 +1,9 @@
 package ru.danilarassokhin.progressive.basic;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import ru.danilarassokhin.progressive.annotation.IsGameScript;
 import ru.danilarassokhin.progressive.annotation.RequiredGameScript;
 import ru.danilarassokhin.progressive.basic.util.BasicComponentCreator;
@@ -95,8 +93,22 @@ public final class BasicGameObject implements GameObject {
 
   @Override
   public synchronized void dispose() {
-    for (Class script : scripts.keySet()) {
-      removeGameScript(script);
-    }
+    scripts.values().stream().parallel().unordered()
+        .forEach(GameScript::dispose);
+    scripts.clear();
+  }
+
+  @Override
+  public void update(long delta) {
+    scripts.values()
+        .stream().parallel().unordered()
+        .forEach(s -> s.update(delta));
+  }
+
+  @Override
+  public void start() {
+    scripts.values()
+        .stream().parallel().unordered()
+        .forEach(GameScript::start);
   }
 }
