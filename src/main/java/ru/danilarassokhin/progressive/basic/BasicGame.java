@@ -31,7 +31,7 @@ public final class BasicGame implements Game {
   private boolean isStarted;
   private long deltaTime;
 
-  protected BasicGame() {
+  public BasicGame() {
     BasicComponentManager
         .getGameLogger().info("Progressive IoC initialization...\n");
     gameObjects = new ConcurrentSkipListMap<>();

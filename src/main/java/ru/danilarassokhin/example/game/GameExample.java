@@ -2,11 +2,7 @@ package ru.danilarassokhin.example.game;
 
 import ru.danilarassokhin.example.game.script.EchoSystem;
 import ru.danilarassokhin.progressive.Game;
-import ru.danilarassokhin.progressive.PublisherType;
-import ru.danilarassokhin.progressive.basic.BasicComponentManager;
-import ru.danilarassokhin.progressive.basic.BasicGame;
-import ru.danilarassokhin.progressive.basic.BasicGameObject;
-import ru.danilarassokhin.progressive.basic.GameInitializer;
+import ru.danilarassokhin.progressive.basic.*;
 import ru.danilarassokhin.progressive.basic.manager.BasicGameStateManager;
 import ru.danilarassokhin.progressive.injection.DIContainer;
 import ru.danilarassokhin.progressive.manager.GameState;

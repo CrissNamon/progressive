@@ -25,7 +25,7 @@ public final class BasicDIContainer implements DIContainer {
 
   private final GameBeanFactory gameBeanFactory;
 
-  protected BasicDIContainer() {
+  public BasicDIContainer() {
     BasicComponentManager.getGameLogger().info("Progressive DI initialization...\n");
     beans = new ConcurrentHashMap<>();
     viewedMethods = Collections.synchronizedSet(new HashSet<>());

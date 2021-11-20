@@ -3,8 +3,8 @@ package progressive;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import progressive.variant.AndroidVariant;
+import progressive.variant.GlobalVariant;
 import progressive.variant.ItemVariant;
-import ru.danilarassokhin.progressive.Game;
 import ru.danilarassokhin.progressive.annotation.GameBean;
 import ru.danilarassokhin.progressive.basic.BasicDIContainer;
 import ru.danilarassokhin.progressive.basic.injection.SimplePackageScanner;
@@ -27,6 +27,13 @@ public class DIContainerTest {
     BasicDIContainer basicDIContainer = new BasicDIContainer("MacOs");
     basicDIContainer.scanPackage("progressive.variant", new SimplePackageScanner());
     Assertions.assertThrows(BeanNotFoundException.class, () -> basicDIContainer.getBean(ItemVariant.class));
+  }
+
+  @Test
+  public void testGlobalVariant() {
+    BasicDIContainer basicDIContainer = new BasicDIContainer("SomeVariant");
+    basicDIContainer.scanPackage("progressive.variant", new SimplePackageScanner());
+    Assertions.assertDoesNotThrow(() -> basicDIContainer.getBean(GlobalVariant.class));
   }
 
   @Test

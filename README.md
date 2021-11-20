@@ -18,7 +18,7 @@ Main features:
 #### Resources
 ___
 * Learn more at Progressive [Wiki](https://github.com/CrissNamon/progressive/wiki)
-* Look at some examples in [Main](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/danilarassokhin/example/Main.java)
+* Look at some examples in [example](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/danilarassokhin/example/) package
 * See javadoc [here](https://crissnamon.github.io/progressive/)
 
 #### Dependencies and source 
