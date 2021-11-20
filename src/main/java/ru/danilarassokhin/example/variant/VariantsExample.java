@@ -28,6 +28,10 @@ public class VariantsExample {
     myService = basicDIContainer.getBean(MyService.class);
     //Default variant was specified in DI container and in WindowsService, so WindowsService will be used
     myService.printVariant();
+
+    //Global service bean has GameBean.GLOBAL_VARIANT, so it always loaded
+    GlobalService globalService = basicDIContainer.getBean(GlobalService.class);
+    globalService.printVariant();
   }
 
 }

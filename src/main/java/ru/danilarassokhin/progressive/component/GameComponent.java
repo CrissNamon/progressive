@@ -3,7 +3,7 @@ package ru.danilarassokhin.progressive.component;
 import java.io.Serializable;
 
 /**
- * Abstract game component
+ * Abstract game component.
  */
 public interface GameComponent extends Serializable {
 

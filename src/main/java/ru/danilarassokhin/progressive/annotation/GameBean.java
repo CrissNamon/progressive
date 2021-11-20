@@ -26,7 +26,15 @@ import ru.danilarassokhin.progressive.injection.GameBeanCreationPolicy;
 @Documented
 public @interface GameBean {
 
-  String DEFAULT_VARIANT = "DEFAULT";
+  /**
+   * Used by default in DI Container.
+   */
+  String DEFAULT_VARIANT = "_DEFAULT";
+
+  /**
+   * Used for global beans. Default variant for bean.
+   */
+  String GLOBAL_VARIANT = "_GLOBAL";
 
   GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;
 
@@ -34,5 +42,5 @@ public @interface GameBean {
 
   int order() default 0;
 
-  String variant() default DEFAULT_VARIANT;
+  String variant() default GLOBAL_VARIANT;
 }

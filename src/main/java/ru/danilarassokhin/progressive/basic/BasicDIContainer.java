@@ -230,7 +230,7 @@ public final class BasicDIContainer implements DIContainer {
           + ", but it has no @GameBean annotation. Bean needs it, actually...");
     }
     String beanVariant = gameBean.variant();
-    if (!beanVariant.equals(variant)) {
+    if (!beanVariant.equals(variant) && !beanVariant.equals(GameBean.GLOBAL_VARIANT)) {
       return;
     }
     Bean information = gameBeanFactory.createBeanMetaInformationFromClass(beanClass);
@@ -319,7 +319,7 @@ public final class BasicDIContainer implements DIContainer {
       return;
     }
     String beanVariant = annotation.variant();
-    if (!beanVariant.equals(variant)) {
+    if (!beanVariant.equals(variant) && !beanVariant.equals(GameBean.GLOBAL_VARIANT)) {
       return;
     }
     BasicComponentManager
@@ -349,7 +349,7 @@ public final class BasicDIContainer implements DIContainer {
     if (m.getReturnType() != Void.TYPE) {
       GameBean annotation = m.getAnnotation(GameBean.class);
       String beanVariant = annotation.variant();
-      if (!beanVariant.equals(variant)) {
+      if (!beanVariant.equals(variant) && !beanVariant.equals(GameBean.GLOBAL_VARIANT)) {
         return;
       }
       BasicComponentManager
