@@ -7,7 +7,7 @@ import ru.danilarassokhin.progressive.lambda.GameActionObject;
  * Represents some publisher components can use to `talk` with each other
  * <p>Components can subscribe to some topics or send messages to some topics</p>
  */
-public interface GamePublisher {
+public interface GamePublisher<I> {
 
   /**
    * Sends {@code message} to {@code topic}.
@@ -24,7 +24,14 @@ public interface GamePublisher {
    * @param action Action to make on new message
    * @param <V> Type to receive in action
    */
-  <V> void subscribeOn(String topic, GameActionObject<V> action);
+  <V> I subscribeOn(String topic, GameActionObject<V> action);
+
+  /**
+   * Removes listener from topic.
+   *
+   * @param subscription Subscription data to unsubscribe
+   */
+  void unsubscribe(I subscription);
 
   /**
    * Sets {@link ru.danilarassokhin.progressive.PublisherType}.
