@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ru.danilarassokhin</groupId>
+    <groupId>ru.hiddenproject</groupId>
     <artifactId>progressive</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.4.0</version>
     <name>Progressive</name>
     <description>Game creation framework</description>
     <properties>
@@ -34,7 +34,7 @@
                 <configuration>
                     <doclint>none</doclint>
                     <source>1.8</source>
-                    <excludePackageNames>ru.danilarassokhin.example:ru.danilarassokhin.example.*</excludePackageNames>
+                    <excludePackageNames>ru.hiddenproject.example:ru.hiddenproject.example.*</excludePackageNames>
                 </configuration>
                 <executions>
                     <execution>
@@ -60,9 +60,9 @@
                 <version>3.2.0</version>
                 <configuration>
                     <includes>
-                        <include>ru/danilarassokhin/progressive/*.*</include>
-                        <include>ru/danilarassokhin/progressive/*/*.*</include>
-                        <include>ru/danilarassokhin/progressive/*/*/*.*</include>
+                        <include>ru/hiddenproject/progressive/*.*</include>
+                        <include>ru/hiddenproject/progressive/*/*.*</include>
+                        <include>ru/hiddenproject/progressive/*/*/*.*</include>
                     </includes>
                     <archive>
                         <index>true</index>
@@ -79,7 +79,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>ru.danilarassokhin.example.Main</mainClass>
+                    <mainClass>ru.hiddenproject.example.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>

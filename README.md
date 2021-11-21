@@ -18,13 +18,13 @@ Main features:
 #### Resources
 ___
 * Learn more at Progressive [Wiki](https://github.com/CrissNamon/progressive/wiki)
-* Look at some examples in [Main](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/danilarassokhin/example/Main.java)
+* Look at some examples in [example](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/hiddenproject/example/) package
 * See javadoc [here](https://crissnamon.github.io/progressive/)
 
 #### Dependencies and source 
 ___
 
-[BasicProxyCreator](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/danilarassokhin/progressive/basic/BasicProxyCreator.java) uses [ByteBuddy](https://bytebuddy.net/) for proxy creation. You need to add byte-buddy lib to be able to use proxy classes in your project. For android development you also need to add [byte-buddy-android](https://github.com/raphw/byte-buddy/tree/master/byte-buddy-android) lib.
+[BasicProxyCreator](https://github.com/CrissNamon/progressive/blob/main/src/main/java/ru/hiddenproject/progressive/basic/BasicProxyCreator.java) uses [ByteBuddy](https://bytebuddy.net/) for proxy creation. You need to add byte-buddy lib to be able to use proxy classes in your project. For android development you also need to add [byte-buddy-android](https://github.com/raphw/byte-buddy/tree/master/byte-buddy-android) lib.
 <p>All other parts of Progressive have no dependencies and use only Java 8.</p> 
 
 #### Repository info

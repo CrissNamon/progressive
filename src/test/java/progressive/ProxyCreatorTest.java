@@ -2,10 +2,10 @@ package progressive;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.danilarassokhin.example.game.component.GameItem;
-import ru.danilarassokhin.example.proxy.LoggerMethodInterceptor;
-import ru.danilarassokhin.progressive.basic.BasicComponentManager;
-import ru.danilarassokhin.progressive.proxy.ProxyCreator;
+import ru.hiddenproject.example.game.component.GameItem;
+import ru.hiddenproject.example.proxy.LoggerMethodInterceptor;
+import ru.hiddenproject.progressive.basic.BasicComponentManager;
+import ru.hiddenproject.progressive.proxy.ProxyCreator;
 
 public class ProxyCreatorTest {
 
