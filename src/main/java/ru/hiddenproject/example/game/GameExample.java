@@ -2,9 +2,11 @@ package ru.hiddenproject.example.game;
 
 import ru.hiddenproject.example.game.script.EchoSystem;
 import ru.hiddenproject.progressive.Game;
-import ru.hiddenproject.progressive.basic.*;
+import ru.hiddenproject.progressive.basic.BasicComponentManager;
+import ru.hiddenproject.progressive.basic.BasicGame;
+import ru.hiddenproject.progressive.basic.BasicGameObject;
+import ru.hiddenproject.progressive.basic.GameInitializer;
 import ru.hiddenproject.progressive.basic.manager.BasicGameStateManager;
-import ru.hiddenproject.progressive.injection.DIContainer;
 import ru.hiddenproject.progressive.manager.GameState;
 
 public class GameExample {
@@ -13,8 +15,6 @@ public class GameExample {
     //Initiate game components such as DI container and Game
     //autoScan = true means Scan all packages for beans and configurations classes
     GameInitializer.init(true);
-    //Get DI container instance
-    DIContainer diContainer = BasicComponentManager.getDiContainer();
     //State manager instance
     BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
     //Subscribe to some instance. This will be executed when game will be initialized first time
@@ -36,10 +36,15 @@ public class GameExample {
     GameScene gameScene = new GameScene();
     gameScene.loadScene();
 
+    //Set action to execute before start
+    game.setPreStart(() -> System.out.println("Before start"));
+    //Set action to execute after start
+    game.setPostStart(() -> System.out.println("After start"));
+
     //Set action to execute before every update
-    game.setPreUpdate(() -> System.out.println("Pre update"));
+    game.setPreUpdate(() -> System.out.println("Before update"));
     //Set action to execute after every update
-    game.setPostUpdate(() -> System.out.println("Post update"));
+    game.setPostUpdate(() -> System.out.println("Before update"));
 
     //Start game
     game.start();

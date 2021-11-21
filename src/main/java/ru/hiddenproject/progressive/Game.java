@@ -75,6 +75,20 @@ public interface Game {
   void setStatic(boolean isStatic);
 
   /**
+   * Sets action to execute before start.
+   *
+   * @param action Action to set
+   */
+  void setPreStart(GameAction action);
+
+  /**
+   * Sets action to execute after start.
+   *
+   * @param action Action to set
+   */
+  void setPostStart(GameAction action);
+
+  /**
    * Sets action to execute before every update.
    *
    * @param action Action to set

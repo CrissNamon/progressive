@@ -1,9 +1,11 @@
 package ru.hiddenproject.progressive.basic;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 import ru.hiddenproject.progressive.Game;
 import ru.hiddenproject.progressive.basic.manager.BasicGameStateManager;
 import ru.hiddenproject.progressive.basic.util.BasicComponentCreator;
@@ -26,6 +28,8 @@ public final class BasicGame implements Game {
   private final BasicGameStateManager stateManager;
   private Class<? extends GameObject> gameObjClass;
   private final ScheduledExecutorService scheduler;
+  private GameAction preStart;
+  private GameAction postStart;
   private GameAction preUpdate;
   private GameAction postUpdate;
 
@@ -46,8 +50,14 @@ public final class BasicGame implements Game {
   @Override
   public synchronized void start() {
     stateManager.setState(GameState.STARTED, true);
+    if (preStart != null) {
+      preStart.make();
+    }
     callStartInObject();
     isStarted = true;
+    if (postStart != null) {
+      postStart.make();
+    }
     if (!isStatic) {
       scheduler.scheduleAtFixedRate(this::update, frameTime, frameTime, TimeUnit.MILLISECONDS);
     }
@@ -134,6 +144,16 @@ public final class BasicGame implements Game {
     if (!isStarted) {
       this.isStatic = isStatic;
     }
+  }
+
+  @Override
+  public void setPreStart(GameAction action) {
+    preStart = action;
+  }
+
+  @Override
+  public void setPostStart(GameAction action) {
+    postStart = action;
   }
 
   @Override
