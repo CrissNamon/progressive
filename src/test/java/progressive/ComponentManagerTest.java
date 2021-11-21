@@ -2,10 +2,10 @@ package progressive;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.basic.BasicComponentManager;
-import ru.danilarassokhin.progressive.basic.BasicDIContainer;
-import ru.danilarassokhin.progressive.injection.DIContainer;
+import ru.hiddenproject.progressive.annotation.GameBean;
+import ru.hiddenproject.progressive.basic.BasicComponentManager;
+import ru.hiddenproject.progressive.basic.BasicDIContainer;
+import ru.hiddenproject.progressive.injection.DIContainer;
 
 public class ComponentManagerTest {
 

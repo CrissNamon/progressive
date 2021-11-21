@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import progressive.variant.AndroidVariant;
 import progressive.variant.GlobalVariant;
 import progressive.variant.ItemVariant;
-import ru.danilarassokhin.progressive.annotation.GameBean;
-import ru.danilarassokhin.progressive.basic.BasicDIContainer;
-import ru.danilarassokhin.progressive.basic.injection.SimplePackageScanner;
-import ru.danilarassokhin.progressive.exception.AnnotationException;
-import ru.danilarassokhin.progressive.exception.BeanDuplicationException;
-import ru.danilarassokhin.progressive.exception.BeanNotFoundException;
+import ru.hiddenproject.progressive.annotation.GameBean;
+import ru.hiddenproject.progressive.basic.BasicDIContainer;
+import ru.hiddenproject.progressive.basic.injection.SimplePackageScanner;
+import ru.hiddenproject.progressive.exception.AnnotationException;
+import ru.hiddenproject.progressive.exception.BeanDuplicationException;
+import ru.hiddenproject.progressive.exception.BeanNotFoundException;
 
 public class DIContainerTest {
 

@@ -1,6 +1,6 @@
 package progressive.variant;
 
-import ru.danilarassokhin.progressive.annotation.GameBean;
+import ru.hiddenproject.progressive.annotation.GameBean;
 
 @GameBean(variant = "Android")
 public class AndroidVariant implements ItemVariant {
