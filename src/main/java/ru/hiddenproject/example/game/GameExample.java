@@ -36,6 +36,11 @@ public class GameExample {
     GameScene gameScene = new GameScene();
     gameScene.loadScene();
 
+    //Set action to execute before every update
+    game.setPreUpdate(() -> System.out.println("Pre update"));
+    //Set action to execute after every update
+    game.setPostUpdate(() -> System.out.println("Post update"));
+
     //Start game
     game.start();
     //Stop game

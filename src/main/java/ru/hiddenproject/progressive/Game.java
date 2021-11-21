@@ -1,6 +1,7 @@
 package ru.hiddenproject.progressive;
 
 import ru.hiddenproject.progressive.component.GameObject;
+import ru.hiddenproject.progressive.lambda.GameAction;
 
 /**
  * Represents game.
@@ -72,5 +73,19 @@ public interface Game {
    * @param isStatic if true {@link #update(long)} will be called automatically.
    */
   void setStatic(boolean isStatic);
+
+  /**
+   * Sets action to execute before every update.
+   *
+   * @param action Action to set
+   */
+  void setPreUpdate(GameAction action);
+
+  /**
+   * Sets action to execute after every update.
+   *
+   * @param action Action to set
+   */
+  void setPostUpdate(GameAction action);
 
 }

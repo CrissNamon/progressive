@@ -1,16 +1,15 @@
 package ru.hiddenproject.progressive.basic;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import ru.hiddenproject.progressive.Game;
 import ru.hiddenproject.progressive.basic.manager.BasicGameStateManager;
 import ru.hiddenproject.progressive.basic.util.BasicComponentCreator;
 import ru.hiddenproject.progressive.component.GameObject;
 import ru.hiddenproject.progressive.exception.GameException;
+import ru.hiddenproject.progressive.lambda.GameAction;
 import ru.hiddenproject.progressive.manager.GameState;
 
 /**
@@ -27,6 +26,8 @@ public final class BasicGame implements Game {
   private final BasicGameStateManager stateManager;
   private Class<? extends GameObject> gameObjClass;
   private final ScheduledExecutorService scheduler;
+  private GameAction preUpdate;
+  private GameAction postUpdate;
 
   private boolean isStarted;
   private long deltaTime;
@@ -56,9 +57,15 @@ public final class BasicGame implements Game {
 
   @Override
   public synchronized void update(long delta) {
+    if (preUpdate != null) {
+      preUpdate.make();
+    }
     gameObjects.values()
         .stream().parallel().unordered()
         .forEach(o -> o.update(delta));
+    if (postUpdate != null) {
+      postUpdate.make();
+    }
   }
 
   @Override
@@ -127,6 +134,16 @@ public final class BasicGame implements Game {
     if (!isStarted) {
       this.isStatic = isStatic;
     }
+  }
+
+  @Override
+  public void setPreUpdate(GameAction action) {
+    preUpdate = action;
+  }
+
+  @Override
+  public void setPostUpdate(GameAction action) {
+    postUpdate = action;
   }
 
   private void callStartInObject() {

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.hiddenproject</groupId>
     <artifactId>progressive</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
     <name>Progressive</name>
     <description>Game creation framework</description>
     <properties>
