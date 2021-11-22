@@ -80,9 +80,12 @@ public final class BasicGame implements Game {
 
   @Override
   public synchronized void stop() {
-    stateManager.setState(GameState.STOPPED, true);
     isStarted = false;
     scheduler.shutdownNow();
+    gameObjects.values()
+        .parallelStream().unordered()
+        .forEach(GameObject::stop);
+    stateManager.setState(GameState.STOPPED, true);
   }
 
   @Override

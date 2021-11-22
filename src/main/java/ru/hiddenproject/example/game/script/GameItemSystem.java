@@ -42,6 +42,11 @@ public class GameItemSystem implements GameScript {
   }
 
   @Override
+  public void stop() {
+
+  }
+
+  @Override
   public void setGameObject(GameObject parent) {
     this.parent = parent;
   }

@@ -44,6 +44,11 @@ public class CharacterSystem implements GameScript {
   }
 
   @Override
+  public void stop() {
+
+  }
+
+  @Override
   public void setGameObject(GameObject parent) {
     this.parent = parent;
   }

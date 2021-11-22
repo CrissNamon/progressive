@@ -44,7 +44,7 @@ public class GameExample {
     //Set action to execute before every update
     game.setPreUpdate(() -> System.out.println("Before update"));
     //Set action to execute after every update
-    game.setPostUpdate(() -> System.out.println("Before update"));
+    game.setPostUpdate(() -> System.out.println("After update"));
 
     //Start game
     game.start();

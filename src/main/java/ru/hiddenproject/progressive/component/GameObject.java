@@ -63,4 +63,11 @@ public interface GameObject extends GameComponent {
    */
   void update(long delta);
 
+  /**
+   * Calls {@link GameScript#stop()} on each {@link GameScript}.
+   * Called automatically on {@link Game#stop()}.
+   *
+   */
+  void stop();
+
 }
