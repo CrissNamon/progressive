@@ -95,4 +95,11 @@
         </plugins>
         <defaultGoal>package</defaultGoal>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>Progressive Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/CrissNamon/progressive</url>
+        </repository>
+    </distributionManagement>
 </project>
