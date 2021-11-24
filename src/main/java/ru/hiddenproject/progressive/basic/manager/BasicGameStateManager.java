@@ -1,33 +1,23 @@
 package ru.hiddenproject.progressive.basic.manager;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import ru.hiddenproject.progressive.annotation.Protected;
 import ru.hiddenproject.progressive.basic.BasicGame;
 import ru.hiddenproject.progressive.lambda.GameActionObject;
+import ru.hiddenproject.progressive.manager.GameSecurityManager;
 import ru.hiddenproject.progressive.manager.GameState;
 import ru.hiddenproject.progressive.manager.GameStateManager;
-import ru.hiddenproject.progressive.manager.GameSecurityManager;
 
 /**
  * Basic implementation of {@link ru.hiddenproject.progressive.manager.GameStateManager}.
  */
-public class BasicGameStateManager implements GameStateManager<GameState> {
-  private static transient BasicGameStateManager INSTANCE;
+public class BasicGameStateManager implements GameStateManager<PublisherSubscription, GameState> {
+
+  private final BasicGamePublisher publisher;
   private GameState state;
-  private final transient Map<GameState, Queue<GameActionObject>> listeners;
 
-  private BasicGameStateManager() {
-    listeners = new ConcurrentHashMap<>();
+  public BasicGameStateManager() {
+    publisher = new BasicGamePublisher();
     setState(GameState.UNDEFINED, null);
-  }
-
-  public static BasicGameStateManager getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new BasicGameStateManager();
-    }
-    return INSTANCE;
   }
 
   @Override
@@ -42,22 +32,17 @@ public class BasicGameStateManager implements GameStateManager<GameState> {
         "This method can be called only from Game class. "
             + "Access denied",
         BasicGame.class, BasicGameStateManager.class);
-    Queue<GameActionObject> stateListeners =
-        listeners.getOrDefault(state, new ConcurrentLinkedQueue<>());
-    stateListeners.stream().parallel().unordered()
-        .forEach(a -> a.make(o));
+    publisher.sendTo(state.name(), o);
     this.state = state;
   }
 
   @Override
-  public Queue<GameActionObject> getListeners(GameState state) {
-    return listeners.getOrDefault(state, new ConcurrentLinkedQueue<>());
+  public <V> PublisherSubscription addListener(GameState state, GameActionObject<V> action) {
+    return publisher.subscribeOn(state.name(), action);
   }
 
   @Override
-  public <V> void addListener(GameState state, GameActionObject<V> action) {
-    listeners.putIfAbsent(state, new ConcurrentLinkedQueue<>());
-    listeners.get(state).add(action);
+  public void removeListener(PublisherSubscription subscription) {
+    publisher.unsubscribe(subscription);
   }
-
 }

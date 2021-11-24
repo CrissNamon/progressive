@@ -111,4 +111,11 @@ public final class BasicGameObject implements GameObject {
         .stream().parallel().unordered()
         .forEach(GameScript::start);
   }
+
+  @Override
+  public void stop() {
+    scripts.values()
+        .stream().parallel().unordered()
+        .forEach(GameScript::stop);
+  }
 }

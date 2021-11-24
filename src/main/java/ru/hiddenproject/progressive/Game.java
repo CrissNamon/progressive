@@ -1,11 +1,13 @@
 package ru.hiddenproject.progressive;
 
 import ru.hiddenproject.progressive.component.GameObject;
+import ru.hiddenproject.progressive.lambda.GameAction;
+import ru.hiddenproject.progressive.manager.GameStateManager;
 
 /**
  * Represents game.
  */
-public interface Game {
+public interface Game<S extends GameStateManager> {
 
   /**
    * Creates an empty game object and returns it.
@@ -72,5 +74,40 @@ public interface Game {
    * @param isStatic if true {@link #update(long)} will be called automatically.
    */
   void setStatic(boolean isStatic);
+
+  /**
+   * Sets action to execute before start.
+   *
+   * @param action Action to set
+   */
+  void setPreStart(GameAction action);
+
+  /**
+   * Sets action to execute after start.
+   *
+   * @param action Action to set
+   */
+  void setPostStart(GameAction action);
+
+  /**
+   * Sets action to execute before every update.
+   *
+   * @param action Action to set
+   */
+  void setPreUpdate(GameAction action);
+
+  /**
+   * Sets action to execute after every update.
+   *
+   * @param action Action to set
+   */
+  void setPostUpdate(GameAction action);
+
+  /**
+   * Returns current state manager in game.
+   *
+   * @return {@link ru.hiddenproject.progressive.manager.GameStateManager}
+   */
+  S getStateManager();
 
 }

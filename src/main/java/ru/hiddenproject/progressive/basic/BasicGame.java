@@ -8,35 +8,52 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import ru.hiddenproject.progressive.Game;
 import ru.hiddenproject.progressive.basic.manager.BasicGameStateManager;
+import ru.hiddenproject.progressive.basic.manager.PublisherSubscription;
 import ru.hiddenproject.progressive.basic.util.BasicComponentCreator;
 import ru.hiddenproject.progressive.component.GameObject;
 import ru.hiddenproject.progressive.exception.GameException;
+import ru.hiddenproject.progressive.lambda.GameAction;
 import ru.hiddenproject.progressive.manager.GameState;
+import ru.hiddenproject.progressive.manager.GameStateManager;
 
 /**
  * Basic implementation of {@link ru.hiddenproject.progressive.Game}.
  */
-public final class BasicGame implements Game {
+public final class BasicGame implements Game<GameStateManager<PublisherSubscription, GameState>> {
 
+  private final Map<Long, GameObject> gameObjects;
+  private final ScheduledExecutorService scheduler;
   private final AtomicLong idGenerator;
+  private final GameStateManager<PublisherSubscription, GameState> stateManager;
 
   private boolean isStatic;
   private int frameTime;
-
-  private final Map<Long, GameObject> gameObjects;
-  private final BasicGameStateManager stateManager;
-  private Class<? extends GameObject> gameObjClass;
-  private final ScheduledExecutorService scheduler;
-
   private boolean isStarted;
   private long deltaTime;
+  
+  private Class<? extends GameObject> gameObjClass;
+  private GameAction preStart;
+  private GameAction postStart;
+  private GameAction preUpdate;
+  private GameAction postUpdate;
+
+  public BasicGame(GameStateManager<PublisherSubscription, GameState> gameStateManager) {
+    BasicComponentManager
+        .getGameLogger().info("Progressive IoC initialization...\n");
+    stateManager = gameStateManager;
+    gameObjects = new ConcurrentSkipListMap<>();
+    idGenerator = new AtomicLong(0);
+    scheduler = Executors.newScheduledThreadPool(4);
+    isStarted = false;
+    stateManager.setState(GameState.INIT, this);
+  }
 
   public BasicGame() {
     BasicComponentManager
         .getGameLogger().info("Progressive IoC initialization...\n");
+    stateManager = new BasicGameStateManager();
     gameObjects = new ConcurrentSkipListMap<>();
     idGenerator = new AtomicLong(0);
-    stateManager = BasicGameStateManager.getInstance();
     scheduler = Executors.newScheduledThreadPool(4);
     isStarted = false;
     stateManager.setState(GameState.INIT, this);
@@ -45,8 +62,14 @@ public final class BasicGame implements Game {
   @Override
   public synchronized void start() {
     stateManager.setState(GameState.STARTED, true);
+    if (preStart != null) {
+      preStart.make();
+    }
     callStartInObject();
     isStarted = true;
+    if (postStart != null) {
+      postStart.make();
+    }
     if (!isStatic) {
       scheduler.scheduleAtFixedRate(this::update, frameTime, frameTime, TimeUnit.MILLISECONDS);
     }
@@ -56,16 +79,25 @@ public final class BasicGame implements Game {
 
   @Override
   public synchronized void update(long delta) {
+    if (preUpdate != null) {
+      preUpdate.make();
+    }
     gameObjects.values()
         .stream().parallel().unordered()
         .forEach(o -> o.update(delta));
+    if (postUpdate != null) {
+      postUpdate.make();
+    }
   }
 
   @Override
   public synchronized void stop() {
-    stateManager.setState(GameState.STOPPED, true);
     isStarted = false;
     scheduler.shutdownNow();
+    gameObjects.values()
+        .parallelStream().unordered()
+        .forEach(GameObject::stop);
+    stateManager.setState(GameState.STOPPED, true);
   }
 
   @Override
@@ -127,6 +159,31 @@ public final class BasicGame implements Game {
     if (!isStarted) {
       this.isStatic = isStatic;
     }
+  }
+
+  @Override
+  public void setPreStart(GameAction action) {
+    preStart = action;
+  }
+
+  @Override
+  public void setPostStart(GameAction action) {
+    postStart = action;
+  }
+
+  @Override
+  public void setPreUpdate(GameAction action) {
+    preUpdate = action;
+  }
+
+  @Override
+  public void setPostUpdate(GameAction action) {
+    postUpdate = action;
+  }
+
+  @Override
+  public GameStateManager<PublisherSubscription, GameState> getStateManager() {
+    return stateManager;
   }
 
   private void callStartInObject() {

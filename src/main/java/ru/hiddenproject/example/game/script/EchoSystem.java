@@ -46,6 +46,12 @@ public class EchoSystem implements GameScript {
   }
 
   @Override
+  public void stop() {
+    BasicComponentManager
+        .getGameLogger().info("EchoSystem stop");
+  }
+
+  @Override
   public void setGameObject(GameObject parent) {
     this.parent = parent;
   }

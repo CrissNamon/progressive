@@ -38,6 +38,12 @@ public interface GameScript extends Serializable {
   void update(long delta);
 
   /**
+   * Stops script. Called automatically on
+   * {@link Game#stop()} and {@link GameObject#stop()}.
+   */
+  void stop();
+
+  /**
    * Sets parent game object
    *
    * @param parent Object to set as parent

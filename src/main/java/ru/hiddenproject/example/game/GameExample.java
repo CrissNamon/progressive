@@ -2,9 +2,11 @@ package ru.hiddenproject.example.game;
 
 import ru.hiddenproject.example.game.script.EchoSystem;
 import ru.hiddenproject.progressive.Game;
-import ru.hiddenproject.progressive.basic.*;
+import ru.hiddenproject.progressive.basic.BasicComponentManager;
+import ru.hiddenproject.progressive.basic.BasicGame;
+import ru.hiddenproject.progressive.basic.BasicGameObject;
+import ru.hiddenproject.progressive.basic.GameInitializer;
 import ru.hiddenproject.progressive.basic.manager.BasicGameStateManager;
-import ru.hiddenproject.progressive.injection.DIContainer;
 import ru.hiddenproject.progressive.manager.GameState;
 
 public class GameExample {
@@ -13,15 +15,20 @@ public class GameExample {
     //Initiate game components such as DI container and Game
     //autoScan = true means Scan all packages for beans and configurations classes
     GameInitializer.init(true);
-    //Get DI container instance
-    DIContainer diContainer = BasicComponentManager.getDiContainer();
+
     //State manager instance
-    BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
+    BasicGameStateManager stateManager = new BasicGameStateManager();
     //Subscribe to some instance. This will be executed when game will be initialized first time
     stateManager.<BasicGame>addListener(GameState.INIT, (g) -> BasicComponentManager
         .getGameLogger().info("GAME INITIATED\n"));
+
+    //Create game instance with state manager
+    Game game = new BasicGame(stateManager);
+    //Put game instance to component manager for global access
+    BasicComponentManager.setGame(game);
+
     //Get game instance
-    Game game = BasicComponentManager.getGame();
+    game = BasicComponentManager.getGame();
     game.setGameObjectClass(BasicGameObject.class);
     game.setFrameTime(16);
     game.setStatic(false);
@@ -35,6 +42,16 @@ public class GameExample {
 
     GameScene gameScene = new GameScene();
     gameScene.loadScene();
+
+    //Set action to execute before start
+    game.setPreStart(() -> System.out.println("Before start"));
+    //Set action to execute after start
+    game.setPostStart(() -> System.out.println("After start"));
+
+    //Set action to execute before every update
+    game.setPreUpdate(() -> System.out.println("Before update"));
+    //Set action to execute after every update
+    game.setPostUpdate(() -> System.out.println("After update"));
 
     //Start game
     game.start();
