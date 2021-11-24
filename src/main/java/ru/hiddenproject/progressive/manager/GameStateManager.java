@@ -1,6 +1,5 @@
 package ru.hiddenproject.progressive.manager;
 
-import java.util.Queue;
 import ru.hiddenproject.progressive.lambda.GameActionObject;
 
 /**
@@ -8,7 +7,7 @@ import ru.hiddenproject.progressive.lambda.GameActionObject;
  *
  * @param <S> State type
  */
-public interface GameStateManager<S extends GameState> {
+public interface GameStateManager<I, S> {
 
   /**
    * Returns current state
@@ -26,14 +25,6 @@ public interface GameStateManager<S extends GameState> {
    */
   <O> void setState(S state, O actionParam);
 
-  /**
-   * Returns all listeners attached to {@code state}
-   *
-   * @param state State to search
-   * @return Queue with actions for {@code state}
-   */
-  Queue<GameActionObject> getListeners(S state);
-
 
   /**
    * Adds listener to state
@@ -42,7 +33,13 @@ public interface GameStateManager<S extends GameState> {
    * @param <V>    Action param type
    * @param action Action to add
    */
-  <V> void addListener(S state, GameActionObject<V> action);
+  <V> I addListener(S state, GameActionObject<V> action);
 
+  /**
+   * Removes listener for state change.
+   *
+   * @param subscription Subscription to remove
+   */
+  void removeListener(I subscription);
 
 }

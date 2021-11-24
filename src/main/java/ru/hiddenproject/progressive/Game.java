@@ -2,11 +2,12 @@ package ru.hiddenproject.progressive;
 
 import ru.hiddenproject.progressive.component.GameObject;
 import ru.hiddenproject.progressive.lambda.GameAction;
+import ru.hiddenproject.progressive.manager.GameStateManager;
 
 /**
  * Represents game.
  */
-public interface Game {
+public interface Game<S extends GameStateManager> {
 
   /**
    * Creates an empty game object and returns it.
@@ -101,5 +102,12 @@ public interface Game {
    * @param action Action to set
    */
   void setPostUpdate(GameAction action);
+
+  /**
+   * Returns current state manager in game.
+   *
+   * @return {@link ru.hiddenproject.progressive.manager.GameStateManager}
+   */
+  S getStateManager();
 
 }

@@ -13,7 +13,8 @@ import ru.hiddenproject.progressive.manager.GamePublisher;
  * Basic implementation of {@link ru.hiddenproject.progressive.manager.GamePublisher}.
  * <p>Allow you to subscribe on and make global events</p>
  */
-public final class BasicGamePublisher implements GamePublisher<PublisherSubscription> {
+public class BasicGamePublisher
+    implements GamePublisher<PublisherSubscription, String> {
 
   private static BasicGamePublisher INSTANCE;
 
@@ -22,7 +23,7 @@ public final class BasicGamePublisher implements GamePublisher<PublisherSubscrip
   private final Map<String, Map<Long, GameActionObject>> feed;
   private PublisherType publisherType;
 
-  private BasicGamePublisher() {
+  protected BasicGamePublisher() {
     feed = new ConcurrentHashMap<>();
     publisherType = PublisherType.PARALLEL;
     generator = new AtomicLong(0);

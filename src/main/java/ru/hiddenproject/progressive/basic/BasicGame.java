@@ -8,40 +8,52 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import ru.hiddenproject.progressive.Game;
 import ru.hiddenproject.progressive.basic.manager.BasicGameStateManager;
+import ru.hiddenproject.progressive.basic.manager.PublisherSubscription;
 import ru.hiddenproject.progressive.basic.util.BasicComponentCreator;
 import ru.hiddenproject.progressive.component.GameObject;
 import ru.hiddenproject.progressive.exception.GameException;
 import ru.hiddenproject.progressive.lambda.GameAction;
 import ru.hiddenproject.progressive.manager.GameState;
+import ru.hiddenproject.progressive.manager.GameStateManager;
 
 /**
  * Basic implementation of {@link ru.hiddenproject.progressive.Game}.
  */
-public final class BasicGame implements Game {
+public final class BasicGame implements Game<GameStateManager<PublisherSubscription, GameState>> {
 
+  private final Map<Long, GameObject> gameObjects;
+  private final ScheduledExecutorService scheduler;
   private final AtomicLong idGenerator;
+  private final GameStateManager<PublisherSubscription, GameState> stateManager;
 
   private boolean isStatic;
   private int frameTime;
-
-  private final Map<Long, GameObject> gameObjects;
-  private final BasicGameStateManager stateManager;
+  private boolean isStarted;
+  private long deltaTime;
+  
   private Class<? extends GameObject> gameObjClass;
-  private final ScheduledExecutorService scheduler;
   private GameAction preStart;
   private GameAction postStart;
   private GameAction preUpdate;
   private GameAction postUpdate;
 
-  private boolean isStarted;
-  private long deltaTime;
+  public BasicGame(GameStateManager<PublisherSubscription, GameState> gameStateManager) {
+    BasicComponentManager
+        .getGameLogger().info("Progressive IoC initialization...\n");
+    stateManager = gameStateManager;
+    gameObjects = new ConcurrentSkipListMap<>();
+    idGenerator = new AtomicLong(0);
+    scheduler = Executors.newScheduledThreadPool(4);
+    isStarted = false;
+    stateManager.setState(GameState.INIT, this);
+  }
 
   public BasicGame() {
     BasicComponentManager
         .getGameLogger().info("Progressive IoC initialization...\n");
+    stateManager = new BasicGameStateManager();
     gameObjects = new ConcurrentSkipListMap<>();
     idGenerator = new AtomicLong(0);
-    stateManager = BasicGameStateManager.getInstance();
     scheduler = Executors.newScheduledThreadPool(4);
     isStarted = false;
     stateManager.setState(GameState.INIT, this);
@@ -167,6 +179,11 @@ public final class BasicGame implements Game {
   @Override
   public void setPostUpdate(GameAction action) {
     postUpdate = action;
+  }
+
+  @Override
+  public GameStateManager<PublisherSubscription, GameState> getStateManager() {
+    return stateManager;
   }
 
   private void callStartInObject() {

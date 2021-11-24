@@ -13,7 +13,7 @@ public class PublisherExample {
 
   public PublisherExample() {
     //Get publisher instance
-    GamePublisher<PublisherSubscription> basicGamePublisher =
+    GamePublisher<PublisherSubscription, String> basicGamePublisher =
         BasicGamePublisher.getInstance();
 
     //Set publisher type

@@ -15,13 +15,20 @@ public class GameExample {
     //Initiate game components such as DI container and Game
     //autoScan = true means Scan all packages for beans and configurations classes
     GameInitializer.init(true);
+
     //State manager instance
-    BasicGameStateManager stateManager = BasicGameStateManager.getInstance();
+    BasicGameStateManager stateManager = new BasicGameStateManager();
     //Subscribe to some instance. This will be executed when game will be initialized first time
     stateManager.<BasicGame>addListener(GameState.INIT, (g) -> BasicComponentManager
         .getGameLogger().info("GAME INITIATED\n"));
+
+    //Create game instance with state manager
+    Game game = new BasicGame(stateManager);
+    //Put game instance to component manager for global access
+    BasicComponentManager.setGame(game);
+
     //Get game instance
-    Game game = BasicComponentManager.getGame();
+    game = BasicComponentManager.getGame();
     game.setGameObjectClass(BasicGameObject.class);
     game.setFrameTime(16);
     game.setStatic(false);
