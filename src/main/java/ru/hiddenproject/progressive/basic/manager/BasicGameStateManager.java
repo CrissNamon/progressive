@@ -26,12 +26,7 @@ public class BasicGameStateManager implements GameStateManager<PublisherSubscrip
   }
 
   @Override
-  @Protected("This method is secured. Only game class can call it")
   public synchronized <O> void setState(GameState state, O o) {
-    GameSecurityManager.allowAccessTo(
-        "This method can be called only from Game class. "
-            + "Access denied",
-        BasicGame.class, BasicGameStateManager.class);
     publisher.sendTo(state.name(), o);
     this.state = state;
   }
