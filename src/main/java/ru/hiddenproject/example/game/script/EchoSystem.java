@@ -18,11 +18,6 @@ public class EchoSystem implements GameScript {
   @FromParent
   private GameItemSystem gameItemSystem;
 
-  //Subscribe to game global update with GamePublisher and pass update delta time to say method
-  public EchoSystem() {
-    BasicGamePublisher.getInstance().subscribeOn("update", this::say);
-  }
-
   @Override
   public GameObject gameObject() {
     return parent;
