@@ -5,7 +5,7 @@ package ru.hiddenproject.progressive.exception;
  */
 public class BeanUndefinedException extends RuntimeException {
 
-  public final static String DEFAULT_MESSAGE = "Undefined error occurred";
+  public static final String DEFAULT_MESSAGE = "Undefined error occurred";
 
   public BeanUndefinedException(String message) {
     super(message);

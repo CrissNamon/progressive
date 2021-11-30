@@ -37,7 +37,8 @@ public final class BasicDIContainer implements DIContainer {
    * Basic constructor.
    *
    * @param variant Variant to be used in bean creation.
-   *                See {@link ru.hiddenproject.progressive.annotation.GameBean} for more information.
+   *                See {@link ru.hiddenproject.progressive.annotation.GameBean}
+   *                for more information.
    */
   public BasicDIContainer(String variant) {
     BasicComponentManager.getGameLogger().info("Progressive DI initialization of "
@@ -111,7 +112,7 @@ public final class BasicDIContainer implements DIContainer {
     if (beansOfClass.size() > 1) {
       beansOfClass.forEach(k -> System.out.println(k.toString()));
       throw new BeanConflictException("There are more than one beans of " + beanClass.getName()
-      + " found! What to inject?");
+          + " found! What to inject?");
     }
     BeanKey beanKey = beansOfClass.stream()
         .parallel()
@@ -185,12 +186,14 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   @Override
-  public synchronized void loadConfiguration(Class<?> configClass) throws BeanUndefinedException {
+  public synchronized void loadConfiguration(Class<?> configClass)
+      throws BeanUndefinedException {
     loadConfiguration(configClass, new SimplePackageScanner());
   }
 
   @Override
-  public void loadConfiguration(Class<?> config, PackageScanner scanner) throws BeanUndefinedException {
+  public void loadConfiguration(Class<?> config, PackageScanner scanner)
+      throws BeanUndefinedException {
     Method[] methods = config.getDeclaredMethods();
     Arrays.asList(methods).removeIf(m -> !m.isAnnotationPresent(GameBean.class));
     Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
@@ -370,7 +373,7 @@ public final class BasicDIContainer implements DIContainer {
       beanData.setMethod(m);
       beanData.setMethodCaller(o);
       beanData.setRealType(beanData.getBean().getClass());
-      updateRealTypeInterfaces(name, beanData.getRealType(),  beanData);
+      updateRealTypeInterfaces(name, beanData.getRealType(), beanData);
       BasicComponentManager
           .getGameLogger().info("GameBean with name " + name + " created for "
           + beanData.getBean().getClass().getName() + " from method " + m.getName());
@@ -395,7 +398,9 @@ public final class BasicDIContainer implements DIContainer {
   private Bean invoke(Method m, Object obj) throws ArrayIndexOutOfBoundsException {
     GameBean annotation = m.getAnnotation(GameBean.class);
     Object[] args = BasicComponentCreator
-        .injectBeansToParameters(m.getReturnType(), m.getParameterTypes(), m.getParameterAnnotations());
+        .injectBeansToParameters(
+            m.getReturnType(), m.getParameterTypes(), m.getParameterAnnotations()
+        );
     Object methodResult = BasicComponentCreator.invoke(m, obj, args);
     Bean beanData = new Bean();
     beanData.setBean(methodResult);

@@ -4,22 +4,22 @@ import java.util.Collection;
 import ru.hiddenproject.progressive.Game;
 
 /**
- * Represents abstract GameObject
+ * Represents abstract GameObject.
  */
 public interface GameObject extends GameComponent {
 
   /**
-   * Returns existed GameScript attached to this object or creates new
+   * Returns existed GameScript attached to this object or creates new.
    *
    * @param gameScriptClass GameScript class to get
    * @param <V>             GameScript to return
-   * @param args Arguments to use in script's constructor
+   * @param args            Arguments to use in script's constructor
    * @return Game script
    */
   <V extends GameScript> V getGameScript(Class<V> gameScriptClass, Object... args);
 
   /**
-   * Checks if this object has given GameScript attached to this object
+   * Checks if this object has given GameScript attached to this object.
    *
    * @param gameScriptClass GameScript class to get
    * @param <V>             GameScript type
@@ -28,7 +28,7 @@ public interface GameObject extends GameComponent {
   <V extends GameScript> boolean hasGameScript(Class<V> gameScriptClass);
 
   /**
-   * Removes game script from this object
+   * Removes game script from this object.
    *
    * @param gameScriptClass GameScript class to remove
    * @param <V>             GameScript type
@@ -37,7 +37,7 @@ public interface GameObject extends GameComponent {
   <V extends GameScript> boolean removeGameScript(Class<V> gameScriptClass);
 
   /**
-   * Gets all scripts attached to this object
+   * Gets all scripts attached to this object.
    *
    * @return Collection of GameScripts
    */
@@ -66,7 +66,6 @@ public interface GameObject extends GameComponent {
   /**
    * Calls {@link GameScript#stop()} on each {@link GameScript}.
    * Called automatically on {@link Game#stop()}.
-   *
    */
   void stop();
 

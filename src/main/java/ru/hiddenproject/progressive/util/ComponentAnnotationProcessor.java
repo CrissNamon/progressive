@@ -3,12 +3,12 @@ package ru.hiddenproject.progressive.util;
 import java.lang.annotation.*;
 
 /**
- * Processes annotations
+ * Processes annotations.
  */
 public final class ComponentAnnotationProcessor {
 
   /**
-   * Checks if class annotated with annotation
+   * Checks if class annotated with annotation.
    *
    * @param an Annotation to check
    * @param c  Class to check
@@ -19,7 +19,7 @@ public final class ComponentAnnotationProcessor {
   }
 
   /**
-   * Searches for annotation on class
+   * Searches for annotation on class.
    *
    * @param clazz          Class to search in
    * @param annotationType Annotation class to search
@@ -28,7 +28,8 @@ public final class ComponentAnnotationProcessor {
    */
   @SuppressWarnings("unchecked")
   public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
-    if (clazz.equals(Target.class) || clazz.equals(Documented.class) || clazz.equals(Retention.class)
+    if (clazz.equals(Target.class) || clazz.equals(Documented.class)
+        || clazz.equals(Retention.class)
         || clazz.equals(Inherited.class) || clazz.equals(Deprecated.class)) {
       return null;
     }

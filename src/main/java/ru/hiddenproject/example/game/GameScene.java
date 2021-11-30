@@ -3,7 +3,6 @@ package ru.hiddenproject.example.game;
 import java.util.ArrayList;
 import java.util.List;
 import ru.hiddenproject.example.game.script.CharacterSystem;
-import ru.hiddenproject.progressive.basic.BasicGameObject;
 import ru.hiddenproject.progressive.basic.BasicComponentManager;
 import ru.hiddenproject.progressive.component.GameObject;
 

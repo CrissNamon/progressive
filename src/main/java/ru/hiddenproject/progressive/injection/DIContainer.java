@@ -5,12 +5,13 @@ import ru.hiddenproject.progressive.basic.GameInitializer;
 import ru.hiddenproject.progressive.exception.BeanUndefinedException;
 
 /**
- * Represents Dependency Injection container
+ * Represents Dependency Injection container.
  */
 public interface DIContainer {
 
   /**
-   * Initiates DI container with {@link ru.hiddenproject.progressive.basic.injection.SimplePackageLoader}
+   * Initiates DI container with
+   * {@link ru.hiddenproject.progressive.basic.injection.SimplePackageLoader}
    * and {@link ru.hiddenproject.progressive.basic.injection.SimplePackageScanner}.
    * Will be called after {@link GameInitializer#init(boolean)}.
    */
@@ -19,13 +20,13 @@ public interface DIContainer {
   /**
    * Initiates DI container with {@code packageLoader} and {@code packageScanner}.
    *
-   * @param packageLoader {@link ru.hiddenproject.progressive.basic.injection.SimplePackageLoader} to use
+   * @param packageLoader  {@link ru.hiddenproject.progressive.basic.injection.SimplePackageLoader} to use
    * @param packageScanner {@link ru.hiddenproject.progressive.basic.injection.SimplePackageScanner} to use
    */
   void init(PackageLoader packageLoader, PackageScanner packageScanner);
 
   /**
-   * Gets bean by it's name and class
+   * Gets bean by it's name and class.
    *
    * @param name      Bean name to find
    * @param beanClass Bean class to find
@@ -35,7 +36,7 @@ public interface DIContainer {
   <V> V getBean(String name, Class<V> beanClass);
 
   /**
-   * Gets random bean bean with given class
+   * Gets random bean bean with given class.
    *
    * @param beanClass Bean class to find
    * @param <V>       Bean object to return
@@ -66,7 +67,7 @@ public interface DIContainer {
    * Scans package {@code name} for {@link ru.hiddenproject.progressive.annotation.Configuration}
    * and {@link ru.hiddenproject.progressive.annotation.GameBean} using {@code loader}.
    *
-   * @param name Package name to scan
+   * @param name   Package name to scan
    * @param loader {@link PackageScanner} to use
    */
   void scanPackage(String name, PackageScanner loader);
@@ -83,13 +84,14 @@ public interface DIContainer {
    * Loads configuration into container with custom {@link PackageScanner}.
    *
    * @param configClass Configuration class to load
-   * @param scanner {@link PackageScanner} to use
+   * @param scanner     {@link PackageScanner} to use
    * @throws BeanUndefinedException Thrown on undefined exception
    */
-  void loadConfiguration(Class<?> configClass, PackageScanner scanner) throws BeanUndefinedException;
+  void loadConfiguration(Class<?> configClass, PackageScanner scanner)
+      throws BeanUndefinedException;
 
   /**
-   * Loads configuration into container
+   * Loads configuration into container.
    *
    * @param configClass Configuration class to load
    * @throws BeanUndefinedException Thrown on undefined exception

@@ -13,7 +13,7 @@ public class GameItemSystem implements GameScript {
 
   private GameObject parent;
 
-  private GameItem item;
+  private final GameItem item;
 
   //Beans can be autofilled as interfaces they implement
   @Autofill

@@ -9,7 +9,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -150,7 +153,7 @@ public abstract class BasicComponentCreator {
         .collect(Collectors.toList());
     if (qualifiers.size() > 1) {
       throw new BeanConflictException("Method parameter in " + beanClass.getName()
-      + " has more than one @Qualifier annotation. What to use?");
+          + " has more than one @Qualifier annotation. What to use?");
     }
     if (qualifiers.size() == 1) {
       qualifier = (Qualifier) qualifiers.get(0);
@@ -207,8 +210,8 @@ public abstract class BasicComponentCreator {
       }
     } catch (Throwable throwable) {
       throwable.printStackTrace();
-      throw new RuntimeException("Exception has occurred while method invocation!" +
-          " Exception: " + throwable.getMessage());
+      throw new RuntimeException("Exception has occurred while method invocation!"
+          + " Exception: " + throwable.getMessage());
     }
   }
 
@@ -225,11 +228,13 @@ public abstract class BasicComponentCreator {
         caller.unreflect(method),
         MethodType.methodType(Object.class, bean.getClass())
     );
-    Function<Object, Object> fullFunction = (Function<Object, Object>) site.getTarget().invokeExact();
+    Function<Object, Object> fullFunction =
+        (Function<Object, Object>) site.getTarget().invokeExact();
     return fullFunction.apply(bean);
   }
 
-  private static Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg) throws Throwable {
+  private static Object invokeObjectMethodWithOneParam(Object bean, Method method, Object arg)
+      throws Throwable {
     MethodHandles.Lookup caller = MethodHandles.lookup();
     MethodType invokedType = MethodType.methodType(BiFunction.class);
     method.setAccessible(true);
@@ -243,13 +248,15 @@ public abstract class BasicComponentCreator {
         caller.unreflect(method),
         caller.unreflect(method).type()
     );
-    BiFunction<Object, Object, Object> fullFunction = (BiFunction<Object, Object, Object>) site.getTarget().invoke();
+    BiFunction<Object, Object, Object> fullFunction =
+        (BiFunction<Object, Object, Object>) site.getTarget().invoke();
     return fullFunction.apply(bean, methodParamTypes[0].cast(arg));
   }
 
   /**
    * Check if given modifier is included in all modifiers.
-   * <p>You can check if method or field you got from Reflection have some modifiers like private, public, etc</p>
+   * <p>You can check if method or field you got from Reflection
+   * have some modifiers like private, public, etc</p>
    *
    * @param allModifiers     All modifiers field or method has
    * @param specificModifier Modifier to check

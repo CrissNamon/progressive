@@ -9,12 +9,12 @@ import ru.hiddenproject.progressive.exception.GameScriptException;
 import ru.hiddenproject.progressive.util.ComponentAnnotationProcessor;
 
 /**
- * Represents game script
+ * Represents game script.
  */
 public interface GameScript extends Serializable {
 
   /**
-   * Gets parent GameObject
+   * Gets parent GameObject.
    *
    * @return Parent game object with this script is attached to
    */
@@ -44,14 +44,15 @@ public interface GameScript extends Serializable {
   void stop();
 
   /**
-   * Sets parent game object
+   * Sets parent game object.
    *
    * @param parent Object to set as parent
    */
   void setGameObject(GameObject parent);
 
   /**
-   * Fills GameScript fields annotated as @FromParent from parent GameObject this script if attached to
+   * Fills GameScript fields annotated as @FromParent
+   * from parent GameObject this script if attached to.
    *
    * @throws IllegalAccessException if field is not accessible
    */
@@ -59,7 +60,11 @@ public interface GameScript extends Serializable {
     Field[] scriptFields = getClass().getDeclaredFields();
     GameObject parent = gameObject();
     if (parent == null) {
-      throw new GameScriptException("Could not autowire fields from parent in " + getClass().getName() + ": parent object is not set");
+      throw new GameScriptException(
+          "Could not autowire fields from parent in "
+              + getClass().getName()
+              + ": parent object is not set"
+      );
     }
     for (Field f : scriptFields) {
       f.setAccessible(true);
@@ -67,8 +72,13 @@ public interface GameScript extends Serializable {
         if (ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, f.getType())) {
           f.set(this, gameObject().getGameScript(f.getType().asSubclass(GameScript.class)));
         } else {
-          throw new GameScriptException("Could not autowire field " + f.getName() + " in " + getClass().getName()
-              + "! Only fields of type IsGameScript and annotated with @IsGameScript supported for autowire");
+          throw new GameScriptException(
+              "Could not autowire field "
+                  + f.getName()
+                  + " in "
+                  + getClass().getName()
+                  + "! Only fields of type IsGameScript and annotated "
+                  + "with @IsGameScript supported for autowire");
         }
       }
     }

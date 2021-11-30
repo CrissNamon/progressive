@@ -4,7 +4,7 @@ import ru.hiddenproject.progressive.lambda.GameActionObject;
 import ru.hiddenproject.progressive.util.GameObjectCaster;
 
 /**
- * Basic implementation of object caster
+ * Basic implementation of object caster.
  */
 public final class BasicObjectCaster implements GameObjectCaster {
 

@@ -3,7 +3,7 @@ package ru.hiddenproject.progressive.basic.log;
 import ru.hiddenproject.progressive.log.GameLogger;
 
 /**
- * Simple game logger implementation using {@link java.lang.System}
+ * Simple game logger implementation using {@link java.lang.System}.
  */
 public class SimpleGameLogger implements GameLogger {
 

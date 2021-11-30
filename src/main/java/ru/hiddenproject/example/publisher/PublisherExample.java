@@ -29,11 +29,14 @@ public class PublisherExample {
     //Subscribe to topic "set" and set current message to received message
     basicGamePublisher.subscribeOn("set", m -> message = m.toString());
 
-    //Send message "hello" to "method" topic, e.g. call all listeners on "method" topic and pass "hello" to them
+    //Send message "hello" to "method" topic,
+    // e.g. call all listeners on "method" topic and pass "hello" to them
     basicGamePublisher.sendTo("method", "hello");
-    //Send message "message" to "print" topic, e.g. call all listeners on "print" and pass "message" to them
+    //Send message "message" to "print" topic,
+    // e.g. call all listeners on "print" and pass "message" to them
     basicGamePublisher.sendTo("print", "message");
-    //Send GameItem object to "set" topic, e.g. call all listeners on "set" and pass GameItem to them
+    //Send GameItem object to "set" topic,
+    // e.g. call all listeners on "set" and pass GameItem to them
     basicGamePublisher.sendTo("set", new GameItem());
 
     //Remove listener from topic

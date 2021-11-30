@@ -9,8 +9,10 @@ import ru.hiddenproject.progressive.proxy.ProxyCreator;
 
 /**
  * Component manager provides global access to core components:
- * {@link ru.hiddenproject.progressive.log.GameLogger}, {@link ru.hiddenproject.progressive.proxy.ProxyCreator},
- * {@link ru.hiddenproject.progressive.injection.DIContainer}, {@link ru.hiddenproject.progressive.Game}.
+ * {@link ru.hiddenproject.progressive.log.GameLogger},
+ * {@link ru.hiddenproject.progressive.proxy.ProxyCreator},
+ * {@link ru.hiddenproject.progressive.injection.DIContainer},
+ * {@link ru.hiddenproject.progressive.Game}.
  */
 public final class BasicComponentManager {
 
@@ -37,7 +39,8 @@ public final class BasicComponentManager {
   }
 
   /**
-   * Returns {@link ru.hiddenproject.progressive.proxy.ProxyCreator}. If proxy creator hasn't been set,
+   * Returns {@link ru.hiddenproject.progressive.proxy.ProxyCreator}.
+   * If proxy creator hasn't been set,
    * then sets it to {@link ru.hiddenproject.progressive.basic.proxy.BasicProxyCreator}.
    *
    * @return Current proxy creator
@@ -54,7 +57,8 @@ public final class BasicComponentManager {
   }
 
   /**
-   * Returns {@link ru.hiddenproject.progressive.injection.DIContainer}. If di container hasn't been set,
+   * Returns {@link ru.hiddenproject.progressive.injection.DIContainer}.
+   * If di container hasn't been set,
    * then sets it to {@link BasicDIContainer}.
    *
    * @return Current di container

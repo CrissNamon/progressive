@@ -12,7 +12,8 @@ public class GameItem implements GameComponent {
   private float amount;
   private Long id;
 
-  public GameItem() {}
+  public GameItem() {
+  }
 
   @Autofill
   public GameItem(@Qualifier("globalIdGenerator") Long id) {

@@ -1,12 +1,12 @@
 package ru.hiddenproject.progressive.lambda;
 
 /**
- * Represents some story condition
+ * Represents some story condition.
  */
 public interface GameCondition {
 
   /**
-   * Checks condition
+   * Checks condition.
    *
    * @return true if condition is completed
    */

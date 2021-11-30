@@ -3,7 +3,7 @@ package ru.hiddenproject.progressive.util;
 import ru.hiddenproject.progressive.lambda.GameActionObject;
 
 /**
- * Casts one object type to another
+ * Casts one object type to another.
  */
 public interface GameObjectCaster {
 

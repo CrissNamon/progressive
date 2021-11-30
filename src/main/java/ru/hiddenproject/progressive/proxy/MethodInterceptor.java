@@ -6,8 +6,9 @@ import ru.hiddenproject.progressive.basic.proxy.BasicProxyCreator;
 
 /**
  * Represents method interceptor for {@link BasicProxyCreator},
- * {@link ru.hiddenproject.progressive.annotation.Proxy}
+ * {@link ru.hiddenproject.progressive.annotation.Proxy}.
  */
 public interface MethodInterceptor {
-  Object intercept(Method proxyMethod, Method originMethod, Object proxy, Object... args) throws InvocationTargetException, IllegalAccessException;
+  Object intercept(Method proxyMethod, Method originMethod, Object proxy, Object... args)
+      throws InvocationTargetException, IllegalAccessException;
 }

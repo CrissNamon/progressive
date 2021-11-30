@@ -4,14 +4,14 @@ package ru.hiddenproject.progressive.manager;
 import ru.hiddenproject.progressive.Game;
 
 /**
- * Represents save manager
+ * Represents save manager.
  * <br>
- * Allows to save and load story
+ * Allows to save and load story.
  */
 public interface GameSaveManager {
 
   /**
-   * Saves story
+   * Saves story.
    *
    * @param <T> return save type
    * @return Save
@@ -19,7 +19,7 @@ public interface GameSaveManager {
   <T> T save();
 
   /**
-   * Loads story from save
+   * Loads story from save.
    *
    * @param save Save to load
    * @param <G>  Game class

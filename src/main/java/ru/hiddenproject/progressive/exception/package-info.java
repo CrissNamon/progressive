@@ -1,4 +1,4 @@
 /**
- * Contains progressive exceptions
+ * Contains progressive exceptions.
  */
 package ru.hiddenproject.progressive.exception;

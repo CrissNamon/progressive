@@ -24,7 +24,8 @@ import ru.hiddenproject.progressive.util.ComponentAnnotationProcessor;
  */
 public final class BasicProxyCreator implements ProxyCreator {
 
-  private static final ClassLoadingStrategy DEFAULT_CLASS_LOADING_STRATEGY = ClassLoadingStrategy.Default.WRAPPER;
+  private static final ClassLoadingStrategy DEFAULT_CLASS_LOADING_STRATEGY =
+      ClassLoadingStrategy.Default.WRAPPER;
 
   private static BasicProxyCreator INSTANCE;
 
@@ -64,12 +65,14 @@ public final class BasicProxyCreator implements ProxyCreator {
           + original.getName()
           + " annotated as @Autofill. What to use?");
     }
-    BasicProxyInterceptionHandler basicProxyInterceptionHandler = new BasicProxyInterceptionHandler(interceptor);
+    BasicProxyInterceptionHandler basicProxyInterceptionHandler =
+        new BasicProxyInterceptionHandler(interceptor);
     DynamicType.Builder builder = createDynamicType(original);
 
     if (autoInjectConstructors.size() == 1) {
       Constructor<?> constructor = autoInjectConstructors.get(0);
-      DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition receiverTypeDefinition = createReceiverTypeDefinition(
+      DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition receiverTypeDefinition =
+          createReceiverTypeDefinition(
           ElementMatchers.isDeclaredBy(original),
           ElementMatchers.named(constructor.getName()),
           basicProxyInterceptionHandler,
@@ -85,7 +88,9 @@ public final class BasicProxyCreator implements ProxyCreator {
       );
     }
     DynamicType.Unloaded<V> unloadedClass = makeProxy(builder);
-    Class<?> type = loadProxyClass(unloadedClass, original.getClassLoader(), getInstance().classLoadingStrategy)
+    Class<?> type = loadProxyClass(
+        unloadedClass, original.getClassLoader(), getInstance().classLoadingStrategy
+    )
         .getLoaded();
     return (Class<V>) type;
   }
@@ -102,10 +107,14 @@ public final class BasicProxyCreator implements ProxyCreator {
   public <V> Class<V> createProxyClass(Class<V> original) {
     Proxy proxy = ComponentAnnotationProcessor.findAnnotation(original, Proxy.class);
     if (proxy == null) {
-      throw new RuntimeException(original.getName() + " must be annotated as @Proxy or MethodInterceptor must be specified!");
+      throw new RuntimeException(
+          original.getName()
+              + " must be annotated as @Proxy or MethodInterceptor must be specified!"
+      );
     }
     MethodInterceptor interceptor = BasicComponentCreator.create(proxy.value());
-    BasicProxyInterceptionHandler basicProxyInterceptionHandler = new BasicProxyInterceptionHandler(interceptor);
+    BasicProxyInterceptionHandler basicProxyInterceptionHandler =
+        new BasicProxyInterceptionHandler(interceptor);
     List<Constructor<?>> autoInjectConstructors
         = BasicComponentCreator.foundAutoInjectConstructors(original.getDeclaredConstructors());
     if (autoInjectConstructors.size() > 1) {
@@ -116,7 +125,8 @@ public final class BasicProxyCreator implements ProxyCreator {
     DynamicType.Builder builder = createDynamicType(original);
     if (autoInjectConstructors.size() == 1) {
       Constructor<?> constructor = autoInjectConstructors.get(0);
-      DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition receiverTypeDefinition = createReceiverTypeDefinition(
+      DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition receiverTypeDefinition =
+          createReceiverTypeDefinition(
           ElementMatchers.isAnnotatedWith(Intercept.class),
           ElementMatchers.named(constructor.getName()),
           basicProxyInterceptionHandler,
@@ -132,13 +142,17 @@ public final class BasicProxyCreator implements ProxyCreator {
       );
     }
     DynamicType.Unloaded<V> unloadedClass = makeProxy(builder);
-    Class<?> type = loadProxyClass(unloadedClass, original.getClassLoader(), getInstance().classLoadingStrategy)
+    Class<?> type = loadProxyClass(
+        unloadedClass, original.getClassLoader(), getInstance().classLoadingStrategy
+    )
         .getLoaded();
     return (Class<V>) type;
   }
 
   private DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition
-      createReceiverTypeDefinition(ElementMatcher elementMatcherMethod, ElementMatcher elementMatcherConstructor, BasicProxyInterceptionHandler basicProxyInterceptionHandler,
+      createReceiverTypeDefinition(ElementMatcher elementMatcherMethod,
+                               ElementMatcher elementMatcherConstructor,
+                               BasicProxyInterceptionHandler basicProxyInterceptionHandler,
                                DynamicType.Builder builder) {
     return builder
         .method(elementMatcherMethod)
@@ -174,7 +188,9 @@ public final class BasicProxyCreator implements ProxyCreator {
 
   private <V> DynamicType.Builder<V> createDynamicType(Class<V> original) {
     return new ByteBuddy()
-        .subclass(original, ConstructorStrategy.Default.IMITATE_SUPER_CLASS.withInheritedAnnotations());
+        .subclass(
+            original, ConstructorStrategy.Default.IMITATE_SUPER_CLASS.withInheritedAnnotations()
+        );
   }
 
   private <V> DynamicType.Unloaded<V> makeProxy(DynamicType.Builder<V> builder) {

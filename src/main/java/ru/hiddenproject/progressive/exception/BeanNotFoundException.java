@@ -1,7 +1,7 @@
 package ru.hiddenproject.progressive.exception;
 
 /**
- * Thrown if bean is not presented in DI container
+ * Thrown if bean is not presented in DI container.
  */
 public class BeanNotFoundException extends RuntimeException {
 

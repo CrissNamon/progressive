@@ -18,7 +18,10 @@ public final class BasicProxyInterceptionHandler {
   }
 
   @RuntimeType
-  public Object intercept(@SuperMethod Method proxyMethod, @Origin Method originMethod, @This Object proxy, @AllArguments Object... args)
+  public Object intercept(@SuperMethod Method proxyMethod,
+                          @Origin Method originMethod,
+                          @This Object proxy,
+                          @AllArguments Object... args)
       throws InvocationTargetException, IllegalAccessException {
     return methodInterceptor.intercept(proxyMethod, originMethod, proxy, args);
   }

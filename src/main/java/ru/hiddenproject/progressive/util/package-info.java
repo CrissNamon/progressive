@@ -1,4 +1,4 @@
 /**
- * Contains progressive abstract utils
+ * Contains progressive abstract utils.
  */
 package ru.hiddenproject.progressive.util;

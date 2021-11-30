@@ -3,21 +3,21 @@ package ru.hiddenproject.progressive.manager;
 import ru.hiddenproject.progressive.lambda.GameActionObject;
 
 /**
- * Represents story state manager
+ * Represents story state manager.
  *
  * @param <S> State type
  */
 public interface GameStateManager<I, S> {
 
   /**
-   * Returns current state
+   * Returns current state.
    *
    * @return Current story state
    */
   S getCurrentState();
 
   /**
-   * Sets state in manager
+   * Sets state in manager.
    *
    * @param state       New state
    * @param <O>         Action param type
@@ -27,7 +27,7 @@ public interface GameStateManager<I, S> {
 
 
   /**
-   * Adds listener to state
+   * Adds listener to state.
    *
    * @param state  State to add action
    * @param <V>    Action param type

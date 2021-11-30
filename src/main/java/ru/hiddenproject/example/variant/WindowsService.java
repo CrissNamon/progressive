@@ -6,7 +6,7 @@ import ru.hiddenproject.progressive.basic.BasicComponentManager;
 /**
  * This service will be loaded to BasicDIContainer if
  * default variant was specified in BasicDIContainer
- * or wasn't specified at all
+ * or wasn't specified at all.
  */
 @GameBean(variant = GameBean.DEFAULT_VARIANT)
 public class WindowsService implements MyService {

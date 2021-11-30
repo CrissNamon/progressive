@@ -30,7 +30,7 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
   private int frameTime;
   private boolean isStarted;
   private long deltaTime;
-  
+
   private Class<? extends GameObject> gameObjClass;
   private GameAction preStart;
   private GameAction postStart;
@@ -116,7 +116,9 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
     if (!isGameObjectClassSet()) {
       setGameObjectClass(BasicGameObject.class);
     }
-    GameObject gameObject = BasicComponentCreator.create(gameObjClass, idGenerator.incrementAndGet());
+    GameObject gameObject = BasicComponentCreator.create(
+        gameObjClass, idGenerator.incrementAndGet()
+    );
     gameObjects.putIfAbsent(idGenerator.get(), gameObject);
     return (V) gameObject;
   }

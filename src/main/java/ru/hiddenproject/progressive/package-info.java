@@ -1,4 +1,4 @@
 /**
- * Contains progressive framework components
+ * Contains progressive framework components.
  */
 package ru.hiddenproject.progressive;

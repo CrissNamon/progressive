@@ -1,41 +1,14 @@
 package ru.hiddenproject.progressive.manager;
 
-import java.util.Arrays;
 import ru.hiddenproject.progressive.lambda.GameCondition;
 
 /**
- * Helps securing any method with simple rules
+ * Helps securing any method with simple rules.
  */
 public final class GameSecurityManager {
 
   /**
-   * Allows access to given classes, throws RuntimeException otherwise
-   *
-   * @param deniedMessage Message to include in exception
-   * @param classes       Classes which are allowed to call this method
-   * @throws SecurityException if caller class is not allowed to call protected method
-   */
-  public static void allowAccessTo(String deniedMessage, Class<?>... classes) {
-    if (!Arrays.asList(classes).contains(getCallerClass())) {
-      throw new SecurityException(deniedMessage);
-    }
-  }
-
-  /**
-   * Denies access to given classes
-   *
-   * @param deniedMessage Message to include in exception
-   * @param classes       Classes which are denied from calling this method
-   * @throws SecurityException if caller class is not allowed to call protected method
-   */
-  public static void denyAccessTo(String deniedMessage, Class<?>... classes) {
-    if (Arrays.asList(classes).contains(getCallerClass())) {
-      throw new SecurityException(deniedMessage);
-    }
-  }
-
-  /**
-   * Allows access if condition is met, throws RuntimeException otherwise
+   * Allows access if condition is met, throws RuntimeException otherwise.
    *
    * @param deniedMessage Message to include in exception
    * @param processor     Condition to protect method with
@@ -48,7 +21,7 @@ public final class GameSecurityManager {
   }
 
   /**
-   * Denies access if condition is met
+   * Denies access if condition is met.
    *
    * @param deniedMessage Message to include in exception
    * @param processor     Condition to protect method with
@@ -61,7 +34,7 @@ public final class GameSecurityManager {
   }
 
   /**
-   * Returns a class which called method with `getCallerClass` called in
+   * Returns a class which called method with `getCallerClass` called in.
    *
    * @return Class or null on error
    */

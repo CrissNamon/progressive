@@ -14,8 +14,7 @@ import ru.hiddenproject.progressive.exception.GameScriptException;
 import ru.hiddenproject.progressive.util.ComponentAnnotationProcessor;
 
 /**
- * Basic game object contains all necessary logic for simple objects
- * <p color="orange">This class is not extendable. Create game object from zero if you need to</red>
+ * Basic game object contains all necessary logic for simple objects.
  */
 public final class BasicGameObject implements GameObject {
 
@@ -38,8 +37,8 @@ public final class BasicGameObject implements GameObject {
     if (!ComponentAnnotationProcessor.isAnnotationPresent(IsGameScript.class, gameScriptClass)) {
       throw new GameScriptException(
           gameScriptClass.getName()
-          + " has no @IsGameScript annotation. "
-          + "All GameScripts must be annotated with @IsGameScript!");
+              + " has no @IsGameScript annotation. "
+              + "All GameScripts must be annotated with @IsGameScript!");
     }
     BasicObjectCaster objectCaster = new BasicObjectCaster();
     GameScript gameScript = scripts.getOrDefault(gameScriptClass, null);
@@ -53,7 +52,7 @@ public final class BasicGameObject implements GameObject {
         for (Class<? extends GameScript> req : requiredGameScripts.value()) {
           if (!requiredGameScripts.lazy()) {
             getGameScript(req);
-          } else if (!hasGameScript(req)){
+          } else if (!hasGameScript(req)) {
             throw new GameScriptException(gameScriptClass.getName() + " requires "
                 + req.getName() + " which is not attached to " + this);
           }

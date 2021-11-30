@@ -1,7 +1,9 @@
 package ru.hiddenproject.example.game;
 
 import ru.hiddenproject.example.game.component.GameItem;
-import ru.hiddenproject.progressive.annotation.*;
+import ru.hiddenproject.progressive.annotation.Configuration;
+import ru.hiddenproject.progressive.annotation.GameBean;
+import ru.hiddenproject.progressive.annotation.Qualifier;
 import ru.hiddenproject.progressive.basic.util.BasicObjectCaster;
 import ru.hiddenproject.progressive.injection.GameBeanCreationPolicy;
 
@@ -10,7 +12,8 @@ import ru.hiddenproject.progressive.injection.GameBeanCreationPolicy;
  */
 //Configuration class must be annotated as @Configuration
 @Configuration
-//Will scan ru.hiddenproject.example.game.component package for @GameBean classes and @Configuration classes
+//Will scan ru.hiddenproject.example.game.component
+// package for @GameBean classes and @Configuration classes
 //@ComponentScan("ru.hiddenproject.example.game.component")
 public class BasicConfiguration {
 
