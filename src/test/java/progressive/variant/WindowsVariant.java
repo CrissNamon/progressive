@@ -1,6 +1,6 @@
 package progressive.variant;
 
-import ru.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.annotation.*;
 
 @GameBean(variant = "Windows")
 public class WindowsVariant implements ItemVariant {

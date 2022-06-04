@@ -1,7 +1,6 @@
 package progressive.variant;
 
-import ru.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.annotation.*;
 
 @GameBean
-public class GlobalVariant {
-}
+public class GlobalVariant {}

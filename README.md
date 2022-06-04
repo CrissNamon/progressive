@@ -1,5 +1,5 @@
 # Progressive
-[![Build Status](https://app.travis-ci.com/CrissNamon/progressive.svg?branch=main)](https://app.travis-ci.com/CrissNamon/progressive) ![release](https://img.shields.io/github/v/release/crissnamon/progressive?include_prereleases)
+[![Build Status](https://app.travis-ci.com/CrissNamon/progressive.svg?branch=main)](https://app.travis-ci.com/CrissNamon/progressive) ![release](https://img.shields.io/github/v/release/crissnamon/progressive?include_prereleases) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/tech.hiddenproject/progressive/badge.svg)](https://maven-badges.herokuapp.com/maven-central/tech.hiddenproject/progressive)
 <p>Progressive is a simple game framework, which provides you predefined way to develop your game logic.</p>
 
 #### About project
@@ -14,6 +14,24 @@ Main features:
 - The global observer for components connection
 - Proxy classes and proxy objects creation through annotations with custom method interceptors
 </p> 
+
+#### Use
+
+##### Maven
+
+```xml
+<dependency>
+    <groupId>tech.hiddenproject</groupId>
+    <artifactId>progressive</artifactId>
+    <version>0.5.0</version>
+</dependency>
+```
+
+##### Gradle
+
+````groovy
+compile 'tech.hiddenproject:progressive:0.5.0'
+````
 
 #### Resources
 ___

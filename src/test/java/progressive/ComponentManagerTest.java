@@ -1,11 +1,9 @@
 package progressive;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import ru.hiddenproject.progressive.annotation.GameBean;
-import ru.hiddenproject.progressive.basic.BasicComponentManager;
-import ru.hiddenproject.progressive.basic.BasicDIContainer;
-import ru.hiddenproject.progressive.injection.DIContainer;
+import org.junit.jupiter.api.*;
+import tech.hiddenproject.progressive.annotation.*;
+import tech.hiddenproject.progressive.basic.*;
+import tech.hiddenproject.progressive.injection.*;
 
 public class ComponentManagerTest {
 
@@ -16,13 +14,10 @@ public class ComponentManagerTest {
 
     Assertions.assertEquals(first, second);
 
-    BasicComponentManager.setDiContainer(
-        new BasicDIContainer(GameBean.DEFAULT_VARIANT)
-    );
+    BasicComponentManager.setDiContainer(new BasicDIContainer(GameBean.DEFAULT_VARIANT));
     first = BasicComponentManager.getDiContainer();
     second = BasicComponentManager.getDiContainer();
 
     Assertions.assertEquals(first, second);
   }
-
 }

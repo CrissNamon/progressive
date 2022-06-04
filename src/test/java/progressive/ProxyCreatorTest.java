@@ -1,11 +1,10 @@
 package progressive;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import ru.hiddenproject.example.game.component.GameItem;
-import ru.hiddenproject.example.proxy.LoggerMethodInterceptor;
-import ru.hiddenproject.progressive.basic.BasicComponentManager;
-import ru.hiddenproject.progressive.proxy.ProxyCreator;
+import org.junit.jupiter.api.*;
+import tech.hiddenproject.example.game.component.*;
+import tech.hiddenproject.example.proxy.*;
+import tech.hiddenproject.progressive.basic.*;
+import tech.hiddenproject.progressive.proxy.*;
 
 public class ProxyCreatorTest {
 
@@ -15,8 +14,7 @@ public class ProxyCreatorTest {
 
     Assertions.assertNotEquals(
         GameItem.class,
-        proxyCreator.createProxyClass(GameItem.class, new LoggerMethodInterceptor())
-    );
+        proxyCreator.createProxyClass(GameItem.class, new LoggerMethodInterceptor()));
   }
 
   @Test
@@ -24,9 +22,9 @@ public class ProxyCreatorTest {
     ProxyCreator proxyCreator = BasicComponentManager.getProxyCreator();
 
     TestProxyClass original = new TestProxyClass();
-    TestProxyClass proxy = proxyCreator.createProxy(TestProxyClass.class, new LoggerMethodInterceptor());
+    TestProxyClass proxy =
+        proxyCreator.createProxy(TestProxyClass.class, new LoggerMethodInterceptor());
 
     Assertions.assertEquals(original.getLong(1L), proxy.getLong(1L));
   }
-
 }
