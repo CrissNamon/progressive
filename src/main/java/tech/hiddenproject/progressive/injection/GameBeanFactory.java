@@ -1,9 +1,11 @@
 package tech.hiddenproject.progressive.injection;
 
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.injection.*;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.injection.Bean;
 
-/** Helps to process beans. */
+/**
+ * Helps to process beans.
+ */
 public interface GameBeanFactory {
 
   /**

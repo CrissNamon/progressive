@@ -1,15 +1,21 @@
 package tech.hiddenproject.progressive.util;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-/** Processes annotations. */
+/**
+ * Processes annotations.
+ */
 public final class ComponentAnnotationProcessor {
 
   /**
    * Checks if class annotated with annotation.
    *
    * @param an Annotation to check
-   * @param c Class to check
+   * @param c  Class to check
    * @return true if class is annotated with given annotation
    */
   public static boolean isAnnotationPresent(Class<? extends Annotation> an, Class<?> c) {
@@ -19,9 +25,9 @@ public final class ComponentAnnotationProcessor {
   /**
    * Searches for annotation on class.
    *
-   * @param clazz Class to search in
+   * @param clazz          Class to search in
    * @param annotationType Annotation class to search
-   * @param <A> Annotation to search
+   * @param <A>            Annotation to search
    * @return Annotation or null
    */
   @SuppressWarnings("unchecked")

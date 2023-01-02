@@ -1,10 +1,12 @@
 package tech.hiddenproject.progressive.basic.injection;
 
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.injection.*;
-import tech.hiddenproject.progressive.util.*;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.injection.GameBeanFactory;
+import tech.hiddenproject.progressive.util.ComponentAnnotationProcessor;
 
-/** Basic implementation of {@link GameBeanFactory}. */
+/**
+ * Basic implementation of {@link GameBeanFactory}.
+ */
 public class BasicGameBeanFactory implements GameBeanFactory {
 
   @Override

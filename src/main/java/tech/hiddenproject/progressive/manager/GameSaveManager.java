@@ -1,10 +1,9 @@
 package tech.hiddenproject.progressive.manager;
 
-import tech.hiddenproject.progressive.*;
+import tech.hiddenproject.progressive.Game;
 
 /**
- * Represents save manager. <br>
- * Allows to save and load story.
+ * Represents save manager. <br> Allows to save and load story.
  */
 public interface GameSaveManager {
 
@@ -20,7 +19,7 @@ public interface GameSaveManager {
    * Loads story from save.
    *
    * @param save Save to load
-   * @param <G> Game class
+   * @param <G>  Game class
    * @return Loaded story
    */
   <G extends Game> G load(Object save);

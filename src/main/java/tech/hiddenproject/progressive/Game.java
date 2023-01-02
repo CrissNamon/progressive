@@ -1,10 +1,12 @@
 package tech.hiddenproject.progressive;
 
-import tech.hiddenproject.progressive.component.*;
-import tech.hiddenproject.progressive.lambda.*;
-import tech.hiddenproject.progressive.manager.*;
+import tech.hiddenproject.progressive.component.GameObject;
+import tech.hiddenproject.progressive.lambda.GameAction;
+import tech.hiddenproject.progressive.manager.GameStateManager;
 
-/** Represents game. */
+/**
+ * Represents game.
+ */
 public interface Game<S extends GameStateManager> {
 
   /**
@@ -37,7 +39,9 @@ public interface Game<S extends GameStateManager> {
    */
   boolean isGameObjectClassSet();
 
-  /** Starts the game. */
+  /**
+   * Starts the game.
+   */
   void start();
 
   /**
@@ -47,10 +51,14 @@ public interface Game<S extends GameStateManager> {
    */
   void update(long deltaTime);
 
-  /** Stops the game. */
+  /**
+   * Stops the game.
+   */
   void stop();
 
-  /** Disposes game. Calls {@link GameObject#dispose()} on each GameObject. */
+  /**
+   * Disposes game. Calls {@link GameObject#dispose()} on each GameObject.
+   */
   void dispose();
 
   /**

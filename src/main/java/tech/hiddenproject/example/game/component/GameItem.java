@@ -1,7 +1,9 @@
 package tech.hiddenproject.example.game.component;
 
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.component.*;
+import tech.hiddenproject.progressive.annotation.Autofill;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.annotation.Qualifier;
+import tech.hiddenproject.progressive.component.GameComponent;
 
 @GameBean(name = "simpleGameItem")
 public class GameItem implements GameComponent {
@@ -10,7 +12,8 @@ public class GameItem implements GameComponent {
   private float amount;
   private Long id;
 
-  public GameItem() {}
+  public GameItem() {
+  }
 
   @Autofill
   public GameItem(@Qualifier("globalIdGenerator") Long id) {

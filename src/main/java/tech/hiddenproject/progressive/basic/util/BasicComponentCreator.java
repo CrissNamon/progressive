@@ -1,18 +1,31 @@
 package tech.hiddenproject.progressive.basic.util;
 
-import java.lang.annotation.*;
-import java.lang.invoke.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.lang.annotation.Annotation;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import tech.hiddenproject.progressive.annotation.Autofill;
 import tech.hiddenproject.progressive.annotation.Proxy;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.injection.*;
+import tech.hiddenproject.progressive.annotation.Qualifier;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.exception.BeanConflictException;
+import tech.hiddenproject.progressive.injection.DIContainer;
 
-/** Instantiates objects from their classes and uses {@link DIContainer} for auto injection. */
+/**
+ * Instantiates objects from their classes and uses {@link DIContainer} for auto injection.
+ */
 public abstract class BasicComponentCreator {
 
   private static boolean isHandlesEnabled = true;
@@ -20,20 +33,19 @@ public abstract class BasicComponentCreator {
   /**
    * Defines if ComponentCreator can use {@link java.lang.invoke.MethodHandles} apis.
    *
-   * @param isHandlesEnabled if true will use {@link java.lang.invoke.MethodHandles} to invoke
-   *     methods or use {@link java.lang.reflect.Method#invoke(Object, Object...)} otherwise
+   * @param isHandlesEnabled if true will use {@link java.lang.invoke.MethodHandles} to invoke methods or use
+   *                         {@link java.lang.reflect.Method#invoke(Object, Object...)} otherwise
    */
   public static void setIsHandlesEnabled(boolean isHandlesEnabled) {
     BasicComponentCreator.isHandlesEnabled = isHandlesEnabled;
   }
 
   /**
-   * Creates object from given class and makes auto injection for fields and methods if they
-   * annotated as @Autofill.
+   * Creates object from given class and makes auto injection for fields and methods if they annotated as @Autofill.
    *
    * @param componentClass Object class to instantiate
-   * @param args Parameters to pass in class constructor
-   * @param <C> Object to instantiate
+   * @param args           Parameters to pass in class constructor
+   * @param <C>            Object to instantiate
    * @return Instantiated object of null
    */
   public static <C> C create(Class<C> componentClass, Object... args) {
@@ -63,7 +75,8 @@ public abstract class BasicComponentCreator {
             injectBeansToParameters(
                 componentClass,
                 constructor.getParameterTypes(),
-                constructor.getParameterAnnotations());
+                constructor.getParameterAnnotations()
+            );
         constructor.setAccessible(true);
         instance = (C) constructor.newInstance(args);
       } else {
@@ -139,8 +152,8 @@ public abstract class BasicComponentCreator {
    * Invokes method from given object and given args.
    *
    * @param method Method to invoke
-   * @param from Object to invoke method from
-   * @param args Parameters to invoke method with
+   * @param from   Object to invoke method from
+   * @param args   Parameters to invoke method with
    */
   public static Object invoke(Method method, Object from, Object... args) {
     try {
@@ -227,7 +240,8 @@ public abstract class BasicComponentCreator {
             invokedType,
             func.generic(),
             caller.unreflect(method),
-            MethodType.methodType(Object.class, bean.getClass()));
+            MethodType.methodType(Object.class, bean.getClass())
+        );
     Function<Object, Object> fullFunction =
         (Function<Object, Object>) site.getTarget().invokeExact();
     return fullFunction.apply(bean);
@@ -247,7 +261,8 @@ public abstract class BasicComponentCreator {
             invokedType,
             func.generic(),
             caller.unreflect(method),
-            caller.unreflect(method).type());
+            caller.unreflect(method).type()
+        );
     BiFunction<Object, Object, Object> fullFunction =
         (BiFunction<Object, Object, Object>) site.getTarget().invoke();
     return fullFunction.apply(bean, methodParamTypes[0].cast(arg));
@@ -259,7 +274,7 @@ public abstract class BasicComponentCreator {
    * <p>You can check if method or field you got from Reflection have some modifiers like private,
    * public, etc
    *
-   * @param allModifiers All modifiers field or method has
+   * @param allModifiers     All modifiers field or method has
    * @param specificModifier Modifier to check
    * @return true if given modifier presented in all modifiers
    */

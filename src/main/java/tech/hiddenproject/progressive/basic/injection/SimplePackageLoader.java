@@ -1,8 +1,10 @@
 package tech.hiddenproject.progressive.basic.injection;
 
-import tech.hiddenproject.progressive.injection.*;
+import tech.hiddenproject.progressive.injection.PackageLoader;
 
-/** Simple implementation of {@link PackageLoader}. */
+/**
+ * Simple implementation of {@link PackageLoader}.
+ */
 public class SimplePackageLoader implements PackageLoader {
 
   /**

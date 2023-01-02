@@ -1,10 +1,14 @@
 package tech.hiddenproject.progressive.component;
 
-import java.io.*;
+import java.io.Serializable;
 
-/** Abstract game component. */
+/**
+ * Abstract game component.
+ */
 public interface GameComponent extends Serializable {
 
-  /** @return Component id */
+  /**
+   * @return Component id
+   */
   Long getId();
 }

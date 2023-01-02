@@ -1,10 +1,13 @@
 package tech.hiddenproject.example.game;
 
-import tech.hiddenproject.example.game.script.*;
-import tech.hiddenproject.progressive.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.manager.*;
-import tech.hiddenproject.progressive.manager.*;
+import tech.hiddenproject.example.game.script.EchoSystem;
+import tech.hiddenproject.progressive.Game;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.basic.BasicGame;
+import tech.hiddenproject.progressive.basic.BasicGameObject;
+import tech.hiddenproject.progressive.basic.GameInitializer;
+import tech.hiddenproject.progressive.basic.manager.BasicGameStateManager;
+import tech.hiddenproject.progressive.manager.GameState;
 
 public class GameExample {
 
@@ -16,7 +19,7 @@ public class GameExample {
     // State manager instance
     BasicGameStateManager stateManager = new BasicGameStateManager();
     // Subscribe to some instance. This will be executed when game will be initialized first time
-    stateManager.<BasicGame>addListener(
+    stateManager.<BasicGame> addListener(
         GameState.INIT, (g) -> BasicComponentManager.getGameLogger().info("GAME INITIATED\n"));
 
     // Create game instance with state manager

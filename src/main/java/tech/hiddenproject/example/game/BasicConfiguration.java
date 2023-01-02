@@ -1,11 +1,15 @@
 package tech.hiddenproject.example.game;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.util.*;
-import tech.hiddenproject.progressive.injection.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.annotation.Configuration;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.annotation.Qualifier;
+import tech.hiddenproject.progressive.basic.util.BasicObjectCaster;
+import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
 
-/** Basic DI configuration. */
+/**
+ * Basic DI configuration.
+ */
 // Configuration class must be annotated as @Configuration
 @Configuration
 // Will scan tech.hiddenproject.example.game.component

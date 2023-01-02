@@ -1,2 +1,4 @@
-/** Contains progressive functional interfaces. */
+/**
+ * Contains progressive functional interfaces.
+ */
 package tech.hiddenproject.progressive.lambda;

@@ -1,12 +1,11 @@
 package tech.hiddenproject.example.variant;
 
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.injection.*;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.BasicDIContainer;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageScanner;
 
 /**
- * Example of beans variant usage. With variant you can create beans for different platforms, use
- * cases, etc.
+ * Example of beans variant usage. With variant you can create beans for different platforms, use cases, etc.
  */
 public class VariantsExample {
 

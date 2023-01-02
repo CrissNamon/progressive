@@ -1,12 +1,17 @@
 package tech.hiddenproject.progressive.basic.injection;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.injection.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.injection.PackageScanner;
 
-/** Simple {@link PackageScanner} implementation. */
+/**
+ * Simple {@link PackageScanner} implementation.
+ */
 public final class SimplePackageScanner implements PackageScanner {
 
   @Override

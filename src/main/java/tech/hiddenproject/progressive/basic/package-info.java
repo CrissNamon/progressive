@@ -1,2 +1,4 @@
-/** Contains basic implementation of progressive. */
+/**
+ * Contains basic implementation of progressive.
+ */
 package tech.hiddenproject.progressive.basic;

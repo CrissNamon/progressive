@@ -1,8 +1,8 @@
 package tech.hiddenproject.example.proxy;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.util.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.basic.util.BasicComponentCreator;
 
 public class ProxyExample {
 

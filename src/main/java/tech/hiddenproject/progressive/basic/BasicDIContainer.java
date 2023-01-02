@@ -1,17 +1,41 @@
 package tech.hiddenproject.progressive.basic;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.injection.*;
-import tech.hiddenproject.progressive.basic.util.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.injection.*;
-import tech.hiddenproject.progressive.util.*;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import tech.hiddenproject.progressive.annotation.ComponentScan;
+import tech.hiddenproject.progressive.annotation.Components;
+import tech.hiddenproject.progressive.annotation.Configuration;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.injection.BasicGameBeanFactory;
+import tech.hiddenproject.progressive.basic.injection.Bean;
+import tech.hiddenproject.progressive.basic.injection.BeanKey;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageLoader;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageScanner;
+import tech.hiddenproject.progressive.basic.util.BasicComponentCreator;
+import tech.hiddenproject.progressive.exception.AnnotationException;
+import tech.hiddenproject.progressive.exception.BeanCircularDependencyException;
+import tech.hiddenproject.progressive.exception.BeanConflictException;
+import tech.hiddenproject.progressive.exception.BeanDuplicationException;
+import tech.hiddenproject.progressive.exception.BeanNotFoundException;
+import tech.hiddenproject.progressive.exception.BeanUndefinedException;
+import tech.hiddenproject.progressive.injection.DIContainer;
+import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
+import tech.hiddenproject.progressive.injection.GameBeanFactory;
+import tech.hiddenproject.progressive.injection.PackageLoader;
+import tech.hiddenproject.progressive.injection.PackageScanner;
+import tech.hiddenproject.progressive.util.ComponentAnnotationProcessor;
 
-/** Basic DI container implementation. */
+/**
+ * Basic DI container implementation.
+ */
 public final class BasicDIContainer implements DIContainer {
 
   private final String variant;
@@ -70,7 +94,8 @@ public final class BasicDIContainer implements DIContainer {
       throw new BeanNotFoundException(
           "GameBean called " + name + " for class " + beanClass.getName() + " not found!",
           beanClass,
-          name);
+          name
+      );
     }
     if (!bean.isReady()) {
       throw new BeanCircularDependencyException(
@@ -79,7 +104,8 @@ public final class BasicDIContainer implements DIContainer {
               + " of class "
               + beanClass.getName()
               + " is not ready! Is there a circular dependency?",
-          beanClass);
+          beanClass
+      );
     }
     if (!bean.haveObject() && !bean.isCreated() && bean.isClass()) {
       BasicComponentManager.getGameLogger()
@@ -96,7 +122,8 @@ public final class BasicDIContainer implements DIContainer {
       throw new BeanNotFoundException(
           "GameBean called " + name + " for class " + beanClass.getName() + " not found!",
           beanClass,
-          name);
+          name
+      );
     }
     if (bean.getCreationPolicy() == GameBeanCreationPolicy.OBJECT) {
       exists = (V) updateObjectTypeBean(bean);
@@ -309,7 +336,8 @@ public final class BasicDIContainer implements DIContainer {
           BasicComponentCreator.injectBeansToParameters(
               bean.getRealType(),
               bean.getMethod().getParameterTypes(),
-              bean.getMethod().getParameterAnnotations()));
+              bean.getMethod().getParameterAnnotations()
+          ));
       return BasicComponentCreator.invoke(
           bean.getMethod(), bean.getMethodCaller(), bean.getMethodArgs());
     } else {

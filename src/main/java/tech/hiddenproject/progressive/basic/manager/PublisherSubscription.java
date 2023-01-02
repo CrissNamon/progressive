@@ -1,6 +1,6 @@
 package tech.hiddenproject.progressive.basic.manager;
 
-import java.util.*;
+import java.util.Objects;
 
 public final class PublisherSubscription {
 

@@ -1,9 +1,11 @@
 package tech.hiddenproject.progressive.basic.util;
 
-import tech.hiddenproject.progressive.lambda.*;
-import tech.hiddenproject.progressive.util.*;
+import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.util.GameObjectCaster;
 
-/** Basic implementation of object caster. */
+/**
+ * Basic implementation of object caster.
+ */
 public final class BasicObjectCaster implements GameObjectCaster {
 
   public <T, O> T cast(O from, Class<T> to) {

@@ -1,15 +1,17 @@
 package tech.hiddenproject.progressive.manager;
 
-import tech.hiddenproject.progressive.lambda.*;
+import tech.hiddenproject.progressive.lambda.GameCondition;
 
-/** Helps securing any method with simple rules. */
+/**
+ * Helps securing any method with simple rules.
+ */
 public final class GameSecurityManager {
 
   /**
    * Allows access if condition is met, throws RuntimeException otherwise.
    *
    * @param deniedMessage Message to include in exception
-   * @param processor Condition to protect method with
+   * @param processor     Condition to protect method with
    * @throws SecurityException if condition returns false
    */
   public static void allowAccessIf(String deniedMessage, GameCondition processor) {
@@ -22,7 +24,7 @@ public final class GameSecurityManager {
    * Denies access if condition is met.
    *
    * @param deniedMessage Message to include in exception
-   * @param processor Condition to protect method with
+   * @param processor     Condition to protect method with
    * @throws SecurityException if condition returns true
    */
   public static void denyAccessIf(String deniedMessage, GameCondition processor) {

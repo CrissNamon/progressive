@@ -1,6 +1,8 @@
 package tech.hiddenproject.progressive.injection;
 
-/** Helps to find and process packages. */
+/**
+ * Helps to find and process packages.
+ */
 public interface PackageLoader {
 
   /**

@@ -1,8 +1,10 @@
 package tech.hiddenproject.progressive.basic.log;
 
-import tech.hiddenproject.progressive.log.*;
+import tech.hiddenproject.progressive.log.GameLogger;
 
-/** Simple game logger implementation using {@link java.lang.System}. */
+/**
+ * Simple game logger implementation using {@link java.lang.System}.
+ */
 public class SimpleGameLogger implements GameLogger {
 
   @Override

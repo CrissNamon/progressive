@@ -1,8 +1,11 @@
 package tech.hiddenproject.example.proxy;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.annotation.Autofill;
+import tech.hiddenproject.progressive.annotation.Intercept;
+import tech.hiddenproject.progressive.annotation.Proxy;
+import tech.hiddenproject.progressive.annotation.Qualifier;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
 
 @Proxy(LoggerMethodInterceptor.class)
 public class TestProxyBean {

@@ -1,2 +1,4 @@
-/** Abstract logger components. */
+/**
+ * Abstract logger components.
+ */
 package tech.hiddenproject.progressive.log;

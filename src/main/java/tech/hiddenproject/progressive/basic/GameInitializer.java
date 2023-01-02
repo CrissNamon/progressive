@@ -1,18 +1,24 @@
 package tech.hiddenproject.progressive.basic;
 
-import tech.hiddenproject.progressive.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.injection.*;
-import tech.hiddenproject.progressive.injection.*;
+import tech.hiddenproject.progressive.Game;
+import tech.hiddenproject.progressive.annotation.Configuration;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageLoader;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageScanner;
+import tech.hiddenproject.progressive.injection.DIContainer;
+import tech.hiddenproject.progressive.injection.PackageLoader;
+import tech.hiddenproject.progressive.injection.PackageScanner;
 
-/** Initiates important components. */
+/**
+ * Initiates important components.
+ */
 public abstract class GameInitializer {
 
   /**
    * Initiates game components such as {@link Game} and {@link DIContainer}.
    *
-   * @param autoScan if true then scans all available packages for {@link Configuration} classes and
-   *     {@link GameBean} classes
+   * @param autoScan if true then scans all available packages for {@link Configuration} classes and {@link GameBean}
+   *                 classes
    */
   public static void init(boolean autoScan) {
     init(new SimplePackageScanner(), new SimplePackageLoader(), autoScan);
@@ -22,9 +28,9 @@ public abstract class GameInitializer {
    * Initiates game components such as {@link Game} and {@link DIContainer}.
    *
    * @param packageScanner Scanner to load classes from package
-   * @param packageLoader Loader to load available packages
-   * @param autoScan if true then scans all available packages for {@link Configuration} classes and
-   *     {@link GameBean} classes
+   * @param packageLoader  Loader to load available packages
+   * @param autoScan       if true then scans all available packages for {@link Configuration} classes and
+   *                       {@link GameBean} classes
    */
   public static void init(
       PackageScanner packageScanner, PackageLoader packageLoader, boolean autoScan) {
@@ -34,7 +40,8 @@ public abstract class GameInitializer {
             "\n"
                 + "╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╦╦  ╦╔═╗\n"
                 + "╠═╝╠╦╝║ ║║ ╦╠╦╝║╣ ╚═╗╚═╗║╚╗╔╝║╣ \n"
-                + "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n");
+                + "╩  ╩╚═╚═╝╚═╝╩╚═╚═╝╚═╝╚═╝╩ ╚╝ ╚═╝\n"
+        );
     BasicComponentManager.getDiContainer();
     BasicComponentManager.getGame();
     if (autoScan) {
@@ -46,7 +53,7 @@ public abstract class GameInitializer {
    * Scans all packages using {@code packageScanner} and {@code packageLoader}.
    *
    * @param packageScanner Scanner to load classes from package
-   * @param packageLoader Loader to load available packages
+   * @param packageLoader  Loader to load available packages
    */
   private static void scan(PackageScanner packageScanner, PackageLoader packageLoader) {
     DIContainer basicDIContainer = BasicComponentManager.getDiContainer();

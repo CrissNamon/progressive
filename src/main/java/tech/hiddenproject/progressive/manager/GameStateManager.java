@@ -1,6 +1,6 @@
 package tech.hiddenproject.progressive.manager;
 
-import tech.hiddenproject.progressive.lambda.*;
+import tech.hiddenproject.progressive.lambda.GameActionObject;
 
 /**
  * Represents story state manager.
@@ -19,8 +19,8 @@ public interface GameStateManager<I, S> {
   /**
    * Sets state in manager.
    *
-   * @param state New state
-   * @param <O> Action param type
+   * @param state       New state
+   * @param <O>         Action param type
    * @param actionParam Param to pass in action of this state
    */
   <O> void setState(S state, O actionParam);
@@ -28,8 +28,8 @@ public interface GameStateManager<I, S> {
   /**
    * Adds listener to state.
    *
-   * @param state State to add action
-   * @param <V> Action param type
+   * @param state  State to add action
+   * @param <V>    Action param type
    * @param action Action to add
    */
   <V> I addListener(S state, GameActionObject<V> action);

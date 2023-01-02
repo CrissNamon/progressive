@@ -1,7 +1,11 @@
 package tech.hiddenproject.progressive.annotation;
 
-import java.lang.annotation.*;
-import tech.hiddenproject.progressive.manager.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import tech.hiddenproject.progressive.manager.GameSecurityManager;
 
 /**
  * Just visual annotation for methods protected with. {@link GameSecurityManager}
@@ -12,5 +16,6 @@ import tech.hiddenproject.progressive.manager.*;
 @Retention(RetentionPolicy.CLASS)
 @Documented
 public @interface Protected {
+
   String value() default "";
 }
