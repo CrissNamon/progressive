@@ -54,59 +54,13 @@ public abstract class BasicComponentCreator {
       componentClass = BasicComponentManager.getProxyCreator().createProxyClass(componentClass);
     }
     try {
-      Class<?>[] argsTypes = new Class[args.length];
-      for (int i = 0; i < args.length; ++i) {
-        argsTypes[i] = args[i].getClass();
-      }
-      C instance;
       DIContainer diContainer = BasicComponentManager.getDiContainer();
-      Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
-      Arrays.sort(constructors, Comparator.comparingInt(Constructor::getParameterCount));
-      List<Constructor<?>> autoInjectConstructors = foundAutoInjectConstructors(constructors);
-      if (autoInjectConstructors.size() > 1) {
-        throw new BeanConflictException(
-            "Found more than one constructor in "
-                + componentClass.getName()
-                + " annotated as @Autofill. What to use?");
-      }
-      if (autoInjectConstructors.size() == 1) {
-        Constructor<?> constructor = autoInjectConstructors.get(0);
-        args =
-            injectBeansToParameters(
-                componentClass,
-                constructor.getParameterTypes(),
-                constructor.getParameterAnnotations()
-            );
-        constructor.setAccessible(true);
-        instance = (C) constructor.newInstance(args);
-      } else {
-        Constructor<C> constructor = componentClass.getDeclaredConstructor(argsTypes);
-        constructor.setAccessible(true);
-        instance = constructor.newInstance(args);
-      }
-      Field[] fields = instance.getClass().getDeclaredFields();
-      for (Field f : fields) {
-        f.setAccessible(true);
-        if (f.isAnnotationPresent(Autofill.class)) {
-          Qualifier qualifier = f.getAnnotation(Qualifier.class);
-          String name = f.getName().toLowerCase();
-          if (qualifier != null) {
-            name = qualifier.value();
-          }
-          f.set(instance, diContainer.getBean(name, f.getType()));
-        }
-      }
-      Method[] methods = instance.getClass().getDeclaredMethods();
-      Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
-      for (Method m : methods) {
-        m.setAccessible(true);
-        if (m.isAnnotationPresent(Autofill.class)) {
-          args =
-              injectBeansToParameters(
-                  componentClass, m.getParameterTypes(), m.getParameterAnnotations());
-          invoke(m, instance, args);
-        }
-      }
+      C instance = wireConstructors(componentClass, args);
+
+      wireFields(instance, diContainer);
+
+      wireMethods(instance, diContainer, args);
+
       return instance;
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
@@ -123,6 +77,81 @@ public abstract class BasicComponentCreator {
               + "! Component must have such a method: "
               + e.getMessage());
     }
+  }
+
+  private static <C> C wireConstructors(Class<C> componentClass, Object... args)
+      throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+    Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
+    Arrays.sort(constructors, Comparator.comparingInt(Constructor::getParameterCount));
+    List<Constructor<?>> autoInjectConstructors = foundAutoInjectConstructors(constructors);
+    if (autoInjectConstructors.size() > 1) {
+      throw new BeanConflictException(
+          "Found more than one constructor in "
+              + componentClass.getName()
+              + " annotated as @Autofill. What to use?");
+    }
+    if (autoInjectConstructors.size() == 1) {
+      return wireConstructor(autoInjectConstructors.get(0), componentClass);
+    }
+    Constructor<C> constructor = componentClass.getDeclaredConstructor(getArgsTypes(args));
+    constructor.setAccessible(true);
+    return constructor.newInstance(args);
+  }
+
+  private static <C> C wireConstructor(Constructor<?> constructor, Class<C> componentClass)
+      throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    Object[] args = injectBeansToParameters(
+        componentClass,
+        constructor.getParameterTypes(),
+        constructor.getParameterAnnotations()
+    );
+    constructor.setAccessible(true);
+    return (C) constructor.newInstance(args);
+  }
+  
+  private static Class<?>[] getArgsTypes(Object... args) {
+    Class<?>[] argsTypes = new Class[args.length];
+    for (int i = 0; i < args.length; ++i) {
+      argsTypes[i] = args[i].getClass();
+    }
+    return argsTypes;
+  }
+
+  private static <C> void wireMethods(C instance, DIContainer diContainer, Object... args) {
+    Method[] methods = instance.getClass().getDeclaredMethods();
+    Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
+    for (Method m : methods) {
+      wireMethod(m, instance, diContainer, args);
+    }
+  }
+
+  private static <C> void wireMethod(Method m, C instance, DIContainer diContainer, Object... args) {
+    m.setAccessible(true);
+    if (m.isAnnotationPresent(Autofill.class)) {
+      args =
+          injectBeansToParameters(instance.getClass(), m.getParameterTypes(), m.getParameterAnnotations());
+      invoke(m, instance, args);
+    }
+  }
+
+  private static <C> void wireFields(C instance, DIContainer diContainer)
+      throws IllegalAccessException {
+    Field[] fields = instance.getClass().getDeclaredFields();
+    for (Field f : fields) {
+      f.setAccessible(true);
+      if (f.isAnnotationPresent(Autofill.class)) {
+        wireField(f, instance, diContainer);
+      }
+    }
+  }
+
+  private static <C> void wireField(Field f, C instance, DIContainer diContainer) throws IllegalAccessException {
+    Qualifier qualifier = f.getAnnotation(Qualifier.class);
+    String name = f.getName().toLowerCase();
+    if (qualifier != null) {
+      name = qualifier.value();
+    }
+    f.set(instance, diContainer.getBean(name, f.getType()));
   }
 
   public static List<Constructor<?>> foundAutoInjectConstructors(Constructor<?>[] constructors) {
