@@ -247,12 +247,11 @@ public final class BasicGame implements Game<GameState, GameEvent, BasicGame> {
         .and()
         .transition(GameState.PLAYING, GameState.STOPPED)
         .event(GameEvent.STOP)
+        .and()
+        .transition(GameState.STOPPED, GameState.STARTED)
+        .event(GameEvent.START)
         .withPersister(stateMachinePersister)
         .forPayload(this)
         .build(GameState.UNDEFINED);
-  }
-
-  private StateMachine<GameState, GameEvent, BasicGame> buildStateMachine() {
-    return buildStateMachine(null);
   }
 }

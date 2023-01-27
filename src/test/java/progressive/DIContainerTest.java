@@ -1,11 +1,18 @@
 package progressive;
 
-import org.junit.jupiter.api.*;
-import progressive.variant.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.injection.*;
-import tech.hiddenproject.progressive.exception.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import progressive.data.ObjectBean;
+import progressive.data.SingletonBean;
+import progressive.variant.AndroidVariant;
+import progressive.variant.GlobalVariant;
+import progressive.variant.ItemVariant;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.BasicDIContainer;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageScanner;
+import tech.hiddenproject.progressive.exception.AnnotationException;
+import tech.hiddenproject.progressive.exception.BeanDuplicationException;
+import tech.hiddenproject.progressive.exception.BeanNotFoundException;
 
 public class DIContainerTest {
 
@@ -55,5 +62,29 @@ public class DIContainerTest {
 
     Assertions.assertThrows(
         AnnotationException.class, () -> basicDIContainer.loadBean(BasicDIContainer.class));
+  }
+
+  @Test
+  public void testObjectBean() {
+    BasicDIContainer basicDIContainer = new BasicDIContainer();
+    basicDIContainer.loadBean(ObjectBean.class);
+
+    ObjectBean bean1 = basicDIContainer.getBean(ObjectBean.class);
+    ObjectBean bean2 = basicDIContainer.getBean(ObjectBean.class);
+
+    Assertions.assertNotEquals(bean1.getId(), bean2.getId());
+    Assertions.assertNotEquals(bean1, bean2);
+  }
+
+  @Test
+  public void testSingletonBean() {
+    BasicDIContainer basicDIContainer = new BasicDIContainer();
+    basicDIContainer.loadBean(SingletonBean.class);
+
+    SingletonBean bean1 = basicDIContainer.getBean(SingletonBean.class);
+    SingletonBean bean2 = basicDIContainer.getBean(SingletonBean.class);
+
+    Assertions.assertEquals(bean1.getId(), bean2.getId());
+    Assertions.assertEquals(bean1, bean2);
   }
 }

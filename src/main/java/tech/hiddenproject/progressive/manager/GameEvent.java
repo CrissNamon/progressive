@@ -58,4 +58,11 @@ public class GameEvent {
     GameEvent gameEvent = (GameEvent) o;
     return getName().equals(gameEvent.getName());
   }
+
+  @Override
+  public String toString() {
+    return "GameEvent{" +
+        "name='" + name + '\'' +
+        '}';
+  }
 }
