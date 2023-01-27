@@ -16,12 +16,12 @@ after_success: |-
   if [ -n "$GITHUB_API_KEY" ]; then
     cd "$TRAVIS_BUILD_DIR"
     mkdir apidocs
-    mkdir apidocs/docs
+    mkdir apidocs/javadoc
     cd apidocs
     git init
     git checkout -b apidocs
     git pull https://github.com/CrissNamon/progressive.git apidocs
-    cp -r ../target/site/apidocs/. ./docs/
+    cp -r ../target/site/apidocs/. ./javadoc/
     git add .
     git -c user.name='travis' -c user.email='travis' commit -m 'Update docs'
     git remote add origin https://github.com/CrissNamon/progressive.git
