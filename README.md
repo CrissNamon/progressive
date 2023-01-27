@@ -10,7 +10,7 @@ Progressive gives you an IoC/DI container with auto injections feature through a
 Main features:
 - IoC/DI container with auto injections through annotations, frame updates
 - GameObjects and GameScripts
-- State manager
+- State machine
 - The global observer for components connection
 - Proxy classes and proxy objects creation through annotations with custom method interceptors
 </p> 
@@ -22,15 +22,15 @@ Main features:
 ```xml
 <dependency>
     <groupId>tech.hiddenproject</groupId>
-    <artifactId>progressive</artifactId>
-    <version>0.5.0</version>
+  <artifactId>progressive</artifactId>
+  <version>0.6.0</version>
 </dependency>
 ```
 
 ##### Gradle
 
 ````groovy
-implementation 'tech.hiddenproject:progressive:0.5.0'
+compile 'tech.hiddenproject:progressive:0.6.0'
 ````
 
 #### Resources

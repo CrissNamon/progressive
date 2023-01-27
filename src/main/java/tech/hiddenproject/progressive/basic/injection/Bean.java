@@ -1,9 +1,11 @@
 package tech.hiddenproject.progressive.basic.injection;
 
-import java.lang.reflect.*;
-import tech.hiddenproject.progressive.injection.*;
+import java.lang.reflect.Method;
+import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
 
-/** Represents bean for Dependency Injection container */
+/**
+ * Represents bean for Dependency Injection container
+ */
 public final class Bean {
 
   private Object bean;

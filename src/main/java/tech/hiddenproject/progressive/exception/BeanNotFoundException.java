@@ -1,6 +1,8 @@
 package tech.hiddenproject.progressive.exception;
 
-/** Thrown if bean is not presented in DI container. */
+/**
+ * Thrown if bean is not presented in DI container.
+ */
 public class BeanNotFoundException extends RuntimeException {
 
   private Class<?> beanClass;

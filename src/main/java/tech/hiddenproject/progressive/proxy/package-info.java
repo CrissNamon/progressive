@@ -1,2 +1,4 @@
-/** Contains abstraction of proxy creation mechanism. */
+/**
+ * Contains abstraction of proxy creation mechanism.
+ */
 package tech.hiddenproject.progressive.proxy;

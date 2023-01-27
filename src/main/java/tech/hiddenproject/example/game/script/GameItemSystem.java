@@ -1,8 +1,12 @@
 package tech.hiddenproject.example.game.script;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.component.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.annotation.Autofill;
+import tech.hiddenproject.progressive.annotation.IsGameScript;
+import tech.hiddenproject.progressive.annotation.Qualifier;
+import tech.hiddenproject.progressive.component.GameComponent;
+import tech.hiddenproject.progressive.component.GameObject;
+import tech.hiddenproject.progressive.component.GameScript;
 
 @IsGameScript // This annotation is required for game scripts
 public class GameItemSystem implements GameScript {
@@ -17,16 +21,20 @@ public class GameItemSystem implements GameScript {
   }
 
   @Override
-  public void start() {}
+  public void start() {
+  }
 
   @Override
-  public void dispose() {}
+  public void dispose() {
+  }
 
   @Override
-  public void update(long delta) {}
+  public void update(long delta) {
+  }
 
   @Override
-  public void stop() {}
+  public void stop() {
+  }
 
   @Override
   public void setGameObject(GameObject parent) {

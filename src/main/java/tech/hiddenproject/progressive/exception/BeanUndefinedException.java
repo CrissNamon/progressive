@@ -1,6 +1,8 @@
 package tech.hiddenproject.progressive.exception;
 
-/** Thrown if exception is undefined. Something just gone wrong, sadly... */
+/**
+ * Thrown if exception is undefined. Something just gone wrong, sadly...
+ */
 public class BeanUndefinedException extends RuntimeException {
 
   public static final String DEFAULT_MESSAGE = "Undefined error occurred";

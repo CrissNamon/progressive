@@ -1,19 +1,26 @@
 package tech.hiddenproject.progressive.component;
 
-import java.io.*;
-import java.lang.reflect.*;
-import tech.hiddenproject.progressive.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.util.*;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import tech.hiddenproject.progressive.Game;
+import tech.hiddenproject.progressive.annotation.FromParent;
+import tech.hiddenproject.progressive.annotation.IsGameScript;
+import tech.hiddenproject.progressive.exception.GameScriptException;
+import tech.hiddenproject.progressive.util.ComponentAnnotationProcessor;
 
-/** Represents game script. */
+/**
+ * Represents game script.
+ */
 public interface GameScript extends Serializable {
 
-  /** Called automatically on every {@link Game#start()}. */
+  /**
+   * Called automatically on every {@link Game#start()}.
+   */
   void start();
 
-  /** Called automatically on {@link Game#dispose()}. */
+  /**
+   * Called automatically on {@link Game#dispose()}.
+   */
   void dispose();
 
   /**
@@ -23,7 +30,9 @@ public interface GameScript extends Serializable {
    */
   void update(long delta);
 
-  /** Stops script. Called automatically on {@link Game#stop()} and {@link GameObject#stop()}. */
+  /**
+   * Stops script. Called automatically on {@link Game#stop()} and {@link GameObject#stop()}.
+   */
   void stop();
 
   /**
@@ -32,6 +41,13 @@ public interface GameScript extends Serializable {
    * @param parent Object to set as parent
    */
   void setGameObject(GameObject parent);
+
+  /**
+   * Gets parent GameObject.
+   *
+   * @return Parent game object with this script is attached to
+   */
+  GameObject gameObject();
 
   /**
    * Fills GameScript fields annotated as @FromParent from parent GameObject this script if attached
@@ -65,11 +81,4 @@ public interface GameScript extends Serializable {
       }
     }
   }
-
-  /**
-   * Gets parent GameObject.
-   *
-   * @return Parent game object with this script is attached to
-   */
-  GameObject gameObject();
 }

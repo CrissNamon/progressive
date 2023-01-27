@@ -1,9 +1,10 @@
 package tech.hiddenproject.example.game;
 
-import java.util.*;
-import tech.hiddenproject.example.game.script.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.component.*;
+import java.util.ArrayList;
+import java.util.List;
+import tech.hiddenproject.example.game.script.CharacterSystem;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.component.GameObject;
 
 public class GameScene {
 

@@ -1,8 +1,9 @@
 package tech.hiddenproject.example.injection;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.util.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.annotation.Configuration;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.util.BasicObjectCaster;
 
 @Configuration
 public class ExampleConfiguration {

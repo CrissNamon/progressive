@@ -1,6 +1,8 @@
 package tech.hiddenproject.progressive.manager;
 
-/** Represents some game state. */
+/**
+ * Represents some game state.
+ */
 public enum GameState {
 
   /**

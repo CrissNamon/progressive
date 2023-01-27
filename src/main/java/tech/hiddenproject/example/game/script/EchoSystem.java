@@ -1,8 +1,10 @@
 package tech.hiddenproject.example.game.script;
 
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.component.*;
+import tech.hiddenproject.progressive.annotation.FromParent;
+import tech.hiddenproject.progressive.annotation.IsGameScript;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.component.GameObject;
+import tech.hiddenproject.progressive.component.GameScript;
 
 // Simple Echo script
 @IsGameScript
@@ -12,7 +14,8 @@ public class EchoSystem implements GameScript {
   private GameObject parent;
 
   // GameItemSystem will be injected from parent game object
-  @FromParent private GameItemSystem gameItemSystem;
+  @FromParent
+  private GameItemSystem gameItemSystem;
 
   @Override
   public void start() {
@@ -44,12 +47,12 @@ public class EchoSystem implements GameScript {
     return parent;
   }
 
-  // This will be called on global game update
-  private void say(Object message) {
-    System.out.println(message);
-  }
-
   public GameItemSystem getGameItemSystem() {
     return gameItemSystem;
+  }
+
+  // This will be called on global game update
+  private void say(Object message) {
+    BasicComponentManager.getGameLogger().info(message);
   }
 }

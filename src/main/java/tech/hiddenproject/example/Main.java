@@ -1,13 +1,14 @@
 package tech.hiddenproject.example;
 
-import tech.hiddenproject.example.game.*;
-import tech.hiddenproject.example.injection.*;
-import tech.hiddenproject.example.proxy.*;
-import tech.hiddenproject.example.publisher.*;
-import tech.hiddenproject.example.variant.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.log.*;
+import tech.hiddenproject.example.game.GameExample;
+import tech.hiddenproject.example.injection.DIContainerExample;
+import tech.hiddenproject.example.proxy.ProxyExample;
+import tech.hiddenproject.example.publisher.PublisherExample;
+import tech.hiddenproject.example.statemachine.StateMachineExample;
+import tech.hiddenproject.example.variant.VariantsExample;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.exception.BeanNotFoundException;
+import tech.hiddenproject.progressive.log.GameLogger;
 
 public class Main {
 
@@ -28,5 +29,8 @@ public class Main {
 
     gameLogger.info("PUBLISHER EXAMPLE");
     PublisherExample publisherExample = new PublisherExample();
+
+    gameLogger.info("STATE MACHINE EXAMPLE");
+    StateMachineExample stateMachineExample = new StateMachineExample();
   }
 }

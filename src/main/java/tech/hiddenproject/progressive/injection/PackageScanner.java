@@ -1,6 +1,6 @@
 package tech.hiddenproject.progressive.injection;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * Package scanner created to help DI container with class loading.

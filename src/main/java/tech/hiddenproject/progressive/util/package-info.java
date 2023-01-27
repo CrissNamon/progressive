@@ -1,2 +1,4 @@
-/** Contains progressive abstract utils. */
+/**
+ * Contains progressive abstract utils.
+ */
 package tech.hiddenproject.progressive.util;

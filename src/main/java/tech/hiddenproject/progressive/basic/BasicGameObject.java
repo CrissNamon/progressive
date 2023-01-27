@@ -1,21 +1,28 @@
 package tech.hiddenproject.progressive.basic;
 
-import java.util.*;
-import java.util.concurrent.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.util.*;
-import tech.hiddenproject.progressive.component.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import tech.hiddenproject.progressive.annotation.IsGameScript;
+import tech.hiddenproject.progressive.annotation.RequiredGameScript;
+import tech.hiddenproject.progressive.basic.util.BasicComponentCreator;
+import tech.hiddenproject.progressive.basic.util.BasicObjectCaster;
+import tech.hiddenproject.progressive.component.GameObject;
+import tech.hiddenproject.progressive.component.GameScript;
+import tech.hiddenproject.progressive.exception.GameScriptException;
+import tech.hiddenproject.progressive.util.ComponentAnnotationProcessor;
 
-/** Basic game object contains all necessary logic for simple objects. */
+/**
+ * Basic game object contains all necessary logic for simple objects.
+ */
 public final class BasicGameObject implements GameObject {
 
   private final Long id;
 
   private final Map<Class<? extends GameScript>, GameScript> scripts;
 
-  protected BasicGameObject(Long id) {
+  private BasicGameObject(Long id) {
     this.id = id;
     scripts = new ConcurrentHashMap<>();
   }

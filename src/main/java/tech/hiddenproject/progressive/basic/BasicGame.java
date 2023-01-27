@@ -1,24 +1,38 @@
 package tech.hiddenproject.progressive.basic;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-import tech.hiddenproject.progressive.*;
-import tech.hiddenproject.progressive.basic.manager.*;
-import tech.hiddenproject.progressive.basic.util.*;
-import tech.hiddenproject.progressive.component.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.lambda.*;
-import tech.hiddenproject.progressive.manager.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import tech.hiddenproject.progressive.Game;
+import tech.hiddenproject.progressive.basic.lambda.GameAction;
+import tech.hiddenproject.progressive.basic.lambda.StateMachinePersister;
+import tech.hiddenproject.progressive.basic.manager.BasicGamePublisher;
+import tech.hiddenproject.progressive.basic.manager.BasicGameStateManager;
+import tech.hiddenproject.progressive.basic.manager.BasicStateMachine;
+import tech.hiddenproject.progressive.basic.util.BasicComponentCreator;
+import tech.hiddenproject.progressive.component.GameObject;
+import tech.hiddenproject.progressive.exception.GameException;
+import tech.hiddenproject.progressive.manager.GameEvent;
+import tech.hiddenproject.progressive.manager.GameState;
+import tech.hiddenproject.progressive.manager.StateMachine;
 
-/** Basic implementation of {@link Game}. */
-public final class BasicGame implements Game<GameStateManager<PublisherSubscription, GameState>> {
+/**
+ * Basic implementation of {@link Game}.
+ */
+public final class BasicGame implements Game<GameState, GameEvent, BasicGame> {
 
   private final Map<Long, GameObject> gameObjects;
   private final ScheduledExecutorService scheduler;
   private final AtomicLong idGenerator;
-  private final GameStateManager<PublisherSubscription, GameState> stateManager;
+  private final StateMachine<GameState, GameEvent, BasicGame> stateMachine;
 
+  private boolean customStateMachine = false;
   private boolean isStatic;
   private int frameTime;
   private boolean isStarted;
@@ -30,35 +44,52 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
   private GameAction preUpdate;
   private GameAction postUpdate;
 
-  public BasicGame(GameStateManager<PublisherSubscription, GameState> gameStateManager) {
+  {
     BasicComponentManager.getGameLogger().info("Progressive IoC initialization...\n");
-    stateManager = gameStateManager;
     gameObjects = new ConcurrentSkipListMap<>();
     idGenerator = new AtomicLong(0);
     scheduler = Executors.newScheduledThreadPool(4);
     isStarted = false;
-    stateManager.setState(GameState.INIT, this);
+    BasicGamePublisher.getInstance().sendTo(
+        GAME_PUBLISHER_TOPIC,
+        GameEvent.INITIALIZATION.setPayload(this)
+    );
+  }
+
+  public BasicGame(StateMachinePersister<GameState, GameEvent, BasicGame> stateMachinePersister) {
+    stateMachine = buildStateMachine(stateMachinePersister);
+    if (!customStateMachine) {
+      stateMachine.fire(GameEvent.INITIALIZATION);
+    }
   }
 
   public BasicGame() {
     BasicComponentManager.getGameLogger().info("Progressive IoC initialization...\n");
-    stateManager = new BasicGameStateManager();
-    gameObjects = new ConcurrentSkipListMap<>();
-    idGenerator = new AtomicLong(0);
-    scheduler = Executors.newScheduledThreadPool(4);
-    isStarted = false;
-    stateManager.setState(GameState.INIT, this);
+    stateMachine = buildStateMachine(null);
+    if (!customStateMachine) {
+      stateMachine.fire(GameEvent.INITIALIZATION);
+    }
+  }
+
+  public BasicGame(StateMachine<GameState, GameEvent, BasicGame> stateMachine) {
+    BasicComponentManager.getGameLogger().info("Progressive IoC initialization...\n");
+    this.stateMachine = stateMachine;
+    customStateMachine = true;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public <V extends GameObject> V addGameObject() {
+  public synchronized <V extends GameObject> V addGameObject() {
     if (!isGameObjectClassSet()) {
       setGameObjectClass(BasicGameObject.class);
     }
     GameObject gameObject =
         BasicComponentCreator.create(gameObjClass, idGenerator.incrementAndGet());
     gameObjects.putIfAbsent(idGenerator.get(), gameObject);
+    BasicGamePublisher.getInstance().sendTo(
+        GAME_PUBLISHER_TOPIC,
+        GameEvent.NEW_OBJECT.setPayload(gameObject)
+    );
     return (V) gameObject;
   }
 
@@ -70,6 +101,10 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
     GameObject gameObject = gameObjects.get(o.getId());
     gameObject.dispose();
     gameObjects.remove(o.getId());
+    BasicGamePublisher.getInstance().sendTo(
+        GAME_PUBLISHER_TOPIC,
+        GameEvent.REMOVE_OBJECT.setPayload(o.getId())
+    );
     return true;
   }
 
@@ -89,7 +124,10 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
 
   @Override
   public synchronized void start() {
-    stateManager.setState(GameState.STARTED, true);
+    if (!customStateMachine) {
+      stateMachine.fire(GameEvent.START);
+    }
+    BasicGamePublisher.getInstance().sendTo(GAME_PUBLISHER_TOPIC, GameEvent.START);
     if (preStart != null) {
       preStart.make();
     }
@@ -102,7 +140,10 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
       scheduler.scheduleAtFixedRate(this::update, frameTime, frameTime, TimeUnit.MILLISECONDS);
     }
     deltaTime = System.currentTimeMillis();
-    stateManager.setState(GameState.PLAYING, true);
+    if (!customStateMachine) {
+      stateMachine.fire(GameEvent.PLAY);
+    }
+    BasicGamePublisher.getInstance().sendTo(GAME_PUBLISHER_TOPIC, GameEvent.PLAY);
   }
 
   @Override
@@ -121,7 +162,10 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
     isStarted = false;
     scheduler.shutdownNow();
     gameObjects.values().parallelStream().unordered().forEach(GameObject::stop);
-    stateManager.setState(GameState.STOPPED, true);
+    if (!customStateMachine) {
+      stateMachine.fire(GameEvent.STOP);
+    }
+    BasicGamePublisher.getInstance().sendTo(GAME_PUBLISHER_TOPIC, GameEvent.STOP.setPayload(this));
   }
 
   @Override
@@ -130,6 +174,7 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
       gameObjects.values().parallelStream().unordered().forEach(GameObject::dispose);
       gameObjects.clear();
     }
+    BasicGamePublisher.getInstance().sendTo(GAME_PUBLISHER_TOPIC, GameEvent.GLOBAL_DISPOSE);
   }
 
   @Override
@@ -148,28 +193,33 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
   }
 
   @Override
-  public void setPreStart(GameAction action) {
+  public synchronized void setPreStart(GameAction action) {
     preStart = action;
   }
 
   @Override
-  public void setPostStart(GameAction action) {
+  public synchronized void setPostStart(GameAction action) {
     postStart = action;
   }
 
   @Override
-  public void setPreUpdate(GameAction action) {
+  public synchronized void setPreUpdate(GameAction action) {
     preUpdate = action;
   }
 
   @Override
-  public void setPostUpdate(GameAction action) {
+  public synchronized void setPostUpdate(GameAction action) {
     postUpdate = action;
   }
 
   @Override
-  public GameStateManager<PublisherSubscription, GameState> getStateManager() {
-    return stateManager;
+  public List<GameObject> getAllGameObjects() {
+    return Collections.unmodifiableList(new ArrayList<>(gameObjects.values()));
+  }
+
+  @Override
+  public BasicGameStateManager getStateManager() {
+    return null;
   }
 
   private void callStartInObject() {
@@ -181,5 +231,28 @@ public final class BasicGame implements Game<GameStateManager<PublisherSubscript
     long delta = now - deltaTime;
     deltaTime = now;
     update(delta);
+  }
+
+  private StateMachine<GameState, GameEvent, BasicGame> buildStateMachine(
+      StateMachinePersister<GameState, GameEvent, BasicGame> stateMachinePersister) {
+    return BasicStateMachine.<GameState, GameEvent, BasicGame> create()
+        .transition(GameState.UNDEFINED, GameState.INIT)
+        .event(GameEvent.INITIALIZATION)
+        .and()
+        .transition(GameState.INIT, GameState.STARTED)
+        .event(GameEvent.START)
+        .and()
+        .transition(GameState.STARTED, GameState.PLAYING)
+        .event(GameEvent.PLAY)
+        .and()
+        .transition(GameState.PLAYING, GameState.STOPPED)
+        .event(GameEvent.STOP)
+        .withPersister(stateMachinePersister)
+        .forPayload(this)
+        .build(GameState.UNDEFINED);
+  }
+
+  private StateMachine<GameState, GameEvent, BasicGame> buildStateMachine() {
+    return buildStateMachine(null);
   }
 }

@@ -1,6 +1,8 @@
-package tech.hiddenproject.progressive.lambda;
+package tech.hiddenproject.progressive.basic.lambda;
 
-/** Represents some story condition. */
+/**
+ * Represents some story condition.
+ */
 public interface GameCondition {
 
   /**

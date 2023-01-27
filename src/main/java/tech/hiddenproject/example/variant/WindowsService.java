@@ -1,7 +1,7 @@
 package tech.hiddenproject.example.variant;
 
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
 
 /**
  * This service will be loaded to BasicDIContainer if default variant was specified in
@@ -9,6 +9,7 @@ import tech.hiddenproject.progressive.basic.*;
  */
 @GameBean(variant = GameBean.DEFAULT_VARIANT)
 public class WindowsService implements MyService {
+
   @Override
   public void printVariant() {
     BasicComponentManager.getGameLogger().info("I'm Windows service");

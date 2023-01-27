@@ -1,25 +1,24 @@
 package tech.hiddenproject.progressive.basic.proxy;
 
-import java.lang.reflect.*;
-import net.bytebuddy.implementation.bind.annotation.*;
-import tech.hiddenproject.progressive.proxy.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperMethod;
+import net.bytebuddy.implementation.bind.annotation.This;
+import tech.hiddenproject.progressive.proxy.MethodInterceptor;
 
 public final class BasicProxyInterceptionHandler {
 
   private final MethodInterceptor methodInterceptor;
 
-  protected BasicProxyInterceptionHandler(MethodInterceptor methodInterceptor) {
+  BasicProxyInterceptionHandler(MethodInterceptor methodInterceptor) {
     this.methodInterceptor = methodInterceptor;
   }
 
-  protected BasicProxyInterceptionHandler() {
+  private BasicProxyInterceptionHandler() {
     this.methodInterceptor = this::defaultInterceptor;
-  }
-
-  private Object defaultInterceptor(
-      Method method, Method originMethod, Object proxy, Object... args)
-      throws InvocationTargetException, IllegalAccessException {
-    return method.invoke(proxy, args);
   }
 
   @RuntimeType
@@ -30,5 +29,11 @@ public final class BasicProxyInterceptionHandler {
       @AllArguments Object... args)
       throws InvocationTargetException, IllegalAccessException {
     return methodInterceptor.intercept(proxyMethod, originMethod, proxy, args);
+  }
+
+  private Object defaultInterceptor(
+      Method method, Method originMethod, Object proxy, Object... args)
+      throws InvocationTargetException, IllegalAccessException {
+    return method.invoke(proxy, args);
   }
 }

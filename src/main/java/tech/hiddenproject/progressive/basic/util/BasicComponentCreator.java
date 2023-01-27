@@ -1,18 +1,31 @@
 package tech.hiddenproject.progressive.basic.util;
 
-import java.lang.annotation.*;
-import java.lang.invoke.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.lang.annotation.Annotation;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import tech.hiddenproject.progressive.annotation.Autofill;
 import tech.hiddenproject.progressive.annotation.Proxy;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.exception.*;
-import tech.hiddenproject.progressive.injection.*;
+import tech.hiddenproject.progressive.annotation.Qualifier;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.exception.BeanConflictException;
+import tech.hiddenproject.progressive.injection.DIContainer;
 
-/** Instantiates objects from their classes and uses {@link DIContainer} for auto injection. */
+/**
+ * Instantiates objects from their classes and uses {@link DIContainer} for auto injection.
+ */
 public abstract class BasicComponentCreator {
 
   private static boolean isHandlesEnabled = true;
@@ -21,7 +34,8 @@ public abstract class BasicComponentCreator {
    * Defines if ComponentCreator can use {@link java.lang.invoke.MethodHandles} apis.
    *
    * @param isHandlesEnabled if true will use {@link java.lang.invoke.MethodHandles} to invoke
-   *     methods or use {@link java.lang.reflect.Method#invoke(Object, Object...)} otherwise
+   *                         methods or use
+   *                         {@link java.lang.reflect.Method#invoke(Object, Object...)} otherwise
    */
   public static void setIsHandlesEnabled(boolean isHandlesEnabled) {
     BasicComponentCreator.isHandlesEnabled = isHandlesEnabled;
@@ -32,8 +46,8 @@ public abstract class BasicComponentCreator {
    * annotated as @Autofill.
    *
    * @param componentClass Object class to instantiate
-   * @param args Parameters to pass in class constructor
-   * @param <C> Object to instantiate
+   * @param args           Parameters to pass in class constructor
+   * @param <C>            Object to instantiate
    * @return Instantiated object of null
    */
   public static <C> C create(Class<C> componentClass, Object... args) {
@@ -42,58 +56,13 @@ public abstract class BasicComponentCreator {
       componentClass = BasicComponentManager.getProxyCreator().createProxyClass(componentClass);
     }
     try {
-      Class<?>[] argsTypes = new Class[args.length];
-      for (int i = 0; i < args.length; ++i) {
-        argsTypes[i] = args[i].getClass();
-      }
-      C instance;
       DIContainer diContainer = BasicComponentManager.getDiContainer();
-      Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
-      Arrays.sort(constructors, Comparator.comparingInt(Constructor::getParameterCount));
-      List<Constructor<?>> autoInjectConstructors = foundAutoInjectConstructors(constructors);
-      if (autoInjectConstructors.size() > 1) {
-        throw new BeanConflictException(
-            "Found more than one constructor in "
-                + componentClass.getName()
-                + " annotated as @Autofill. What to use?");
-      }
-      if (autoInjectConstructors.size() == 1) {
-        Constructor<?> constructor = autoInjectConstructors.get(0);
-        args =
-            injectBeansToParameters(
-                componentClass,
-                constructor.getParameterTypes(),
-                constructor.getParameterAnnotations());
-        constructor.setAccessible(true);
-        instance = (C) constructor.newInstance(args);
-      } else {
-        Constructor<C> constructor = componentClass.getDeclaredConstructor(argsTypes);
-        constructor.setAccessible(true);
-        instance = constructor.newInstance(args);
-      }
-      Field[] fields = instance.getClass().getDeclaredFields();
-      for (Field f : fields) {
-        f.setAccessible(true);
-        if (f.isAnnotationPresent(Autofill.class)) {
-          Qualifier qualifier = f.getAnnotation(Qualifier.class);
-          String name = f.getName().toLowerCase();
-          if (qualifier != null) {
-            name = qualifier.value();
-          }
-          f.set(instance, diContainer.getBean(name, f.getType()));
-        }
-      }
-      Method[] methods = instance.getClass().getDeclaredMethods();
-      Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
-      for (Method m : methods) {
-        m.setAccessible(true);
-        if (m.isAnnotationPresent(Autofill.class)) {
-          args =
-              injectBeansToParameters(
-                  componentClass, m.getParameterTypes(), m.getParameterAnnotations());
-          invoke(m, instance, args);
-        }
-      }
+      C instance = wireConstructors(componentClass, args);
+
+      wireFields(instance, diContainer);
+
+      wireMethods(instance, diContainer, args);
+
       return instance;
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
@@ -110,6 +79,84 @@ public abstract class BasicComponentCreator {
               + "! Component must have such a method: "
               + e.getMessage());
     }
+  }
+
+  private static <C> C wireConstructors(Class<C> componentClass, Object... args)
+      throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+    Constructor<?>[] constructors = componentClass.getDeclaredConstructors();
+    Arrays.sort(constructors, Comparator.comparingInt(Constructor::getParameterCount));
+    List<Constructor<?>> autoInjectConstructors = foundAutoInjectConstructors(constructors);
+    if (autoInjectConstructors.size() > 1) {
+      throw new BeanConflictException(
+          "Found more than one constructor in "
+              + componentClass.getName()
+              + " annotated as @Autofill. What to use?");
+    }
+    if (autoInjectConstructors.size() == 1) {
+      return wireConstructor(autoInjectConstructors.get(0), componentClass);
+    }
+    Constructor<C> constructor = componentClass.getDeclaredConstructor(getArgsTypes(args));
+    constructor.setAccessible(true);
+    return constructor.newInstance(args);
+  }
+
+  private static <C> C wireConstructor(Constructor<?> constructor, Class<C> componentClass)
+      throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    Object[] args = injectBeansToParameters(
+        componentClass,
+        constructor.getParameterTypes(),
+        constructor.getParameterAnnotations()
+    );
+    constructor.setAccessible(true);
+    return (C) constructor.newInstance(args);
+  }
+
+  private static Class<?>[] getArgsTypes(Object... args) {
+    Class<?>[] argsTypes = new Class[args.length];
+    for (int i = 0; i < args.length; ++i) {
+      argsTypes[i] = args[i].getClass();
+    }
+    return argsTypes;
+  }
+
+  private static <C> void wireMethods(C instance, DIContainer diContainer, Object... args) {
+    Method[] methods = instance.getClass().getDeclaredMethods();
+    Arrays.sort(methods, Comparator.comparingInt(Method::getParameterCount));
+    for (Method m : methods) {
+      wireMethod(m, instance, diContainer, args);
+    }
+  }
+
+  private static <C> void wireMethod(Method m, C instance, DIContainer diContainer,
+                                     Object... args) {
+    m.setAccessible(true);
+    if (m.isAnnotationPresent(Autofill.class)) {
+      args =
+          injectBeansToParameters(
+              instance.getClass(), m.getParameterTypes(), m.getParameterAnnotations());
+      invoke(m, instance, args);
+    }
+  }
+
+  private static <C> void wireFields(C instance, DIContainer diContainer)
+      throws IllegalAccessException {
+    Field[] fields = instance.getClass().getDeclaredFields();
+    for (Field f : fields) {
+      f.setAccessible(true);
+      if (f.isAnnotationPresent(Autofill.class)) {
+        wireField(f, instance, diContainer);
+      }
+    }
+  }
+
+  private static <C> void wireField(Field f, C instance, DIContainer diContainer)
+      throws IllegalAccessException {
+    Qualifier qualifier = f.getAnnotation(Qualifier.class);
+    String name = f.getName().toLowerCase();
+    if (qualifier != null) {
+      name = qualifier.value();
+    }
+    f.set(instance, diContainer.getBean(name, f.getType()));
   }
 
   public static List<Constructor<?>> foundAutoInjectConstructors(Constructor<?>[] constructors) {
@@ -139,8 +186,8 @@ public abstract class BasicComponentCreator {
    * Invokes method from given object and given args.
    *
    * @param method Method to invoke
-   * @param from Object to invoke method from
-   * @param args Parameters to invoke method with
+   * @param from   Object to invoke method from
+   * @param args   Parameters to invoke method with
    */
   public static Object invoke(Method method, Object from, Object... args) {
     try {
@@ -227,7 +274,8 @@ public abstract class BasicComponentCreator {
             invokedType,
             func.generic(),
             caller.unreflect(method),
-            MethodType.methodType(Object.class, bean.getClass()));
+            MethodType.methodType(Object.class, bean.getClass())
+        );
     Function<Object, Object> fullFunction =
         (Function<Object, Object>) site.getTarget().invokeExact();
     return fullFunction.apply(bean);
@@ -247,7 +295,8 @@ public abstract class BasicComponentCreator {
             invokedType,
             func.generic(),
             caller.unreflect(method),
-            caller.unreflect(method).type());
+            caller.unreflect(method).type()
+        );
     BiFunction<Object, Object, Object> fullFunction =
         (BiFunction<Object, Object, Object>) site.getTarget().invoke();
     return fullFunction.apply(bean, methodParamTypes[0].cast(arg));
@@ -259,7 +308,7 @@ public abstract class BasicComponentCreator {
    * <p>You can check if method or field you got from Reflection have some modifiers like private,
    * public, etc
    *
-   * @param allModifiers All modifiers field or method has
+   * @param allModifiers     All modifiers field or method has
    * @param specificModifier Modifier to check
    * @return true if given modifier presented in all modifiers
    */

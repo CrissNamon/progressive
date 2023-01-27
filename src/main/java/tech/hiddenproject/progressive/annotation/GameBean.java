@@ -1,15 +1,21 @@
 package tech.hiddenproject.progressive.annotation;
 
-import java.lang.annotation.*;
-import tech.hiddenproject.progressive.injection.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import tech.hiddenproject.progressive.injection.DIContainer;
+import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
 
 /**
  * Marks class or method as bean provider for Dependency Injection container.
  *
- * <p>policy - defines if bean should be recreated before {@link DIContainer#getBean(String, Class)}
+ * <p>policy - defines if bean should be recreated before
+ * {@link DIContainer#getBean(String, Class)}
  *
- * <p>name - specifies bean name. If not specified, then bean will get method or class name in lower
- * case
+ * <p>name - specifies bean name. If not specified, then bean will get method or class name in
+ * lower case
  *
  * <p>order - specifies order in which annotated methods will be executed in {@link Configuration}
  *
@@ -33,10 +39,14 @@ import tech.hiddenproject.progressive.injection.*;
 @Documented
 public @interface GameBean {
 
-  /** Used by default in DI Container. */
+  /**
+   * Used by default in DI Container.
+   */
   String DEFAULT_VARIANT = "_DEFAULT";
 
-  /** Used for global beans. Default variant for bean. */
+  /**
+   * Used for global beans. Default variant for bean.
+   */
   String GLOBAL_VARIANT = "_GLOBAL";
 
   GameBeanCreationPolicy policy() default GameBeanCreationPolicy.SINGLETON;

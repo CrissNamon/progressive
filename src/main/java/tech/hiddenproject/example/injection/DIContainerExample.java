@@ -1,11 +1,11 @@
 package tech.hiddenproject.example.injection;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.injection.*;
-import tech.hiddenproject.progressive.basic.util.*;
-import tech.hiddenproject.progressive.component.*;
-import tech.hiddenproject.progressive.injection.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.basic.BasicDIContainer;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageScanner;
+import tech.hiddenproject.progressive.basic.util.BasicObjectCaster;
+import tech.hiddenproject.progressive.component.GameComponent;
+import tech.hiddenproject.progressive.injection.DIContainer;
 
 public class DIContainerExample {
 

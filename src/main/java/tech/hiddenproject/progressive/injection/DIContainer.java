@@ -1,12 +1,16 @@
 package tech.hiddenproject.progressive.injection;
 
-import java.util.*;
-import tech.hiddenproject.progressive.annotation.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.injection.*;
-import tech.hiddenproject.progressive.exception.*;
+import java.util.Optional;
+import tech.hiddenproject.progressive.annotation.Configuration;
+import tech.hiddenproject.progressive.annotation.GameBean;
+import tech.hiddenproject.progressive.basic.GameInitializer;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageLoader;
+import tech.hiddenproject.progressive.basic.injection.SimplePackageScanner;
+import tech.hiddenproject.progressive.exception.BeanUndefinedException;
 
-/** Represents Dependency Injection container. */
+/**
+ * Represents Dependency Injection container.
+ */
 public interface DIContainer {
 
   /**
@@ -18,7 +22,7 @@ public interface DIContainer {
   /**
    * Initiates DI container with {@code packageLoader} and {@code packageScanner}.
    *
-   * @param packageLoader {@link SimplePackageLoader} to use
+   * @param packageLoader  {@link SimplePackageLoader} to use
    * @param packageScanner {@link SimplePackageScanner} to use
    */
   void init(PackageLoader packageLoader, PackageScanner packageScanner);
@@ -26,9 +30,9 @@ public interface DIContainer {
   /**
    * Gets bean by it's name and class.
    *
-   * @param name Bean name to find
+   * @param name      Bean name to find
    * @param beanClass Bean class to find
-   * @param <V> Bean object to return
+   * @param <V>       Bean object to return
    * @return Bean object or throws BeanNotFoundException if bean not found
    */
   <V> V getBean(String name, Class<V> beanClass);
@@ -37,7 +41,7 @@ public interface DIContainer {
    * Gets random bean bean with given class.
    *
    * @param beanClass Bean class to find
-   * @param <V> Bean object to return
+   * @param <V>       Bean object to return
    * @return Bean object or throws BeanNotFoundException if bean not found
    */
   <V> V getBean(Class<V> beanClass);
@@ -46,7 +50,7 @@ public interface DIContainer {
    * Searches for bean with given {@code beanClass}.
    *
    * @param beanClass Bean class to search
-   * @param <V> Bean object to search
+   * @param <V>       Bean object to search
    * @return Optional bean
    */
   <V> Optional<V> searchBean(Class<V> beanClass);
@@ -54,17 +58,18 @@ public interface DIContainer {
   /**
    * Searches for bean with given {@code beanClass}.
    *
-   * @param name Bean name to search
+   * @param name      Bean name to search
    * @param beanClass Bean class to search
-   * @param <V> Bean object to search
+   * @param <V>       Bean object to search
    * @return Optional bean
    */
   <V> Optional<V> searchBean(String name, Class<V> beanClass);
 
   /**
-   * Scans package {@code name} for {@link Configuration} and {@link GameBean} using {@code loader}.
+   * Scans package {@code name} for {@link Configuration} and {@link GameBean} using
+   * {@code loader}.
    *
-   * @param name Package name to scan
+   * @param name   Package name to scan
    * @param loader {@link PackageScanner} to use
    */
   void scanPackage(String name, PackageScanner loader);
@@ -80,7 +85,7 @@ public interface DIContainer {
    * Loads configuration into container with custom {@link PackageScanner}.
    *
    * @param configClass Configuration class to load
-   * @param scanner {@link PackageScanner} to use
+   * @param scanner     {@link PackageScanner} to use
    * @throws BeanUndefinedException Thrown on undefined exception
    */
   void loadConfiguration(Class<?> configClass, PackageScanner scanner)

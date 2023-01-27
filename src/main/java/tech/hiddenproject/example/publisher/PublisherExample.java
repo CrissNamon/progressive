@@ -1,10 +1,11 @@
 package tech.hiddenproject.example.publisher;
 
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.progressive.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.basic.manager.*;
-import tech.hiddenproject.progressive.manager.*;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.progressive.PublisherType;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.basic.manager.BasicGamePublisher;
+import tech.hiddenproject.progressive.basic.manager.PublisherSubscription;
+import tech.hiddenproject.progressive.manager.GamePublisher;
 
 public class PublisherExample {
 
@@ -24,7 +25,7 @@ public class PublisherExample {
     PublisherSubscription methodSubscription =
         basicGamePublisher.subscribeOn("method", this::print);
     // Subscribe to topic "print" and print received object to console
-    basicGamePublisher.subscribeOn("print", m -> System.out.println(m));
+    basicGamePublisher.subscribeOn("print", m -> BasicComponentManager.getGameLogger().info(m));
     // Subscribe to topic "set" and set current message to received message
     basicGamePublisher.subscribeOn("set", m -> message = m.toString());
 

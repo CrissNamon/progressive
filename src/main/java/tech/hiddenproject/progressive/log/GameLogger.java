@@ -1,6 +1,8 @@
 package tech.hiddenproject.progressive.log;
 
-/** Represents abstract game logger. */
+/**
+ * Represents abstract game logger.
+ */
 public interface GameLogger {
 
   String RESET = "\033[0m"; // Text Reset
@@ -16,7 +18,7 @@ public interface GameLogger {
   /**
    * Logs {@code message} with {@code prefix}.
    *
-   * @param prefix Prefix to use
+   * @param prefix  Prefix to use
    * @param message Message to log
    */
   void log(String prefix, Object message);

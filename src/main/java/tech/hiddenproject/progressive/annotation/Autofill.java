@@ -1,7 +1,11 @@
 package tech.hiddenproject.progressive.annotation;
 
-import java.lang.annotation.*;
-import tech.hiddenproject.progressive.exception.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import tech.hiddenproject.progressive.exception.BeanConflictException;
 
 /**
  * Represents field or constructor which can be injected with some value from Dependency Injection
@@ -19,10 +23,12 @@ import tech.hiddenproject.progressive.exception.*;
  * <p>If there are more than one bean of parameter, field type exist and no {@link Qualifier} is
  * specified than throws {@link BeanConflictException}
  *
- * <p>If you need to call some method after object creation, then create no-args method and annotate
- * it as @Autofill
+ * <p>If you need to call some method after object creation, then create no-args method and
+ * annotate it as @Autofill
  */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Autofill {}
+public @interface Autofill {
+
+}

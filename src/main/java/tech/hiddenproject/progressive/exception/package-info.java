@@ -1,2 +1,4 @@
-/** Contains progressive exceptions. */
+/**
+ * Contains progressive exceptions.
+ */
 package tech.hiddenproject.progressive.exception;

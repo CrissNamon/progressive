@@ -1,17 +1,19 @@
 package tech.hiddenproject.progressive.component;
 
-import java.util.*;
-import tech.hiddenproject.progressive.*;
+import java.util.Collection;
+import tech.hiddenproject.progressive.Game;
 
-/** Represents abstract GameObject. */
+/**
+ * Represents abstract GameObject.
+ */
 public interface GameObject extends GameComponent {
 
   /**
    * Returns existed GameScript attached to this object or creates new.
    *
    * @param gameScriptClass GameScript class to get
-   * @param <V> GameScript to return
-   * @param args Arguments to use in script's constructor
+   * @param <V>             GameScript to return
+   * @param args            Arguments to use in script's constructor
    * @return Game script
    */
   <V extends GameScript> V getGameScript(Class<V> gameScriptClass, Object... args);
@@ -20,7 +22,7 @@ public interface GameObject extends GameComponent {
    * Checks if this object has given GameScript attached to this object.
    *
    * @param gameScriptClass GameScript class to get
-   * @param <V> GameScript type
+   * @param <V>             GameScript type
    * @return true if given script is attached
    */
   <V extends GameScript> boolean hasGameScript(Class<V> gameScriptClass);
@@ -29,7 +31,7 @@ public interface GameObject extends GameComponent {
    * Removes game script from this object.
    *
    * @param gameScriptClass GameScript class to remove
-   * @param <V> GameScript type
+   * @param <V>             GameScript type
    * @return true if script has been removed
    */
   <V extends GameScript> boolean removeGameScript(Class<V> gameScriptClass);
@@ -42,14 +44,14 @@ public interface GameObject extends GameComponent {
   Collection<GameScript> getGameScripts();
 
   /**
-   * Calls {@link GameScript#dispose()} on each {@link GameScript} and removes all {@link
-   * GameScript}'s from current object.
+   * Calls {@link GameScript#dispose()} on each {@link GameScript} and removes all
+   * {@link GameScript}'s from current object.
    */
   void dispose();
 
   /**
-   * Calls {@link GameScript#start()} on each {@link GameScript}. Called automatically on {@link
-   * Game#start()}.
+   * Calls {@link GameScript#start()} on each {@link GameScript}. Called automatically on
+   * {@link Game#start()}.
    */
   void start();
 
@@ -62,8 +64,8 @@ public interface GameObject extends GameComponent {
   void update(long delta);
 
   /**
-   * Calls {@link GameScript#stop()} on each {@link GameScript}. Called automatically on {@link
-   * Game#stop()}.
+   * Calls {@link GameScript#stop()} on each {@link GameScript}. Called automatically on
+   * {@link Game#stop()}.
    */
   void stop();
 }
