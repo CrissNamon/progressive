@@ -1,10 +1,12 @@
 package progressive;
 
-import org.junit.jupiter.api.*;
-import tech.hiddenproject.example.game.component.*;
-import tech.hiddenproject.example.proxy.*;
-import tech.hiddenproject.progressive.basic.*;
-import tech.hiddenproject.progressive.proxy.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import progressive.data.TestProxyClass;
+import tech.hiddenproject.example.game.component.GameItem;
+import tech.hiddenproject.example.proxy.LoggerMethodInterceptor;
+import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.proxy.ProxyCreator;
 
 public class ProxyCreatorTest {
 

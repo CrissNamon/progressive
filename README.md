@@ -23,14 +23,14 @@ Main features:
 <dependency>
     <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive</artifactId>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
 </dependency>
 ```
 
 ##### Gradle
 
 ````groovy
-compile 'tech.hiddenproject:progressive:0.6.0'
+compile 'tech.hiddenproject:progressive:0.6.1'
 ````
 
 #### Resources

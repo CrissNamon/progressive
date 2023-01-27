@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>tech.hiddenproject</groupId>
     <artifactId>progressive</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Progressive is a simple game framework, which provides you predefined way to develop your game logic
     </description>
