@@ -14,8 +14,8 @@ import tech.hiddenproject.progressive.exception.BeanUndefinedException;
 public interface DIContainer {
 
   /**
-   * Initiates DI container with {@link SimplePackageLoader} and {@link SimplePackageScanner}. Will be called after
-   * {@link GameInitializer#init(boolean)}.
+   * Initiates DI container with {@link SimplePackageLoader} and {@link SimplePackageScanner}. Will
+   * be called after {@link GameInitializer#init(boolean)}.
    */
   void init();
 
@@ -66,7 +66,8 @@ public interface DIContainer {
   <V> Optional<V> searchBean(String name, Class<V> beanClass);
 
   /**
-   * Scans package {@code name} for {@link Configuration} and {@link GameBean} using {@code loader}.
+   * Scans package {@code name} for {@link Configuration} and {@link GameBean} using
+   * {@code loader}.
    *
    * @param name   Package name to scan
    * @param loader {@link PackageScanner} to use

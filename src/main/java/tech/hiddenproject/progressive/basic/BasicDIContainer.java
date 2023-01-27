@@ -146,7 +146,6 @@ public final class BasicDIContainer implements DIContainer {
           "There is no beans for " + beanClass.getName() + " were found!", beanClass);
     }
     if (beansOfClass.size() > 1) {
-      beansOfClass.forEach(k -> System.out.println(k.toString()));
       throw new BeanConflictException(
           "There are more than one beans of " + beanClass.getName() + " found! What to inject?");
     }

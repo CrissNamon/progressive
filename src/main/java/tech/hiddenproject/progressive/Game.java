@@ -1,13 +1,17 @@
 package tech.hiddenproject.progressive;
 
+import java.util.List;
+import tech.hiddenproject.progressive.basic.lambda.GameAction;
+import tech.hiddenproject.progressive.basic.manager.BasicGameStateManager;
 import tech.hiddenproject.progressive.component.GameObject;
-import tech.hiddenproject.progressive.lambda.GameAction;
 import tech.hiddenproject.progressive.manager.GameStateManager;
 
 /**
  * Represents game.
  */
-public interface Game<S extends GameStateManager> {
+public interface Game<S, E, P extends Game<S, E, P>> {
+
+  String GAME_PUBLISHER_TOPIC = "__GAME__";
 
   /**
    * Creates an empty game object and returns it.
@@ -103,10 +107,12 @@ public interface Game<S extends GameStateManager> {
    */
   void setPostUpdate(GameAction action);
 
+  List<GameObject> getAllGameObjects();
+
   /**
    * Returns current state manager in game.
    *
    * @return {@link GameStateManager}
    */
-  S getStateManager();
+  BasicGameStateManager getStateManager();
 }

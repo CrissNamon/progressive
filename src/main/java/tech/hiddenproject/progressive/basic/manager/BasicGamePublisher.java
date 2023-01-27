@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import tech.hiddenproject.progressive.PublisherType;
-import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.basic.lambda.GameActionObject;
 import tech.hiddenproject.progressive.manager.GamePublisher;
 
 /**
@@ -29,7 +29,7 @@ public class BasicGamePublisher implements GamePublisher<PublisherSubscription, 
     generator = new AtomicLong(0);
   }
 
-  public static BasicGamePublisher getInstance() {
+  public static synchronized BasicGamePublisher getInstance() {
     if (INSTANCE == null) {
       INSTANCE = new BasicGamePublisher();
     }

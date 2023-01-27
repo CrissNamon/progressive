@@ -33,7 +33,8 @@ public abstract class BasicComponentCreator {
   /**
    * Defines if ComponentCreator can use {@link java.lang.invoke.MethodHandles} apis.
    *
-   * @param isHandlesEnabled if true will use {@link java.lang.invoke.MethodHandles} to invoke methods or use
+   * @param isHandlesEnabled if true will use {@link java.lang.invoke.MethodHandles} to invoke
+   *                         methods or use
    *                         {@link java.lang.reflect.Method#invoke(Object, Object...)} otherwise
    */
   public static void setIsHandlesEnabled(boolean isHandlesEnabled) {
@@ -41,7 +42,8 @@ public abstract class BasicComponentCreator {
   }
 
   /**
-   * Creates object from given class and makes auto injection for fields and methods if they annotated as @Autofill.
+   * Creates object from given class and makes auto injection for fields and methods if they
+   * annotated as @Autofill.
    *
    * @param componentClass Object class to instantiate
    * @param args           Parameters to pass in class constructor
@@ -108,7 +110,7 @@ public abstract class BasicComponentCreator {
     constructor.setAccessible(true);
     return (C) constructor.newInstance(args);
   }
-  
+
   private static Class<?>[] getArgsTypes(Object... args) {
     Class<?>[] argsTypes = new Class[args.length];
     for (int i = 0; i < args.length; ++i) {
@@ -125,11 +127,13 @@ public abstract class BasicComponentCreator {
     }
   }
 
-  private static <C> void wireMethod(Method m, C instance, DIContainer diContainer, Object... args) {
+  private static <C> void wireMethod(Method m, C instance, DIContainer diContainer,
+                                     Object... args) {
     m.setAccessible(true);
     if (m.isAnnotationPresent(Autofill.class)) {
       args =
-          injectBeansToParameters(instance.getClass(), m.getParameterTypes(), m.getParameterAnnotations());
+          injectBeansToParameters(
+              instance.getClass(), m.getParameterTypes(), m.getParameterAnnotations());
       invoke(m, instance, args);
     }
   }
@@ -145,7 +149,8 @@ public abstract class BasicComponentCreator {
     }
   }
 
-  private static <C> void wireField(Field f, C instance, DIContainer diContainer) throws IllegalAccessException {
+  private static <C> void wireField(Field f, C instance, DIContainer diContainer)
+      throws IllegalAccessException {
     Qualifier qualifier = f.getAnnotation(Qualifier.class);
     String name = f.getName().toLowerCase();
     if (qualifier != null) {

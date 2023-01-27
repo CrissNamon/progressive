@@ -17,8 +17,8 @@ public abstract class GameInitializer {
   /**
    * Initiates game components such as {@link Game} and {@link DIContainer}.
    *
-   * @param autoScan if true then scans all available packages for {@link Configuration} classes and {@link GameBean}
-   *                 classes
+   * @param autoScan if true then scans all available packages for {@link Configuration} classes and
+   *                 {@link GameBean} classes
    */
   public static void init(boolean autoScan) {
     init(new SimplePackageScanner(), new SimplePackageLoader(), autoScan);
@@ -29,8 +29,8 @@ public abstract class GameInitializer {
    *
    * @param packageScanner Scanner to load classes from package
    * @param packageLoader  Loader to load available packages
-   * @param autoScan       if true then scans all available packages for {@link Configuration} classes and
-   *                       {@link GameBean} classes
+   * @param autoScan       if true then scans all available packages for {@link Configuration}
+   *                       classes and {@link GameBean} classes
    */
   public static void init(
       PackageScanner packageScanner, PackageLoader packageLoader, boolean autoScan) {

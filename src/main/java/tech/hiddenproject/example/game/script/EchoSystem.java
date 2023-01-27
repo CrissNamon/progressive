@@ -53,6 +53,6 @@ public class EchoSystem implements GameScript {
 
   // This will be called on global game update
   private void say(Object message) {
-    System.out.println(message);
+    BasicComponentManager.getGameLogger().info(message);
   }
 }

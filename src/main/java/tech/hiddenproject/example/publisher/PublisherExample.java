@@ -25,7 +25,7 @@ public class PublisherExample {
     PublisherSubscription methodSubscription =
         basicGamePublisher.subscribeOn("method", this::print);
     // Subscribe to topic "print" and print received object to console
-    basicGamePublisher.subscribeOn("print", m -> System.out.println(m));
+    basicGamePublisher.subscribeOn("print", m -> BasicComponentManager.getGameLogger().info(m));
     // Subscribe to topic "set" and set current message to received message
     basicGamePublisher.subscribeOn("set", m -> message = m.toString());
 

@@ -1,6 +1,6 @@
 package tech.hiddenproject.progressive.util;
 
-import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.basic.lambda.GameActionObject;
 
 /**
  * Casts one object type to another.

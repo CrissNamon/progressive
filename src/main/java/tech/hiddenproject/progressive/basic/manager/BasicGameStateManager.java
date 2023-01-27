@@ -1,15 +1,19 @@
 package tech.hiddenproject.progressive.basic.manager;
 
-import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.basic.lambda.GameActionObject;
 import tech.hiddenproject.progressive.manager.GameState;
 import tech.hiddenproject.progressive.manager.GameStateManager;
 
 /**
  * Basic implementation of {@link GameStateManager}.
+ *
+ * @deprecated Use {@link tech.hiddenproject.progressive.manager.StateMachine} instead.
  */
+@Deprecated
 public class BasicGameStateManager implements GameStateManager<PublisherSubscription, GameState> {
 
   private final BasicGamePublisher publisher;
+
   private GameState state;
 
   public BasicGameStateManager() {

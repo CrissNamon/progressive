@@ -1,7 +1,7 @@
 package tech.hiddenproject.progressive.manager;
 
 import tech.hiddenproject.progressive.PublisherType;
-import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.basic.lambda.GameActionObject;
 
 /**
  * Represents some publisher components can use to `talk` with each other.

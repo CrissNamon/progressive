@@ -1,12 +1,14 @@
 package tech.hiddenproject.progressive.manager;
 
-import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.basic.lambda.GameActionObject;
 
 /**
  * Represents story state manager.
  *
  * @param <S> State type
+ * @deprecated Use {@link StateMachine} instead
  */
+@Deprecated
 public interface GameStateManager<I, S> {
 
   /**

@@ -54,6 +54,21 @@
             <artifactId>byte-buddy</artifactId>
             <version>1.11.21</version>
         </dependency>
+        <dependency>
+            <artifactId>slf4j-api</artifactId>
+            <groupId>org.slf4j</groupId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <artifactId>slf4j-reload4j</artifactId>
+            <groupId>org.slf4j</groupId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <artifactId>log4j-core</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <version>2.19.0</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

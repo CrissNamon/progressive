@@ -8,7 +8,8 @@ import java.lang.annotation.Target;
 import tech.hiddenproject.progressive.basic.proxy.BasicProxyCreator;
 
 /**
- * Used in {@link BasicProxyCreator} while proxy class creation from original class annotated with {@link Proxy}.
+ * Used in {@link BasicProxyCreator} while proxy class creation from original class annotated with
+ * {@link Proxy}.
  *
  * <p>Only methods of original class annotated with {@link Intercept} will be intercepted
  */

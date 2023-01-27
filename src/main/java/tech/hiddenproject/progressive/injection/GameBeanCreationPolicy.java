@@ -10,8 +10,8 @@ public enum GameBeanCreationPolicy {
   SINGLETON,
 
   /**
-   * Adds bean information to container and create. new object every time {@link DIContainer#getBean(String, Class)}
-   * called
+   * Adds bean information to container and create. new object every time
+   * {@link DIContainer#getBean(String, Class)} called
    */
   OBJECT
 }

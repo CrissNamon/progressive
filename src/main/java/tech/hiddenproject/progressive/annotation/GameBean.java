@@ -11,16 +11,17 @@ import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
 /**
  * Marks class or method as bean provider for Dependency Injection container.
  *
- * <p>policy - defines if bean should be recreated before {@link DIContainer#getBean(String, Class)}
+ * <p>policy - defines if bean should be recreated before
+ * {@link DIContainer#getBean(String, Class)}
  *
- * <p>name - specifies bean name. If not specified, then bean will get method or class name in lower
- * case
+ * <p>name - specifies bean name. If not specified, then bean will get method or class name in
+ * lower case
  *
  * <p>order - specifies order in which annotated methods will be executed in {@link Configuration}
  *
  * <p>variant - specifies variant this bean will be used in. Only beans with variant, which equals
- * to variant specified in BasicDIContainer will be loaded. You can create beans for different use cases, build
- * platforms, etc.
+ * to variant specified in BasicDIContainer will be loaded. You can create beans for different use
+ * cases, build platforms, etc.
  *
  * <p><b>Bean creation strategy from methods:</b>
  *
@@ -30,7 +31,8 @@ import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
  * <p><b>Bean creation strategy from classes:</b>
  *
  * <p>Creates meta information of bean. Then creates object from bean class. If class has
- * constructor annotated as {@link Autofill}, then inject beans as constructor parameters and creates object.
+ * constructor annotated as {@link Autofill}, then inject beans as constructor parameters and
+ * creates object.
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

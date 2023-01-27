@@ -19,7 +19,9 @@ public class SimplePackageLoader implements PackageLoader {
       "org.w3c.dom",
       "jdk.internal",
       "org.codehaus.classworlds",
-      "org.codehaus.plexus"
+      "org.codehaus.plexus",
+      "org.slf4j",
+      "org.apache.log4j"
   };
 
   /**
@@ -31,7 +33,6 @@ public class SimplePackageLoader implements PackageLoader {
   public Package[] loadAllPackages() {
     return Arrays.stream(Package.getPackages())
         .filter(this::isPackageForbidden)
-        .peek(a -> System.out.println(a))
         .collect(Collectors.toList())
         .toArray(new Package[]{});
   }
@@ -48,6 +49,7 @@ public class SimplePackageLoader implements PackageLoader {
   }
 
   private boolean isPackageForbidden(Package pack) {
-    return Arrays.stream(FORBIDDEN_PACKAGE_PREFIX).noneMatch(prefix -> pack.getName().startsWith(prefix));
+    return Arrays.stream(FORBIDDEN_PACKAGE_PREFIX)
+        .noneMatch(prefix -> pack.getName().startsWith(prefix));
   }
 }

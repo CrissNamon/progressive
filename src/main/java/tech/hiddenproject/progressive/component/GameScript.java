@@ -50,7 +50,8 @@ public interface GameScript extends Serializable {
   GameObject gameObject();
 
   /**
-   * Fills GameScript fields annotated as @FromParent from parent GameObject this script if attached to.
+   * Fills GameScript fields annotated as @FromParent from parent GameObject this script if attached
+   * to.
    *
    * @throws IllegalAccessException if field is not accessible
    */

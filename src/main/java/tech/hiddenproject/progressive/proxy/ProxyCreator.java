@@ -9,8 +9,8 @@ import tech.hiddenproject.progressive.annotation.Proxy;
 public interface ProxyCreator {
 
   /**
-   * Creates proxy class from {@code original} class. All methods of original class will be intercepted with given
-   * interceptor
+   * Creates proxy class from {@code original} class. All methods of original class will be
+   * intercepted with given interceptor
    *
    * @param original    Original class to create proxy from
    * @param <V>         Object type to create proxy from
@@ -20,8 +20,8 @@ public interface ProxyCreator {
   <V> Class<V> createProxyClass(Class<V> original, MethodInterceptor interceptor);
 
   /**
-   * Creates proxy class from {@code original} class and instantiates it. All methods of original class will be
-   * intercepted with given interceptor
+   * Creates proxy class from {@code original} class and instantiates it. All methods of original
+   * class will be intercepted with given interceptor
    *
    * @param original    Original class to create proxy from
    * @param <V>         Object type to create proxy from

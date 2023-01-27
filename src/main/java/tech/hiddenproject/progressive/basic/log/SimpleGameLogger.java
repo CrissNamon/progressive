@@ -1,5 +1,7 @@
 package tech.hiddenproject.progressive.basic.log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.hiddenproject.progressive.log.GameLogger;
 
 /**
@@ -7,9 +9,11 @@ import tech.hiddenproject.progressive.log.GameLogger;
  */
 public class SimpleGameLogger implements GameLogger {
 
+  private static final Logger log = LoggerFactory.getLogger(SimpleGameLogger.class);
+
   @Override
   public void log(String prefix, Object message) {
-    System.out.println(prefix + " " + message.toString());
+    log.info(prefix + " " + message);
   }
 
   @Override

@@ -17,16 +17,16 @@ public class TestProxyBean {
 
   @Intercept
   public void print(String a) {
-    System.out.println(a);
+    BasicComponentManager.getGameLogger().info(a);
   }
 
   @Intercept
   public int getInt(int a) {
-    System.out.println("GET INT = " + a);
+    BasicComponentManager.getGameLogger().info("GET INT = " + a);
     return a;
   }
 
   public void notIntercepted(String message) {
-    System.out.println(message);
+    BasicComponentManager.getGameLogger().info(message);
   }
 }

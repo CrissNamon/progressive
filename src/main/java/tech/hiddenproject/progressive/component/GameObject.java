@@ -44,13 +44,14 @@ public interface GameObject extends GameComponent {
   Collection<GameScript> getGameScripts();
 
   /**
-   * Calls {@link GameScript#dispose()} on each {@link GameScript} and removes all {@link GameScript}'s from current
-   * object.
+   * Calls {@link GameScript#dispose()} on each {@link GameScript} and removes all
+   * {@link GameScript}'s from current object.
    */
   void dispose();
 
   /**
-   * Calls {@link GameScript#start()} on each {@link GameScript}. Called automatically on {@link Game#start()}.
+   * Calls {@link GameScript#start()} on each {@link GameScript}. Called automatically on
+   * {@link Game#start()}.
    */
   void start();
 
@@ -63,7 +64,8 @@ public interface GameObject extends GameComponent {
   void update(long delta);
 
   /**
-   * Calls {@link GameScript#stop()} on each {@link GameScript}. Called automatically on {@link Game#stop()}.
+   * Calls {@link GameScript#stop()} on each {@link GameScript}. Called automatically on
+   * {@link Game#stop()}.
    */
   void stop();
 }

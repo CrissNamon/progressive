@@ -9,7 +9,8 @@ import tech.hiddenproject.progressive.basic.proxy.BasicProxyCreator;
 import tech.hiddenproject.progressive.proxy.MethodInterceptor;
 
 /**
- * Used in {@link BasicProxyCreator} to create proxy class from original class annotated with {@link Proxy}.
+ * Used in {@link BasicProxyCreator} to create proxy class from original class annotated with
+ * {@link Proxy}.
  *
  * <p>You must specify {@link MethodInterceptor} class to be used as method interceptor
  */

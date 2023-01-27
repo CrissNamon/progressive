@@ -1,6 +1,6 @@
 package tech.hiddenproject.progressive.basic.util;
 
-import tech.hiddenproject.progressive.lambda.GameActionObject;
+import tech.hiddenproject.progressive.basic.lambda.GameActionObject;
 import tech.hiddenproject.progressive.util.GameObjectCaster;
 
 /**
