@@ -37,7 +37,7 @@ compile 'tech.hiddenproject:progressive:0.6.0'
 ___
 * Learn more at Progressive [Wiki](https://github.com/CrissNamon/progressive/wiki)
 * Look at some examples in [example](https://github.com/CrissNamon/progressive/blob/main/src/main/java/tech/hiddenproject/example/) package
-* See javadoc [here](https://crissnamon.github.io/progressive/)
+* See javadoc [here](https://hiddenproject.tech/progressive/javadoc)
 
 #### Dependencies and source 
 ___
