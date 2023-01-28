@@ -6,6 +6,7 @@ tech.hiddenproject.progressive.basic.lambda
 tech.hiddenproject.progressive.basic.log
 tech.hiddenproject.progressive.basic.manager
 tech.hiddenproject.progressive.basic.proxy
+tech.hiddenproject.progressive.basic.storage
 tech.hiddenproject.progressive.basic.util
 tech.hiddenproject.progressive.component
 tech.hiddenproject.progressive.data
@@ -14,4 +15,5 @@ tech.hiddenproject.progressive.injection
 tech.hiddenproject.progressive.log
 tech.hiddenproject.progressive.manager
 tech.hiddenproject.progressive.proxy
+tech.hiddenproject.progressive.storage
 tech.hiddenproject.progressive.util
