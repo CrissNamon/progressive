@@ -3,11 +3,14 @@ package tech.hiddenproject.progressive.storage;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import tech.hiddenproject.progressive.basic.storage.BasicStorage;
 
 /**
+ * Default implementation to handle calls from any other implementation of {@link StorageRepository}
+ * with {@link tech.hiddenproject.progressive.basic.storage.RepositoryInterceptor}.
+ *
  * @author Danila Rassokhin
  */
 public class DefaultStorageRepository implements StorageRepository {
@@ -27,7 +30,7 @@ public class DefaultStorageRepository implements StorageRepository {
 
   @Override
   public void save(StorageEntity entity) {
-    BasicStorage.INSTANCE.getTableFor(entityClass).put(entity);
+    BasicStorage.INSTANCE.getTableFor(entityClass).save(entity);
   }
 
   @Override
@@ -36,7 +39,7 @@ public class DefaultStorageRepository implements StorageRepository {
   }
 
   @Override
-  public Collection search(SearchCriteria searchCriteria) {
+  public List search(Criteria searchCriteria) {
     return BasicStorage.INSTANCE.getTableFor(entityClass).search(searchCriteria);
   }
 }

@@ -3,7 +3,6 @@ package tech.hiddenproject.progressive.basic.storage;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
-import tech.hiddenproject.example.storage.RepositoryInterceptor;
 import tech.hiddenproject.progressive.storage.EntityTable;
 import tech.hiddenproject.progressive.storage.Storage;
 import tech.hiddenproject.progressive.storage.StorageEntity;
@@ -33,5 +32,10 @@ public enum BasicStorage implements Storage {
       dataBase.put(entityClass, entityTable);
     }
     return (EntityTable<I, E>) dataBase.get(entityClass);
+  }
+
+  @Override
+  public void clear() {
+    dataBase.values().forEach(EntityTable::clear);
   }
 }

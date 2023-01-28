@@ -1,45 +1,41 @@
 package tech.hiddenproject.progressive.util;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
+ * Helper to work with reflection on classes.
+ *
  * @author Danila Rassokhin
  */
 public class ClassProcessor {
 
-  public static Optional<Object> getFieldValue(String name, Object from) {
+  public static Object getFieldValue(Field f, Object from) {
     try {
-      Field field = from.getClass().getDeclaredField(name.trim());
-      field.setAccessible(true);
-      return Optional.ofNullable(field.get(from));
-    } catch (IllegalAccessException | NoSuchFieldException e) {
-      return Optional.empty();
-    }
-  }
-
-  public static void setFieldValue(String name, Object value, Object to) {
-    try {
-      Field field = to.getClass().getDeclaredField(name);
-      field.setAccessible(true);
-      field.set(to, value);
-    } catch (IllegalAccessException | NoSuchFieldException | NullPointerException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static Type getGenericType(Class<?> c, String name) {
-    try {
-      return c.getDeclaredField(name)
-          .getGenericType();
-    } catch (NoSuchFieldException e) {
+      return f.get(from);
+    } catch (IllegalAccessException e) {
       return null;
     }
   }
 
+  public static Field setAccessible(Field f) {
+    f.setAccessible(true);
+    return f;
+  }
+
   public static boolean isCollection(Class type) {
     return Collection.class.isAssignableFrom(type);
+  }
+
+  public static boolean isPrimitive(Field f) {
+    return f.getType().equals(String.class)
+        || (f.getType().getSuperclass() != null && f.getType().getSuperclass().equals(Number.class))
+        || f.getType().isPrimitive();
+  }
+
+  public static boolean isPrimitive(Class<?> c) {
+    return c.equals(String.class)
+        || (c.getSuperclass() != null && c.getSuperclass().equals(Number.class))
+        || c.isPrimitive();
   }
 }

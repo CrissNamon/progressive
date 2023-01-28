@@ -30,27 +30,27 @@ public interface DIContainer {
   /**
    * Gets bean by it's name and class.
    *
-   * @param name      Bean name to find
-   * @param beanClass Bean class to find
-   * @param <V>       Bean object to return
-   * @return Bean object or throws BeanNotFoundException if bean not found
+   * @param name      BeanDefinition name to find
+   * @param beanClass BeanDefinition class to find
+   * @param <V>       BeanDefinition object to return
+   * @return BeanDefinition object or throws BeanNotFoundException if bean not found
    */
   <V> V getBean(String name, Class<V> beanClass);
 
   /**
    * Gets random bean bean with given class.
    *
-   * @param beanClass Bean class to find
-   * @param <V>       Bean object to return
-   * @return Bean object or throws BeanNotFoundException if bean not found
+   * @param beanClass BeanDefinition class to find
+   * @param <V>       BeanDefinition object to return
+   * @return BeanDefinition object or throws BeanNotFoundException if bean not found
    */
   <V> V getBean(Class<V> beanClass);
 
   /**
    * Searches for bean with given {@code beanClass}.
    *
-   * @param beanClass Bean class to search
-   * @param <V>       Bean object to search
+   * @param beanClass BeanDefinition class to search
+   * @param <V>       BeanDefinition object to search
    * @return Optional bean
    */
   <V> Optional<V> searchBean(Class<V> beanClass);
@@ -58,9 +58,9 @@ public interface DIContainer {
   /**
    * Searches for bean with given {@code beanClass}.
    *
-   * @param name      Bean name to search
-   * @param beanClass Bean class to search
-   * @param <V>       Bean object to search
+   * @param name      BeanDefinition name to search
+   * @param beanClass BeanDefinition class to search
+   * @param <V>       BeanDefinition object to search
    * @return Optional bean
    */
   <V> Optional<V> searchBean(String name, Class<V> beanClass);

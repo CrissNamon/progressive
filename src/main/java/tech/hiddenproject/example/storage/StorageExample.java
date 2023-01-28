@@ -2,10 +2,11 @@ package tech.hiddenproject.example.storage;
 
 import java.util.List;
 import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.basic.BasicDIContainer;
 import tech.hiddenproject.progressive.basic.storage.BasicStorage;
+import tech.hiddenproject.progressive.basic.storage.SearchCriteria;
+import tech.hiddenproject.progressive.exception.CriteriaException;
 import tech.hiddenproject.progressive.storage.EntityTable;
-import tech.hiddenproject.progressive.storage.SearchCriteria;
-import tech.hiddenproject.progressive.storage.Storage;
 
 /**
  * @author Danila Rassokhin
@@ -14,27 +15,89 @@ public class StorageExample {
 
   public StorageExample() {
 
-    Storage storage = BasicStorage.INSTANCE;
-    EntityTable<Long, TestEntity> testEntityTable = storage.getTableFor(TestEntity.class);
+    // Init DI container to create all repositories
+    BasicDIContainer basicDIContainer = new BasicDIContainer();
+    //basicDIContainer.init();
+    basicDIContainer.loadBean(TestRepository.class);
 
+    // Get repository from DI container if repository annotated as @Repository
+    TestRepository testRepository = basicDIContainer.getBean(TestRepository.class);
+    // Create repository using BasicStorage if repository is not annotated as @Repository
+    testRepository = BasicStorage.createRepository(TestRepository.class);
+
+    // Create entity instance
     TestEntity testEntity = new TestEntity(0L, "The peripheral");
-    testEntityTable.put(testEntity);
 
-    BasicComponentManager.getGameLogger().info("Entity: " + testEntity);
-    BasicComponentManager.getGameLogger().info("Metadata: " + testEntity.getMetadata());
-
-    SearchCriteria searchCriteria = SearchCriteria.createFromExpression(
-        "title = $0 & embeddedField.embeddedId > $1", "The peripheral", 1);
-    BasicComponentManager.getGameLogger().info("Search: " + testEntityTable.search(searchCriteria));
-
-    TestRepository testRepository = BasicStorage.createRepository(TestRepository.class);
-    List<TestEntity> searchWithRepository = testRepository.test("The peripheral");
-    BasicComponentManager.getGameLogger().info(searchWithRepository);
-    searchWithRepository = testRepository.testEmbedded(1);
-    BasicComponentManager.getGameLogger().info(searchWithRepository);
-
+    // Save entity
     testRepository.save(testEntity);
-    testRepository.findById(0L)
-        .ifPresent(testEntity1 -> BasicComponentManager.getGameLogger().info("Found entity!"));
+
+    // Find entity by id
+    testRepository.findById(0L).orElseThrow(() -> new RuntimeException());
+
+    // Use criteria for advanced search
+    SearchCriteria searchCriteria =
+        SearchCriteria.createFromExpression("title = $0", "The peripheral");
+
+    // Use generic search() method which exists in any repository
+    List<TestEntity> foundEntities = testRepository.search(searchCriteria);
+
+    // Create shortcut methods with predefined criteria in repository using @Select
+    // See TestRepository.class
+    testRepository.findByByTitle("The peripheral").orElseThrow(() -> new RuntimeException());
+
+    // You can search for embedded field values like rootFieldName.fieldName
+    // Fields must be annotated as @Embedded to be included in search
+    // See TestEntity.class and EmbeddedField.class
+    searchCriteria = SearchCriteria.createFromExpression("embeddedField.embeddedId = $0", 1);
+    foundEntities = testRepository.search(searchCriteria);
+
+    // You can also do it in @Select from repository
+    foundEntities = testRepository.findByEmbeddedId(1);
+
+    // This query will throw exception, cause field name is null and is not annotated as @Nullable
+    // Fields with null values won't be included in entity metadata if they are not annotated as @Nullable
+    try {
+      searchCriteria = SearchCriteria.createFromExpression("name = $0", "MyName");
+      foundEntities = testRepository.search(searchCriteria);
+    } catch (CriteriaException e) {
+      BasicComponentManager.getGameLogger().info("");
+    }
+
+    // ADVANCED CRITERIA OPTIONS
+
+    // Add new operation to criteria
+    // You need to pass operation code (like >, <=, etc)
+    // and a function which will accept entity field value and query value from criteria
+    // It must return boolean as a result of operation
+    // See SearchCriteria.addExternalOperation javadoc for more information
+    SearchCriteria.addExternalOperation("^", this::checkClassOperation);
+
+    // ADVANCED STORAGE, STORAGE TABLE, ENTITY USAGE
+
+    // Instead of high-level api (repositories) you can use low-level access to storage
+
+    // Get entity table from storage
+    EntityTable<Long, TestEntity> testEntityTable = BasicStorage.INSTANCE.getTableFor(
+        TestEntity.class);
+
+    // Save entity in table
+    testEntityTable.save(testEntity);
+
+    // Get entity by id
+    testEntityTable.get(1L);
+
+    // Use criteria
+    try {
+      testEntityTable.search(searchCriteria);
+    } catch (CriteriaException e) {
+      BasicComponentManager.getGameLogger().info("");
+    }
+
+    // Get entity metadata
+    testEntity.getMetadata();
+  }
+
+  public boolean checkClassOperation(Object arg, Object query) {
+    return arg.getClass().equals(query);
   }
 }

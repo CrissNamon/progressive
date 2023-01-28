@@ -23,12 +23,12 @@ import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
  * to variant specified in BasicDIContainer will be loaded. You can create beans for different use
  * cases, build platforms, etc.
  *
- * <p><b>Bean creation strategy from methods:</b>
+ * <p><b>BeanDefinition creation strategy from methods:</b>
  *
  * <p>Sort methods by parameters count, then sorts them by order(), then invokes methods in sorted
  * order
  *
- * <p><b>Bean creation strategy from classes:</b>
+ * <p><b>BeanDefinition creation strategy from classes:</b>
  *
  * <p>Creates meta information of bean. Then creates object from bean class. If class has
  * constructor annotated as {@link Autofill}, then inject beans as constructor parameters and

@@ -6,8 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import tech.hiddenproject.progressive.annotation.Embedded;
 import tech.hiddenproject.progressive.annotation.Nullable;
+import tech.hiddenproject.progressive.util.ClassProcessor;
 
 /**
+ * Implementation of {@link StorageEntity} which collects field values with reflection. Unlike
+ * {@link ReflectedCacheableStorageEntity} {@link EntityMetadata} won't be saved and field values
+ * will be collected on every {@link ReflectedStorageEntity#getMetadata()} call. This implementation
+ * can be slow, cause {@link EntityMetadata} won't be cached.
+ *
+ * @param <I> Entity id type
  * @author Danila Rassokhin
  */
 public interface ReflectedStorageEntity<I> extends StorageEntity<I> {
@@ -38,46 +45,29 @@ public interface ReflectedStorageEntity<I> extends StorageEntity<I> {
 
   default EntityMetadata createMetaData(Class<?> c, String prefix, Object from) {
     Map<String, Object> metadata = Arrays.stream(c.getDeclaredFields())
-        .map(this::setAccessible)
+        .map(ClassProcessor::setAccessible)
         .filter(field -> includeField(field, from))
         .collect(HashMap::new, (map, field) -> collect(map, field, from, prefix), HashMap::putAll);
     return new EntityMetadata(metadata);
   }
 
-  default Field setAccessible(Field f) {
-    f.setAccessible(true);
-    return f;
-  }
-
   default Map<String, Object> collect(Map<String, Object> map, Field f, Object from,
                                       String prefix) {
-    if (f.isAnnotationPresent(Embedded.class) && !isPrimitive(f)) {
-      map.putAll(createMetaData(f.getType(), f.getName() + ".", getFieldValue(f, from)).getAll());
+    if (f.isAnnotationPresent(Embedded.class) && !ClassProcessor.isPrimitive(f)) {
+      map.putAll(createMetaData(f.getType(), f.getName() + ".",
+                                ClassProcessor.getFieldValue(f, from)
+      ).getAll());
     } else {
-      map.put(prefix + f.getName(), getFieldValue(f, from));
+      map.put(prefix + f.getName(), ClassProcessor.getFieldValue(f, from));
     }
     return map;
   }
 
-  default Object getFieldValue(Field f, Object from) {
-    try {
-      return f.get(from);
-    } catch (IllegalAccessException e) {
-      return null;
-    }
-  }
-
   default boolean isNullable(Field f, Object from) {
-    return getFieldValue(f, from) != null || f.isAnnotationPresent(Nullable.class);
+    return ClassProcessor.getFieldValue(f, from) != null || f.isAnnotationPresent(Nullable.class);
   }
 
   default boolean isEmbedded(Field f) {
-    return isPrimitive(f) || f.isAnnotationPresent(Embedded.class);
-  }
-
-  default boolean isPrimitive(Field f) {
-    return f.getType().equals(String.class)
-        || (f.getType().getSuperclass() != null && f.getType().getSuperclass().equals(Number.class))
-        || f.getType().isPrimitive();
+    return ClassProcessor.isPrimitive(f) || f.isAnnotationPresent(Embedded.class);
   }
 }

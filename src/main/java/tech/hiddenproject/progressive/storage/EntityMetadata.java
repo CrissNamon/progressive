@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * Represents {@link StorageEntity} metadata as key-value pairs.
+ *
  * @author Danila Rassokhin
  */
 public class EntityMetadata {
