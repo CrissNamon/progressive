@@ -39,7 +39,8 @@ public class RepositoryBeanFactory implements BeanFactory {
 
   @Override
   public boolean isShouldBeProcessed(Class<?> beanClass) {
-    return ComponentAnnotationProcessor.isAnnotationPresent(Repository.class, beanClass);
+    return ComponentAnnotationProcessor.isAnnotationPresent(Repository.class, beanClass)
+        && isStorageRepository(beanClass);
   }
 
   @Override

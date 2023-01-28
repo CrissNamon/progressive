@@ -1,6 +1,7 @@
 package tech.hiddenproject.progressive.storage;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +14,8 @@ public class EntityMetadata {
   private final Map<String, Object> metadata;
 
   public EntityMetadata(Map<String, Object> metadata) {
-    this.metadata = Collections.unmodifiableMap(metadata);
+    this.metadata = Collections.synchronizedMap(new HashMap<>());
+    this.metadata.putAll(metadata);
   }
 
   public Map<String, Object> getAll() {
@@ -24,10 +26,7 @@ public class EntityMetadata {
     return metadata.get(key);
   }
 
-  @Override
-  public String toString() {
-    return "EntityMetadata{" +
-        "metadata=" + metadata +
-        '}';
+  public void put(String key, String value) {
+    metadata.put(key, value);
   }
 }

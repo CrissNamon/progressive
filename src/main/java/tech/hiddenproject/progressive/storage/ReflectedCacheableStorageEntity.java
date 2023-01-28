@@ -14,6 +14,8 @@ public interface ReflectedCacheableStorageEntity<I> extends ReflectedStorageEnti
 
   void saveMetadata(EntityMetadata entityMetadata);
 
+  EntityMetadata getMetadata();
+
   @Override
   default void init() {
     saveMetadata(createMetaData());

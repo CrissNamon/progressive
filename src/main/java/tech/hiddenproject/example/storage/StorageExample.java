@@ -1,11 +1,14 @@
 package tech.hiddenproject.example.storage;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import tech.hiddenproject.progressive.basic.BasicComponentManager;
 import tech.hiddenproject.progressive.basic.BasicDIContainer;
 import tech.hiddenproject.progressive.basic.storage.BasicStorage;
 import tech.hiddenproject.progressive.basic.storage.SearchCriteria;
 import tech.hiddenproject.progressive.exception.CriteriaException;
+import tech.hiddenproject.progressive.storage.Criteria;
 import tech.hiddenproject.progressive.storage.EntityTable;
 
 /**
@@ -71,6 +74,10 @@ public class StorageExample {
     // It must return boolean as a result of operation
     // See SearchCriteria.addExternalOperation javadoc for more information
     SearchCriteria.addExternalOperation("^", this::checkClassOperation);
+    Map<String, Object> testData = new HashMap<>();
+    testData.put("name", "Hello");
+    Criteria classTypeCriteria = SearchCriteria.createFromExpression("name ^ $0", String.class);
+    BasicComponentManager.getGameLogger().info(classTypeCriteria.test(testData));
 
     // ADVANCED STORAGE, STORAGE TABLE, ENTITY USAGE
 

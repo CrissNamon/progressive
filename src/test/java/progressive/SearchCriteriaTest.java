@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tech.hiddenproject.progressive.basic.storage.SearchCriteria;
 import tech.hiddenproject.progressive.exception.CriteriaException;
+import tech.hiddenproject.progressive.storage.Criteria;
 
 /**
  * @author Danila Rassokhin
@@ -58,5 +59,17 @@ public class SearchCriteriaTest {
     Assertions.assertThrows(CriteriaException.class, () -> searchCriteria.test(testData));
   }
 
+
+  @Test
+  public void expressionCriteriaTest() {
+    Criteria criteria = SearchCriteria.createFromExpression("a >= $0", 1);
+
+    Map<String, Object> testData1 = new HashMap<>();
+    testData1.put("a", 1);
+    testData1.put("b", "Hello");
+    testData1.put("c", new Object());
+
+    Assertions.assertTrue(criteria.test(testData1));
+  }
 
 }

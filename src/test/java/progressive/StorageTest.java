@@ -37,6 +37,7 @@ public class StorageTest {
     SearchCriteria searchCriteria1 = SearchCriteria.createFromExpression("id = $0", 1L);
     SearchCriteria searchCriteria2 = SearchCriteria.createFromExpression("id = $0", 2L);
 
+    Assertions.assertEquals(testEntity, entityTable.get(2L));
     Assertions.assertEquals(0, entityTable.search(searchCriteria1).size());
     Assertions.assertEquals(1, entityTable.search(searchCriteria2).size());
     Assertions.assertEquals(testEntity, entityTable.search(searchCriteria2).get(0));
