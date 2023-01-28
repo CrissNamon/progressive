@@ -6,7 +6,7 @@ import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
 /**
  * Represents bean for Dependency Injection container
  */
-public final class Bean {
+public final class BeanDefinition {
 
   private Object bean;
   private Method method;
@@ -17,6 +17,8 @@ public final class Bean {
   private boolean isReady = true;
   private Class<?> realType;
   private boolean isCreated = false;
+  private String name;
+  private String variant = "";
 
   public GameBeanCreationPolicy getCreationPolicy() {
     return creationPolicy;
@@ -100,5 +102,21 @@ public final class Bean {
 
   public void setBean(Object bean) {
     this.bean = bean;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getVariant() {
+    return variant;
+  }
+
+  public void setVariant(String variant) {
+    this.variant = variant;
   }
 }

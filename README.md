@@ -23,14 +23,14 @@ Main features:
 <dependency>
     <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive</artifactId>
-  <version>0.6.1</version>
+  <version>0.7.0</version>
 </dependency>
 ```
 
 ##### Gradle
 
 ````groovy
-compile 'tech.hiddenproject:progressive:0.6.1'
+compile 'tech.hiddenproject:progressive:0.7.0'
 ````
 
 #### Resources
@@ -53,4 +53,5 @@ ___
 
 #### Authors
 ___
-* [Danila Rassokhin](https://gihub.com/crissnamon) [![Twitter](https://img.shields.io/twitter/follow/kpekepsalt?style=social)](https://twitter.com/kpekepsalt)
+
+* [Danila Rassokhin](https://gihub.com/crissnamon) [![Twitter](https://img.shields.io/twitter/follow/kpekepsalt_en?style=social)](https://twitter.com/kpekepsalt_en)
