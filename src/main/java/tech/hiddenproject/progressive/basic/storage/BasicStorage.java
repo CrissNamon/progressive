@@ -1,8 +1,9 @@
 package tech.hiddenproject.progressive.basic.storage;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import tech.hiddenproject.progressive.storage.EntityTable;
 import tech.hiddenproject.progressive.storage.Storage;
 import tech.hiddenproject.progressive.storage.StorageEntity;
@@ -15,13 +16,33 @@ public enum BasicStorage implements Storage {
 
   INSTANCE;
 
-  private final Map<Class<? extends StorageEntity>, EntityTable> dataBase = new HashMap<>();
+  private final Map<Class<? extends StorageEntity>, EntityTable> dataBase = new ConcurrentHashMap<>();
 
+  /**
+   * Creates repository instance for given class.
+   *
+   * @param repositoryClass Repository class
+   * @param <R>             Repository type
+   * @return {@link StorageRepository}
+   */
   public static <R extends StorageRepository> R createRepository(Class<R> repositoryClass) {
+    return createRepository(repositoryClass, new RepositoryInterceptor(repositoryClass));
+  }
+
+  /**
+   * Creates repository instance for given class.
+   *
+   * @param repositoryClass   Repository class
+   * @param <R>               Repository type
+   * @param invocationHandler Custom implementation of {@link InvocationHandler}
+   * @return {@link StorageRepository}
+   */
+  public static <R extends StorageRepository> R createRepository(Class<R> repositoryClass,
+                                                                 InvocationHandler invocationHandler) {
     return (R) Proxy.newProxyInstance(
         repositoryClass.getClassLoader(),
         new Class[]{repositoryClass},
-        new RepositoryInterceptor(repositoryClass)
+        invocationHandler
     );
   }
 

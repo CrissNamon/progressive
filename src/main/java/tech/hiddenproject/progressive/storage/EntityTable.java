@@ -1,8 +1,8 @@
 package tech.hiddenproject.progressive.storage;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import tech.hiddenproject.progressive.exception.CriteriaException;
 
@@ -11,9 +11,9 @@ import tech.hiddenproject.progressive.exception.CriteriaException;
  */
 public class EntityTable<I, E extends StorageEntity<I>> implements StorageTable<I, E> {
 
-  private final Map<I, E> table = new HashMap<>();
+  private final Map<I, E> table = new ConcurrentHashMap<>();
 
-  public void save(E entity) {
+  public synchronized void save(E entity) {
     entity.init();
     table.put(entity.getId(), entity);
   }
