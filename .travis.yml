@@ -5,7 +5,7 @@ branches:
   only:
     - main
 script:
-  - "./mvnw test javadoc:javadoc -B"
+  - "./mvnw test javadoc:aggregate -B"
 notifications:
   email:
     recipients:

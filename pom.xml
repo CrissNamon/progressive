@@ -20,6 +20,13 @@
             </goals>
             <id>attach-javadoc</id>
           </execution>
+          <execution>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+            <id>aggregate</id>
+            <phase>site</phase>
+          </execution>
         </executions>
         <groupId>org.apache.maven.plugins</groupId>
         <version>3.3.0</version>
@@ -133,6 +140,7 @@
     <module>progressive-proxy</module>
     <module>progressive-injection</module>
     <module>progressive-persistence</module>
+    <module>progressive-all</module>
   </modules>
   <name>${project.groupId}:${project.artifactId}</name>
   <packaging>pom</packaging>

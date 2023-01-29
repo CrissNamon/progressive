@@ -25,8 +25,8 @@ Main features:
 
 ```xml
 <dependency>
-    <groupId>tech.hiddenproject</groupId>
-  <artifactId>progressive</artifactId>
+  <groupId>tech.hiddenproject</groupId>
+  <artifactId>progressive-all</artifactId>
   <version>0.7.1</version>
 </dependency>
 ```
@@ -34,7 +34,7 @@ Main features:
 ##### Gradle
 
 ````groovy
-implementation 'tech.hiddenproject:progressive:0.7.1'
+implementation 'tech.hiddenproject:progressive-all:0.7.1'
 ````
 
 #### Resources
