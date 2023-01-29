@@ -10,10 +10,10 @@ ___
 Progressive gives you an IoC/DI container with auto injections feature through annotations, game objects, game scripts and much more! It's is like a constructor. You can add game objects and attach game scripts to them.
 
 Main features:
-
-- IoC/DI container with auto injections through annotations, frame updates
+- Extendable IoC/DI containers with auto injections through annotations, frame updates
 - GameObjects and GameScripts
 - State machine
+- Storage (Persistence api)
 - The global observer for components connection
 - Proxy classes and proxy objects creation through annotations with custom method interceptors
 
