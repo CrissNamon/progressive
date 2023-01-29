@@ -3,7 +3,7 @@ package tech.hiddenproject.example.injection;
 import tech.hiddenproject.example.game.component.GameItem;
 import tech.hiddenproject.progressive.annotation.Configuration;
 import tech.hiddenproject.progressive.annotation.GameBean;
-import tech.hiddenproject.progressive.basic.util.BasicObjectCaster;
+import tech.hiddenproject.progressive.util.BasicObjectCaster;
 
 @Configuration
 public class ExampleConfiguration {

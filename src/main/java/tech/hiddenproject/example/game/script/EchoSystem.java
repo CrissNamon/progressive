@@ -1,8 +1,8 @@
 package tech.hiddenproject.example.game.script;
 
+import tech.hiddenproject.progressive.BasicComponentManager;
 import tech.hiddenproject.progressive.annotation.FromParent;
 import tech.hiddenproject.progressive.annotation.IsGameScript;
-import tech.hiddenproject.progressive.basic.BasicComponentManager;
 import tech.hiddenproject.progressive.component.GameObject;
 import tech.hiddenproject.progressive.component.GameScript;
 

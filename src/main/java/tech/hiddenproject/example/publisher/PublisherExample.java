@@ -1,10 +1,10 @@
 package tech.hiddenproject.example.publisher;
 
 import tech.hiddenproject.example.game.component.GameItem;
-import tech.hiddenproject.progressive.PublisherType;
 import tech.hiddenproject.progressive.basic.BasicComponentManager;
 import tech.hiddenproject.progressive.basic.manager.BasicGamePublisher;
 import tech.hiddenproject.progressive.basic.manager.PublisherSubscription;
+import tech.hiddenproject.progressive.data.PublisherType;
 import tech.hiddenproject.progressive.manager.GamePublisher;
 
 public class PublisherExample {

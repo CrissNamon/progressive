@@ -4,8 +4,8 @@ import tech.hiddenproject.example.game.component.GameItem;
 import tech.hiddenproject.progressive.annotation.Configuration;
 import tech.hiddenproject.progressive.annotation.GameBean;
 import tech.hiddenproject.progressive.annotation.Qualifier;
-import tech.hiddenproject.progressive.basic.util.BasicObjectCaster;
 import tech.hiddenproject.progressive.injection.GameBeanCreationPolicy;
+import tech.hiddenproject.progressive.util.BasicObjectCaster;
 
 /**
  * Basic DI configuration.
