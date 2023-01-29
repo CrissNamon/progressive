@@ -19,7 +19,7 @@ Main features:
 
 </p> 
 
-#### Use
+#### Usage
 
 ##### Maven
 
@@ -30,12 +30,73 @@ Main features:
   <version>0.7.1</version>
 </dependency>
 ```
+<details>
+  <summary>If you don't need all components</summary>
+  
+  - progressive-api required for each component
+  
+```xml
+<dependency>
+  <groupId>tech.hiddenproject</groupId>
+  <artifactId>progressive-api</artifactId>
+  <version>0.7.1</version>
+</dependency>
+```
+
+- progressive-game contains Game and related classes
+
+```xml
+<dependency>
+  <groupId>tech.hiddenproject</groupId>
+  <artifactId>progressive-game</artifactId>
+  <version>0.7.1</version>
+</dependency>
+```
+
+- progressive-injection contains DIContainer and related classes
+
+```xml
+<dependency>
+  <groupId>tech.hiddenproject</groupId>
+  <artifactId>progressive-injection</artifactId>
+  <version>0.7.1</version>
+</dependency>
+```
+
+- progressive-persistence contains Storage and related classes
+
+```xml
+<dependency>
+  <groupId>tech.hiddenproject</groupId>
+  <artifactId>progressive-persistence</artifactId>
+  <version>0.7.1</version>
+</dependency>
+```
+
+- progressive-proxy contains ProxyCreator and related classes
+
+```xml
+<dependency>
+  <groupId>tech.hiddenproject</groupId>
+  <artifactId>progressive-proxy</artifactId>
+  <version>0.7.1</version>
+</dependency>
+```
+
+</details>
 
 ##### Gradle
 
 ````groovy
 implementation 'tech.hiddenproject:progressive-all:0.7.1'
 ````
+
+<details>
+  <summary>If you don't need all components</summary>
+  
+  Use same artifacts from maven
+  
+</details>
 
 #### Resources
 
