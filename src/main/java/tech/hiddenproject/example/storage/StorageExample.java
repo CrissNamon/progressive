@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import tech.hiddenproject.progressive.basic.BasicComponentManager;
 import tech.hiddenproject.progressive.basic.BasicDIContainer;
-import tech.hiddenproject.progressive.basic.storage.BasicStorage;
-import tech.hiddenproject.progressive.basic.storage.SearchCriteria;
 import tech.hiddenproject.progressive.exception.CriteriaException;
+import tech.hiddenproject.progressive.storage.BasicStorage;
 import tech.hiddenproject.progressive.storage.Criteria;
 import tech.hiddenproject.progressive.storage.EntityTable;
+import tech.hiddenproject.progressive.storage.SearchCriteria;
 
 /**
  * @author Danila Rassokhin

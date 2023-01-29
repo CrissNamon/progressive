@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>progressive-all</artifactId>
+  <dependencies>
+    <dependency>
+      <artifactId>progressive-api</artifactId>
+      <groupId>tech.hiddenproject</groupId>
+      <version>${progressive.api.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>progressive-game</artifactId>
+      <groupId>tech.hiddenproject</groupId>
+      <version>${progressive.game.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>progressive-injection</artifactId>
+      <groupId>tech.hiddenproject</groupId>
+      <version>${progressive.injection.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>progressive-persistence</artifactId>
+      <groupId>tech.hiddenproject</groupId>
+      <version>${progressive.persistence.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>progressive-proxy</artifactId>
+      <groupId>tech.hiddenproject</groupId>
+      <version>${progressive.proxy.version}</version>
+    </dependency>
+  </dependencies>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>progressive</artifactId>
+    <groupId>tech.hiddenproject</groupId>
+    <version>0.7.1</version>
+  </parent>
+
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+    <progressive.api.version>${progressive.version}</progressive.api.version>
+    <progressive.game.version>${progressive.version}</progressive.game.version>
+    <progressive.injection.version>${progressive.version}</progressive.injection.version>
+    <progressive.persistence.version>${progressive.version}</progressive.persistence.version>
+    <progressive.proxy.version>${progressive.version}</progressive.proxy.version>
+    <progressive.version>0.7.1</progressive.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+</project>

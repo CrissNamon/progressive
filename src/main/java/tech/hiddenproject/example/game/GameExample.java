@@ -6,7 +6,6 @@ import tech.hiddenproject.progressive.Game;
 import tech.hiddenproject.progressive.basic.BasicComponentManager;
 import tech.hiddenproject.progressive.basic.BasicGame;
 import tech.hiddenproject.progressive.basic.BasicGameObject;
-import tech.hiddenproject.progressive.basic.GameInitializer;
 import tech.hiddenproject.progressive.basic.lambda.StateMachinePersister;
 import tech.hiddenproject.progressive.basic.manager.BasicGamePublisher;
 import tech.hiddenproject.progressive.component.GameObject;
@@ -17,10 +16,6 @@ import tech.hiddenproject.progressive.manager.GameState;
 public class GameExample {
 
   public GameExample() {
-    // Initiate game components such as DI container and Game
-    // autoScan = true means Scan all packages for beans and configurations classes
-    GameInitializer.init(true);
-
     // Subscribe to game events
     BasicGamePublisher.getInstance().subscribeOn(Game.GAME_PUBLISHER_TOPIC, this::processGameEvent);
 

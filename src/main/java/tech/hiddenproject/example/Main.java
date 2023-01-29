@@ -7,7 +7,7 @@ import tech.hiddenproject.example.publisher.PublisherExample;
 import tech.hiddenproject.example.statemachine.StateMachineExample;
 import tech.hiddenproject.example.storage.StorageExample;
 import tech.hiddenproject.example.variant.VariantsExample;
-import tech.hiddenproject.progressive.basic.BasicComponentManager;
+import tech.hiddenproject.progressive.BasicComponentManager;
 import tech.hiddenproject.progressive.exception.BeanNotFoundException;
 import tech.hiddenproject.progressive.log.GameLogger;
 
