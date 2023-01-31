@@ -5,20 +5,21 @@ package tech.hiddenproject.progressive.exception;
  *
  * <p>BeanA(BeanB) -> BeanB(BeanA)
  */
-public class BeanCircularDependencyException extends RuntimeException {
+public class BeanCircularDependencyException extends AbstractException {
 
-  private Class<?> dependency;
-
-  public BeanCircularDependencyException(String message) {
-    super(message);
+  public BeanCircularDependencyException(Throwable cause) {
+    super(cause);
   }
 
-  public BeanCircularDependencyException(String message, Class<?> dependency) {
-    super(message);
-    this.dependency = dependency;
+  public BeanCircularDependencyException(String message, Object... args) {
+    super(message, args);
   }
 
-  public Class<?> getDependency() {
-    return dependency;
+  public BeanCircularDependencyException(String message, Throwable cause, Object... args) {
+    super(message, cause, args);
+  }
+
+  public static BeanCircularDependencyException of(String message, Object... args) {
+    return new BeanCircularDependencyException(message, args);
   }
 }

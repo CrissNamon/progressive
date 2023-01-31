@@ -5,10 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tech.hiddenproject.progressive.data.TestEntity;
 import tech.hiddenproject.progressive.data.TestRepository;
+import tech.hiddenproject.progressive.injection.BasicDIContainer;
 import tech.hiddenproject.progressive.injection.BeanFactory;
 import tech.hiddenproject.progressive.injection.BeanScanner;
 import tech.hiddenproject.progressive.injection.RepositoryBeanFactory;
 import tech.hiddenproject.progressive.injection.RepositoryScanner;
+import tech.hiddenproject.progressive.injection.SimplePackageScanner;
 import tech.hiddenproject.progressive.storage.BasicStorage;
 import tech.hiddenproject.progressive.storage.EntityTable;
 import tech.hiddenproject.progressive.storage.SearchCriteria;
@@ -86,5 +88,31 @@ public class StorageTest {
     Assertions.assertFalse(beanScanner.shouldBeLoaded(TestEntity.class));
     Assertions.assertFalse(beanFactory.isShouldBeProcessed(TestEntity.class));
     Assertions.assertFalse(beanFactory.isShouldBeCreated(TestEntity.class));
+  }
+
+  @Test
+  public void testRepositoryBean() {
+    BasicDIContainer basicDIContainer = new BasicDIContainer();
+    basicDIContainer.addBeanFactory(new RepositoryBeanFactory());
+    basicDIContainer.addBeanScanner(new RepositoryScanner());
+    basicDIContainer.loadBean(TestRepository.class);
+
+    Assertions.assertDoesNotThrow(() -> basicDIContainer.getBean(TestRepository.class));
+    Assertions.assertDoesNotThrow(() -> basicDIContainer.getBean(
+        "TestRepository",
+        TestRepository.class
+    ));
+
+    BasicDIContainer newContainer = new BasicDIContainer();
+    newContainer.addBeanFactory(new RepositoryBeanFactory());
+    newContainer.addBeanScanner(new RepositoryScanner());
+    newContainer.scanPackage(
+        "tech.hiddenproject.progressive.data", new SimplePackageScanner());
+
+    Assertions.assertDoesNotThrow(() -> newContainer.getBean(TestRepository.class));
+    Assertions.assertDoesNotThrow(() -> newContainer.getBean(
+        "TestRepository",
+        TestRepository.class
+    ));
   }
 }

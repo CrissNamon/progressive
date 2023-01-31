@@ -119,4 +119,16 @@ public final class BeanDefinition {
   public void setVariant(String variant) {
     this.variant = variant;
   }
+
+  @Override
+  public String toString() {
+    return "BeanDefinition{" +
+        "creationPolicy=" + creationPolicy +
+        ", isReady=" + isReady +
+        ", realType=" + realType +
+        ", isCreated=" + isCreated +
+        ", name='" + name + '\'' +
+        ", variant='" + variant + '\'' +
+        '}';
+  }
 }

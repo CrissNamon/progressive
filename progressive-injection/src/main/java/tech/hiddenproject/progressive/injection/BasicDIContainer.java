@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import tech.hiddenproject.progressive.BasicComponentManager;
+import tech.hiddenproject.progressive.BooleanOptional;
 import tech.hiddenproject.progressive.annotation.ComponentScan;
 import tech.hiddenproject.progressive.annotation.Components;
 import tech.hiddenproject.progressive.annotation.Configuration;
@@ -31,15 +32,15 @@ import tech.hiddenproject.progressive.exception.BeanUndefinedException;
  */
 public final class BasicDIContainer implements DIContainer {
 
+  private static final List<BeanFactory> BEAN_FACTORIES = new ArrayList<>();
+
+  private static final List<BeanScanner> BEAN_SCANNERS = new ArrayList<>();
+
   private final String variant;
   private final Map<BeanKey, BeanDefinition> beans;
   private final Set<Method> viewedMethods;
 
   private final BeanFactory gameBeanFactory;
-
-  private final List<BeanFactory> beanFactories = new ArrayList<>();
-
-  private final List<BeanScanner> beanScanners = new ArrayList<>();
 
   public BasicDIContainer() {
     BasicComponentManager.getGameLogger().info("Progressive DI initialization...\n");
@@ -47,7 +48,7 @@ public final class BasicDIContainer implements DIContainer {
     viewedMethods = Collections.synchronizedSet(new HashSet<>());
     gameBeanFactory = new GameBeanFactory();
     variant = GameBean.DEFAULT_VARIANT;
-    beanScanners.add(new GameBeanScanner());
+    BEAN_SCANNERS.add(new GameBeanScanner());
   }
 
   /**
@@ -62,7 +63,7 @@ public final class BasicDIContainer implements DIContainer {
     viewedMethods = Collections.synchronizedSet(new HashSet<>());
     gameBeanFactory = new GameBeanFactory();
     this.variant = variant;
-    beanScanners.add(new GameBeanScanner());
+    BEAN_SCANNERS.add(new GameBeanScanner());
   }
 
   @Override
@@ -89,23 +90,15 @@ public final class BasicDIContainer implements DIContainer {
   public <V> V getBean(String name, Class<V> beanClass) {
     BeanKey beanKey = new BeanKey(name, beanClass);
     BeanDefinition beanDefinition = beans.getOrDefault(beanKey, null);
-    if (beanDefinition == null) {
-      throw new BeanNotFoundException(
-          "GameBean called " + name + " for class " + beanClass.getName() + " not found!",
-          beanClass,
-          name
-      );
-    }
-    if (!beanDefinition.isReady()) {
-      throw new BeanCircularDependencyException(
-          "GameBean "
-              + name
-              + " of class "
-              + beanClass.getName()
-              + " is not ready! Is there a circular dependency?",
-          beanClass
-      );
-    }
+    BooleanOptional.of(beanDefinition == null)
+        .ifTrueThrow(() -> BeanNotFoundException.of("GameBean called %s for class %s not found!",
+                                                    name, beanClass
+        ));
+    BooleanOptional.of(beanDefinition.isReady())
+        .ifFalseThrow(() -> BeanCircularDependencyException.of(
+            "GameBean %s of class %s is not ready! Is there a circular dependency?",
+            name, beanClass
+        ));
     if (!beanDefinition.haveObject() && !beanDefinition.isCreated() && beanDefinition.isClass()) {
       BasicComponentManager.getGameLogger()
           .info(
@@ -249,14 +242,13 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   @Override
-  public void addBeanFactory(
-      BeanFactory gameBeanFactory) {
-    this.beanFactories.add(gameBeanFactory);
+  public void addBeanFactory(BeanFactory gameBeanFactory) {
+    BEAN_FACTORIES.add(gameBeanFactory);
   }
 
   @Override
   public void addBeanScanner(BeanScanner beanScanner) {
-    this.beanScanners.add(beanScanner);
+    BEAN_SCANNERS.add(beanScanner);
   }
 
   @Override
@@ -265,18 +257,18 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   private boolean isBeanShouldBeLoaded(Class<?> beanClass) {
-    return beanScanners.stream()
+    return BEAN_SCANNERS.stream()
         .anyMatch(beanScanner -> beanScanner.shouldBeLoaded(beanClass));
   }
 
   private boolean isBeanShouldBeProcessed(Class<?> beanClass) {
-    return beanFactories.stream()
+    return BEAN_FACTORIES.stream()
         .anyMatch(beanFactory -> beanFactory.isShouldBeProcessed(beanClass))
         || gameBeanFactory.isShouldBeProcessed(beanClass);
   }
 
   private boolean isBeanShouldBeCreated(Class<?> beanClass) {
-    return beanFactories.stream()
+    return BEAN_FACTORIES.stream()
         .anyMatch(beanFactory -> beanFactory.isShouldBeCreated(beanClass))
         || gameBeanFactory.isShouldBeCreated(beanClass);
   }
@@ -343,7 +335,7 @@ public final class BasicDIContainer implements DIContainer {
   }
 
   private BeanDefinition getBeanDataFromClass(Class<?> beanClass) {
-    return beanFactories.stream()
+    return BEAN_FACTORIES.stream()
         .filter(beanFactory -> beanFactory.isShouldBeProcessed(beanClass))
         .findAny()
         .map(beanFactory -> beanFactory.createBeanMetaInformationFromClass(beanClass))

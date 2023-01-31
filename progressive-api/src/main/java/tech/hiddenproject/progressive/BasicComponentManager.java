@@ -24,6 +24,10 @@ public final class BasicComponentManager {
 
   private static GamePublisher gamePublisher;
 
+  static {
+    ComponentInitializer.init();
+  }
+
   /**
    * Returns {@link GameLogger}. If logger hasn't been set, then sets it to {@link GameLogger}.
    *
@@ -48,7 +52,7 @@ public final class BasicComponentManager {
    */
   public static ProxyCreator getProxyCreator() {
     if (proxyCreator == null) {
-      throw new GameException("ProxyCreator is not set!");
+      isProxyCreatorEnabled();
     }
     return proxyCreator;
   }
@@ -114,8 +118,8 @@ public final class BasicComponentManager {
 
   private static boolean isDiCreatorEnabled() {
     try {
-      Class.forName("tech.hiddenproject.progressive.basic.util.BasicComponentCreator",
-                    true, BasicComponentManager.class.getClassLoader()
+      Class.forName(ComponentInitializer.BASIC_COMPONENT_CREATOR_CLASS,
+                    false, BasicComponentManager.class.getClassLoader()
       );
       return true;
     } catch (ClassNotFoundException e) {
@@ -126,7 +130,7 @@ public final class BasicComponentManager {
   private static ComponentCreator createDiCreator() {
     try {
       return (ComponentCreator) Class.forName(
-              "tech.hiddenproject.progressive.basic.util.BasicComponentCreator")
+              ComponentInitializer.BASIC_COMPONENT_CREATOR_CLASS)
           .getDeclaredConstructor()
           .newInstance();
     } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException |
@@ -147,8 +151,8 @@ public final class BasicComponentManager {
       return true;
     }
     try {
-      Class.forName("tech.hiddenproject.progressive.basic.BasicDIContainer",
-                    true, BasicComponentManager.class.getClassLoader()
+      Class.forName(ComponentInitializer.BASIC_DI_CONTAINER_CLASS, false,
+                    BasicComponentManager.class.getClassLoader()
       );
       return true;
     } catch (ClassNotFoundException e) {
@@ -159,16 +163,25 @@ public final class BasicComponentManager {
   private static DIContainer createDIContainer() {
     if (!isDiContainerEnabled()) {
       throw new GameException(
-          "Unable to load component: tech.hiddenproject.progressive.basic.BasicDIContainer");
+          "Unable to load component: " + ComponentInitializer.BASIC_DI_CONTAINER_CLASS);
     }
     try {
       return (DIContainer) Class.forName(
-              "tech.hiddenproject.progressive.basic.BasicDIContainer")
+              ComponentInitializer.BASIC_DI_CONTAINER_CLASS)
           .getDeclaredConstructor()
           .newInstance();
     } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException |
              IllegalAccessException | InvocationTargetException e) {
       throw new GameException("Unable to initialize DI Container: " + e.getMessage());
+    }
+  }
+
+  public static boolean isProxyCreatorEnabled() {
+    try {
+      Class.forName(ComponentInitializer.BASIC_PROXY_CREATOR_CLASS);
+      return true;
+    } catch (ClassNotFoundException e) {
+      return false;
     }
   }
 }

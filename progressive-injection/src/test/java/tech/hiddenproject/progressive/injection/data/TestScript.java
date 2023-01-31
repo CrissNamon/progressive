@@ -1,13 +1,11 @@
 package tech.hiddenproject.progressive.injection.data;
 
-import tech.hiddenproject.progressive.annotation.IsGameScript;
 import tech.hiddenproject.progressive.component.GameObject;
 import tech.hiddenproject.progressive.component.GameScript;
 
 /**
  * @author Danila Rassokhin
  */
-@IsGameScript
 public class TestScript implements GameScript {
 
   private GameObject parent;

@@ -36,7 +36,9 @@ public final class SimplePackageScanner implements PackageScanner {
 
   private Class<?> getClass(String className, String packageName) {
     try {
-      return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')));
+      return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')),
+                           false, SimplePackageScanner.class.getClassLoader()
+      );
     } catch (ClassNotFoundException e) {
       throw new RuntimeException("Class " + className + " not found!");
     }
