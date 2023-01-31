@@ -15,10 +15,8 @@ import tech.hiddenproject.progressive.util.ComponentAnnotationProcessor;
  */
 public class RepositoryBeanFactory implements BeanFactory {
 
-  public RepositoryBeanFactory() {
-    if (BasicComponentManager.isDiContainerEnabled()) {
-      BasicComponentManager.getDiContainer().addBeanFactory(this);
-    }
+  static {
+    BasicComponentManager.getDiContainer().addBeanFactory(new RepositoryBeanFactory());
   }
 
   @Override

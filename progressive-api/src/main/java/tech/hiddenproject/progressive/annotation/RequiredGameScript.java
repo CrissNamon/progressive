@@ -20,7 +20,6 @@ import tech.hiddenproject.progressive.component.GameScript;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@IsGameScript
 public @interface RequiredGameScript {
 
   Class<? extends GameScript>[] value() default {};

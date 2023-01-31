@@ -7,7 +7,13 @@
     <dependency>
       <artifactId>progressive-api</artifactId>
       <groupId>tech.hiddenproject</groupId>
-      <version>0.7.1</version>
+      <version>0.7.11</version>
+    </dependency>
+    <dependency>
+      <artifactId>progressive-injection</artifactId>
+      <groupId>tech.hiddenproject</groupId>
+      <scope>test</scope>
+      <version>0.7.11</version>
     </dependency>
   </dependencies>
 
@@ -16,7 +22,7 @@
   <parent>
     <artifactId>progressive</artifactId>
     <groupId>tech.hiddenproject</groupId>
-    <version>0.7.1</version>
+    <version>0.7.11</version>
   </parent>
 
   <properties>

@@ -3,8 +3,6 @@ package tech.hiddenproject.progressive.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import tech.hiddenproject.progressive.ComponentCreator;
 import tech.hiddenproject.progressive.exception.GameException;
 
@@ -23,14 +21,10 @@ public class SimpleComponentCreator implements ComponentCreator {
       return constructor.newInstance(args);
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
              InvocationTargetException e) {
+      e.printStackTrace();
       throw new GameException(
           "Unable to create class: " + componentClass + "! Exception: " + e.getMessage());
     }
-  }
-
-  @Override
-  public List<Constructor<?>> foundAutoInjectConstructors(Constructor<?>[] constructors) {
-    return new ArrayList<>();
   }
 
   @Override

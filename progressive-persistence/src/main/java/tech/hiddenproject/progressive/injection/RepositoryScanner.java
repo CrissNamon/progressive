@@ -10,10 +10,8 @@ import tech.hiddenproject.progressive.annotation.Repository;
  */
 public class RepositoryScanner implements BeanScanner {
 
-  public RepositoryScanner() {
-    if (BasicComponentManager.isDiContainerEnabled()) {
-      BasicComponentManager.getDiContainer().addBeanScanner(this);
-    }
+  static {
+    BasicComponentManager.getDiContainer().addBeanScanner(new RepositoryScanner());
   }
 
   @Override

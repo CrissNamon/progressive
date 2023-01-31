@@ -41,9 +41,10 @@ public interface ProxyCreator {
    *
    * @param original Original class to create proxy from
    * @param <V>      Object type to create proxy from
+   * @param args     Arguments to pass in {@link MethodInterceptor} constructor.
    * @return New proxy class of {@code original}
    */
-  <V> Class<V> createProxyClass(Class<V> original);
+  <V> Class<V> createProxyClass(Class<V> original, Object... args);
 
   /**
    * Creates proxy class from {@code original} class and instantiates it.

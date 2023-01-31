@@ -10,6 +10,7 @@ ___
 Progressive gives you an IoC/DI container with auto injections feature through annotations, game objects, game scripts and much more! It's is like a constructor. You can add game objects and attach game scripts to them.
 
 Main features:
+
 - Extendable IoC/DI containers with auto injections through annotations, frame updates
 - GameObjects and GameScripts
 - State machine
@@ -27,59 +28,65 @@ Main features:
 <dependency>
   <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive-all</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.11</version>
 </dependency>
 ```
+
 <details>
   <summary>If you don't need all components</summary>
-  
-  - progressive-api required for each component
-  
+
+- progressive-api required for each component
+
 ```xml
+
 <dependency>
   <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive-api</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.11</version>
 </dependency>
 ```
 
 - progressive-game contains Game and related classes
 
 ```xml
+
 <dependency>
   <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive-game</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.11</version>
 </dependency>
 ```
 
 - progressive-injection contains DIContainer and related classes
 
 ```xml
+
 <dependency>
   <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive-injection</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.11</version>
 </dependency>
 ```
 
 - progressive-persistence contains Storage and related classes
 
 ```xml
+
 <dependency>
   <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive-persistence</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.11</version>
 </dependency>
 ```
 
 - progressive-proxy contains ProxyCreator and related classes
 
 ```xml
+
 <dependency>
   <groupId>tech.hiddenproject</groupId>
   <artifactId>progressive-proxy</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.11</version>
 </dependency>
 ```
 
@@ -88,14 +95,14 @@ Main features:
 ##### Gradle
 
 ````groovy
-implementation 'tech.hiddenproject:progressive-all:0.7.1'
+implementation 'tech.hiddenproject:progressive-all:0.7.11'
 ````
 
 <details>
   <summary>If you don't need all components</summary>
-  
-  Use same artifacts from maven
-  
+
+Use same artifacts from maven
+
 </details>
 
 #### Resources

@@ -3,31 +3,21 @@ package tech.hiddenproject.progressive.exception;
 /**
  * Thrown if bean is not presented in DI container.
  */
-public class BeanNotFoundException extends RuntimeException {
+public class BeanNotFoundException extends AbstractException {
 
-  private Class<?> beanClass;
-  private String beanName;
-
-  public BeanNotFoundException(String message) {
-    super(message);
+  public BeanNotFoundException(Throwable cause) {
+    super(cause);
   }
 
-  public BeanNotFoundException(String message, Class<?> beanClass) {
-    super(message);
-    this.beanClass = beanClass;
+  public BeanNotFoundException(String message, Object... args) {
+    super(message, args);
   }
 
-  public BeanNotFoundException(String message, Class<?> beanClass, String beanName) {
-    super(message);
-    this.beanClass = beanClass;
-    this.beanName = beanName;
+  public BeanNotFoundException(String message, Throwable cause, Object... args) {
+    super(message, cause, args);
   }
 
-  public Class<?> getBeanClass() {
-    return beanClass;
-  }
-
-  public String getBeanName() {
-    return beanName;
+  public static BeanNotFoundException of(String message, Object... args) {
+    return new BeanNotFoundException(message, args);
   }
 }

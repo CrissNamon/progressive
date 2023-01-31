@@ -8,7 +8,7 @@ import tech.hiddenproject.progressive.exception.BeanDuplicationException;
 import tech.hiddenproject.progressive.exception.BeanNotFoundException;
 import tech.hiddenproject.progressive.injection.data.ObjectBean;
 import tech.hiddenproject.progressive.injection.data.SingletonBean;
-import tech.hiddenproject.progressive.injection.data.TestRepository;
+import tech.hiddenproject.progressive.injection.data.TestEvent;
 import tech.hiddenproject.progressive.injection.variant.AndroidVariant;
 import tech.hiddenproject.progressive.injection.variant.GlobalVariant;
 import tech.hiddenproject.progressive.injection.variant.ItemVariant;
@@ -91,32 +91,6 @@ public class DIContainerTest {
   }
 
   @Test
-  public void testRepositoryBean() {
-    BasicDIContainer basicDIContainer = new BasicDIContainer();
-    basicDIContainer.addBeanFactory(new RepositoryBeanFactory());
-    basicDIContainer.addBeanScanner(new RepositoryScanner());
-    basicDIContainer.loadBean(TestRepository.class);
-
-    Assertions.assertDoesNotThrow(() -> basicDIContainer.getBean(TestRepository.class));
-    Assertions.assertDoesNotThrow(() -> basicDIContainer.getBean(
-        "TestRepository",
-        TestRepository.class
-    ));
-
-    BasicDIContainer newContainer = new BasicDIContainer();
-    newContainer.addBeanFactory(new RepositoryBeanFactory());
-    newContainer.addBeanScanner(new RepositoryScanner());
-    newContainer.scanPackage(
-        "tech.hiddenproject.progressive.injection.data", new SimplePackageScanner());
-
-    Assertions.assertDoesNotThrow(() -> newContainer.getBean(TestRepository.class));
-    Assertions.assertDoesNotThrow(() -> newContainer.getBean(
-        "TestRepository",
-        TestRepository.class
-    ));
-  }
-
-  @Test
   public void testGameBeanFactory() {
     BeanScanner beanScanner = new GameBeanScanner();
     BeanFactory beanFactory = new GameBeanFactory();
@@ -125,8 +99,8 @@ public class DIContainerTest {
     Assertions.assertTrue(beanFactory.isShouldBeProcessed(SingletonBean.class));
     Assertions.assertTrue(beanFactory.isShouldBeCreated(SingletonBean.class));
 
-    Assertions.assertFalse(beanScanner.shouldBeLoaded(TestRepository.class));
-    Assertions.assertFalse(beanFactory.isShouldBeProcessed(TestRepository.class));
-    Assertions.assertFalse(beanFactory.isShouldBeCreated(TestRepository.class));
+    Assertions.assertFalse(beanScanner.shouldBeLoaded(TestEvent.class));
+    Assertions.assertFalse(beanFactory.isShouldBeProcessed(TestEvent.class));
+    Assertions.assertFalse(beanFactory.isShouldBeCreated(TestEvent.class));
   }
 }
